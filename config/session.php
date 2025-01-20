@@ -129,7 +129,7 @@ return [
 
     'cookie' => env(
         'SESSION_COOKIE',
-        Str::slug(env('APP_NAME', 'game_key_store'), '_').'_session'
+        Str::slug(env('APP_NAME', 'game_key_store_laravel'), '_').'_session'
     ),
 
     /*

@@ -1,5 +1,5 @@
 import { defineConfig } from 'vite';
-import laravel from 'game_key_store-vite-plugin';
+import laravel from 'game_key_store_laravel-vite-plugin';
 
 export default defineConfig({
     plugins: [

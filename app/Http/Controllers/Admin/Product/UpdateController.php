@@ -17,7 +17,7 @@ class UpdateController extends Controller
         try {
             $data = $request->validated();
             $product = Product::findOrFail($data['id']);
-            $categoryId = $data['category']['id'];
+            $categoryId = $data['category'];
             $genres = $data['genres'];
 
             // Получаем путь к старому изображению

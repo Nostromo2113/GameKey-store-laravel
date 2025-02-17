@@ -26,7 +26,7 @@ class IndexController extends Controller
             if ($selectedOrder->isEmpty()) {
                 return response()->json(['message' => 'Order not found'], 404);
             }
-            
+
             return response()->json($selectedOrder);
         } else {
             return response()->json(Order::all());

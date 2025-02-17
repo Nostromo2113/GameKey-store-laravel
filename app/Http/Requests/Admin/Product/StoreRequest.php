@@ -22,7 +22,7 @@ class StoreRequest extends FormRequest
             'price' => 'required|numeric|min:0',
             'amount' => 'required|integer|min:0',
             'is_published' => 'required|boolean',
-            'category.id' => 'required|exists:categories,id',
+            'category' => 'required|exists:categories,id',
             'genres' => 'array|nullable',
             'genres.*' => 'exists:genres,id',
             'technical_requirements' => 'array|nullable',

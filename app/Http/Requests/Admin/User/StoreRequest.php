@@ -29,7 +29,7 @@ class StoreRequest extends FormRequest
             'age' => 'required|integer',
             'address' => 'required|string|max:255',
             'gender' => 'required|integer',
-            'password' => 'required|string|min:6|confirmed'
+            'password' => 'string|min:6|confirmed'
         ];
     }
 }

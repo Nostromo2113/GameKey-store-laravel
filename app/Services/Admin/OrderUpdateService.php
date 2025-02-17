@@ -70,9 +70,9 @@ class OrderUpdateService
     /**
      * Обновляет количество продуктов в заказе.
      *
-     * @param array<int, array{id: int}> $requestedProducts Продукты, которые нужно обновить.
-     * @param Collection<int, Product> $existingProducts Уже существующие продукты в заказе.
-     * @param Collection<int, mixed> $selectedActivationKeys Выбранные ключи активации.
+     * @param array $requestedProducts Продукты, которые нужно обновить.
+     * @param Collection $existingProducts Уже существующие продукты в заказе.
+     * @param Collection $selectedActivationKeys Выбранные ключи активации.
      * @return void
      */
     private function performUpdateProductQuantity(array $requestedProducts, Collection $existingProducts, Collection $selectedActivationKeys): void

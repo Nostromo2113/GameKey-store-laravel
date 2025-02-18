@@ -12,6 +12,5 @@ class IndexController extends Controller
     {
        $users = User::all();
        return UserResource::collection($users);
-
     }
 }

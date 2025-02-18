@@ -1,0 +1,35 @@
+<?php
+
+namespace App\Http\Controllers\Admin\Auth;
+
+use App\Http\Controllers\Controller;
+use App\Http\Requests\Admin\Auth\RegistrationRequest;
+use App\Services\Admin\UserStoreService;
+use Tymon\JWTAuth\Facades\JWTAuth;
+
+class RegistrationController extends Controller
+{
+    public function __construct(UserStoreService $userService)
+    {
+        $this->userService = $userService;
+    }
+
+    public function __invoke(RegistrationRequest $request)
+    {
+        $data = $request->validated();
+        try {
+            $newUser = $this->userService->store($data);
+
+            $token = JWTAuth::fromUser($newUser);
+
+            return response()->json([
+                'message' => 'User created successfully',
+                'data' => $newUser,
+                'access_token' => $token
+            ], 201);
+
+        } catch(\Exception $e) {
+            return response()->json($e->getMessage(), 500);
+        }
+    }
+}

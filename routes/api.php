@@ -3,9 +3,9 @@
 use App\Http\Controllers\Admin\Auth\PasswordUpdateController;
 use App\Http\Controllers\Admin\Auth\PasswordResetController;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\Admin\Auth\RegistrationController;
 
 
 Route::get('/user', function (Request $request) {
@@ -15,7 +15,7 @@ Route::get('/user', function (Request $request) {
 
 
 
-Route::group(['prefix' => 'admin', 'namespace' => 'App\Http\Controllers\Admin'], function () {
+Route::group(['prefix' => 'admin'], function () {
 
     //categories
     require base_path('routes/admin/categories.php');
@@ -48,6 +48,7 @@ Route::group(['prefix' => 'admin', 'namespace' => 'App\Http\Controllers\Admin'],
         Route::post('reset', [PasswordResetController::class, 'sendResetPasswordMail']);
         Route::post('change', [PasswordUpdateController::class, 'changePassword']);
     });
+    Route::post('/registration', RegistrationController::class);
 
 });
 

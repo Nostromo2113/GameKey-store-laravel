@@ -21,7 +21,6 @@ class UserStoreService
     public function store(array $data): User
     {
         DB::beginTransaction();
-
         try {
             $user = User::where('email', $data['email'])->first();
 
@@ -32,11 +31,9 @@ class UserStoreService
             $password = isset($data['password']) ? Hash::make($data['password']) : $this->genPassword(6);
 
             $newUser = $this->createUser($data, $password);
-
-            $this->sendEmail($newUser, $password);
-
+// Убрал вызов фунции, что-бы не спамить письмами при отладке
+//            $this->sendEmail($newUser, $password);
             DB::commit();
-
             return $newUser;
         } catch (Exception $e) {
             DB::rollBack();
@@ -79,10 +76,10 @@ class UserStoreService
         return User::create([
             'name' => $data['name'],
             'email' => $data['email'],
+            'phone_number' => $data['phone'],
             'password' => Hash::make($password),
             'surname' => $data['surname'],
             'patronymic' => $data['patronymic'],
-            'gender' => $data['gender'],
             'age' => $data['age'],
             'address' => $data['address'],
             'avatar' => $avatar,

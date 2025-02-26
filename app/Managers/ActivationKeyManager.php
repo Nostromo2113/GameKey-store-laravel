@@ -1,12 +1,13 @@
 <?php
 
-namespace App\Services\Admin;
+namespace App\Managers;
 
 use App\Models\ActivationKey;
+use App\Services\Admin\Array;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
-class ActivationKeyManagerService
+class ActivationKeyManager
 {
 
     /**

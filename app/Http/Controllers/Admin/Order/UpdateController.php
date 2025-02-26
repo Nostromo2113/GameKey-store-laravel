@@ -21,7 +21,7 @@ class UpdateController extends Controller
         try {
             $this->orderService->update($order, $data);
         } catch(\Exception $e) {
-            return response()->json($e->getMessage(), 500);
+            return response()->json(['Ошибка при обновлении продукта в заказе' => $e->getMessage()], 500);
         }
     }
 }

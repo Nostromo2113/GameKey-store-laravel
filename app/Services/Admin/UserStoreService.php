@@ -4,13 +4,19 @@ namespace App\Services\Admin;
 
 use App\Mail\UserRegistered;
 use App\Models\User;
+use App\Services\Admin\Cart\CartStoreService;
+use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
-use Exception;
 
 class UserStoreService
 {
+    public function __construct(CartStoreService $cartService)
+    {
+        $this->cartService = $cartService;
+    }
+
     /**
      * Создает нового пользователя и возвращает ответ с данными пользователя и токеном.
      *
@@ -31,6 +37,10 @@ class UserStoreService
             $password = isset($data['password']) ? Hash::make($data['password']) : $this->genPassword(6);
 
             $newUser = $this->createUser($data, $password);
+
+            //Создание корзины пользователя при регистрации
+            $this->cartService->store($newUser);
+
 // Убрал вызов фунции, что-бы не спамить письмами при отладке
 //            $this->sendEmail($newUser, $password);
             DB::commit();

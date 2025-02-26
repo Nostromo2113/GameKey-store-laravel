@@ -2,16 +2,18 @@
 
 namespace App\Services\Admin;
 
+use App\Managers\ActivationKeyManager;
+use App\Managers\OrderProductManager;
 use App\Models\Order;
 use App\Models\Product;
 use Illuminate\Support\Collection;
 
 class OrderUpdateService
 {
-    private ActivationKeyManagerService $keyManager;
-    private OrderProductManagerService $orderProductManager;
+    private ActivationKeyManager $keyManager;
+    private OrderProductManager $orderProductManager;
 
-    public function __construct(ActivationKeyManagerService $keyManager, OrderProductManagerService $orderProductManager)
+    public function __construct(ActivationKeyManager $keyManager, OrderProductManager $orderProductManager)
     {
         $this->keyManager = $keyManager;
         $this->orderProductManager = $orderProductManager;

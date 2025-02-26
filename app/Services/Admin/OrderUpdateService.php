@@ -24,10 +24,10 @@ class OrderUpdateService
      *
      * @param Order $order Заказ для обновления.
      * @param array $data Данные для обновления.
-     * @return bool Возвращает true при успешном обновлении.
+     * @return Order $order Возвращает обновленный заказ
      * @throws \Exception
      */
-    public function update(Order $order, array $data): bool
+    public function update(Order $order, array $data): Order
     {
 
         $requestedProducts = $data['order_products'];
@@ -48,7 +48,7 @@ class OrderUpdateService
         $this->performUpdateProductQuantity($requestedProducts, $existingProducts, $selectedActivationKeys);
         $this->performRemoveProductToOrder($order, $productsToRemoveIds);
 
-        return true;
+        return $order;
     }
 
     /**

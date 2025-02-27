@@ -5,44 +5,28 @@ namespace App\Http\Controllers\Admin\User;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\User\UpdateRequest;
 use App\Models\User;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Storage;
+use App\Services\Admin\UserUpdateService;
 
 class UpdateController extends Controller
 {
-    public function __invoke(UpdateRequest $request)
+    public function __construct(UserUpdateService $userService)
     {
-        // Получаем валидированные данные
+        $this->userService = $userService;
+    }
+
+    public function __invoke(UpdateRequest $request, User $user)
+    {
         $data = $request->validated();
-        // Найти категорию по ID
-        $user = User::findOrFail($data['id']);
-        $oldImagePath = $user->avatar;
-        //Удаляем старое изображение
-        if($oldImagePath != 'uploads/users/avatars/default_avatar.jpg' && Storage::disk('public')->exists($oldImagePath) && isset($data['file'])) {
-            Storage::disk('public')->delete($oldImagePath);
+        try {
+            $user = $this->userService->update($data, $user);
+
+            return response()->json([
+                'message' => 'Пользователь обновлен успешно',
+                'data' => $user
+            ], 200);
+
+        } catch(\Exception $e) {
+            return response()->json($e->getMessage(), 500);
         }
-
-        if(isset($data['file'])) {
-            $data['file'] = Storage::disk('public')->put('uploads/users/avatars', $data['file']);
-        } else {
-            $data['file'] = $oldImagePath;
-        }
-
-
-        // Обновить категорию с новыми данными
-        $user->fill([
-            'name' => $data['name'],
-            'email' => $data['email'],
-            'surname' => $data['surname'],
-            'patronymic' => $data['patronymic'],
-            'gender' => $data['gender'],
-            'age' => $data['age'],
-            'address' => $data['address'],
-            'avatar' => $data['file']
-        ])->save();
-
-        return response()->json([
-            'message' => 'Пользователь обновлена успешно',
-        ], 200);
     }
 }

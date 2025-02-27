@@ -36,11 +36,14 @@ class OrderResource extends JsonResource
                     'amount' => $product->amount,
                     'category' => $product->category,
                     'is_published' => $product->is_published,
-                    'activation_keys' => $activationKeys->map(function ($key) {
-                        return [
-                            'key' => $key->key
-                        ];
-                    }),
+                    'quantity' => $orderProduct->quantity,
+                    'activation_keys' => $this->status === 'completed'
+                        ? null // Если статус "completed", ключи не возвращаем
+                        : $orderProduct->activationKeys->map(function ($key) {
+                            return [
+                                'key' => $key->key,
+                            ];
+                        }),
                 ];
             }),
         ];

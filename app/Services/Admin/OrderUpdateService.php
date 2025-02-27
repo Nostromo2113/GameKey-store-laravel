@@ -2,16 +2,19 @@
 
 namespace App\Services\Admin;
 
+use App\Managers\ActivationKeyManager;
+use App\Managers\OrderProductManager;
 use App\Models\Order;
 use App\Models\Product;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
 
 class OrderUpdateService
 {
-    private ActivationKeyManagerService $keyManager;
-    private OrderProductManagerService $orderProductManager;
+    private ActivationKeyManager $keyManager;
+    private OrderProductManager $orderProductManager;
 
-    public function __construct(ActivationKeyManagerService $keyManager, OrderProductManagerService $orderProductManager)
+    public function __construct(ActivationKeyManager $keyManager, OrderProductManager $orderProductManager)
     {
         $this->keyManager = $keyManager;
         $this->orderProductManager = $orderProductManager;
@@ -22,31 +25,60 @@ class OrderUpdateService
      *
      * @param Order $order Заказ для обновления.
      * @param array $data Данные для обновления.
-     * @return bool Возвращает true при успешном обновлении.
+     * @param bool $isInTransaction Флаг для транзакций. По умолчанию false.
+     * @return Order Возвращает обновленный заказ.
      * @throws \Exception
      */
-    public function update(Order $order, array $data): bool
+    public function update(Order $order, array $data, bool $isInTransaction = false): Order
     {
+        // Логика внутри callback, которая будет выполняться в транзакции
+        $callback = function () use ($order, $data) {
+            $requestedProducts = $data['order_products'];
+            $requestedProductIds = array_column($requestedProducts, 'id');
 
-        $requestedProducts = $data['order_products'];
-        $requestedProductIds = array_column($requestedProducts, 'id');
+            $existingProducts = $order->orderProducts()->whereIn('product_id', $requestedProductIds)->get();
 
-        $existingProducts = $order->orderProducts()->whereIn('product_id', $requestedProductIds)->get();
+            $products = Product::whereIn('id', $requestedProductIds)->get();
 
-        $products = Product::whereIn('id', $requestedProductIds)->get();
+            $selectedActivationKeys = $this->keyManager->selectKeys($requestedProducts, $products, $existingProducts) ?? collect([]);
 
-        $selectedActivationKeys = $this->keyManager->selectKeys($requestedProducts, $products, $existingProducts) ?? collect([]);
+            $productsIds = $order->orderProducts()->pluck('product_id')->toArray();
+            $productsToRemoveIds = array_diff($productsIds, $requestedProductIds);
 
-        $productsIds = $order->orderProducts()->pluck('product_id')->toArray();
-        $productsToRemoveIds = array_diff($productsIds, $requestedProductIds);
+            $this->performAddProductToOrder($requestedProducts, $selectedActivationKeys, $existingProducts, $order);
 
+            $this->performUpdateProductQuantity($requestedProducts, $existingProducts, $selectedActivationKeys);
 
-        $this->performAddProductToOrder($requestedProducts, $selectedActivationKeys, $existingProducts, $order);
+            $this->performRemoveProductToOrder($order, $productsToRemoveIds);
 
-        $this->performUpdateProductQuantity($requestedProducts, $existingProducts, $selectedActivationKeys);
-        $this->performRemoveProductToOrder($order, $productsToRemoveIds);
+            return $order;
+        };
 
-        return true;
+        // Управление транзакциями
+        if ($isInTransaction) {
+            return $callback();
+        } else {
+            return DB::transaction($callback);
+        }
+    }
+    /**
+     * Переводит статус заказа в "Выполнено".
+     *
+     * @param Order $order Заказ для обновления.
+     * @return Order Возвращает обновленный заказ.
+     * @throws \Exception
+     */
+    public function executeOrder(Order $order) :Order
+    {
+        try {
+            $order->status = 'completed';
+            $order->save();
+            $orderProductsIds = $order->orderProducts->pluck('id')->toArray();
+            $this->keyManager->softDeleteKeys($orderProductsIds);
+            return $order;
+        } catch(\Exception $e) {
+            throw new \Exception('Ошибка изменения статуса заказа', $e->getMessage());
+        }
     }
 
     /**
@@ -70,9 +102,9 @@ class OrderUpdateService
     /**
      * Обновляет количество продуктов в заказе.
      *
-     * @param array<int, array{id: int}> $requestedProducts Продукты, которые нужно обновить.
-     * @param Collection<int, Product> $existingProducts Уже существующие продукты в заказе.
-     * @param Collection<int, mixed> $selectedActivationKeys Выбранные ключи активации.
+     * @param array $requestedProducts Продукты, которые нужно обновить.
+     * @param Collection $existingProducts Уже существующие продукты в заказе.
+     * @param Collection $selectedActivationKeys Выбранные ключи активации.
      * @return void
      */
     private function performUpdateProductQuantity(array $requestedProducts, Collection $existingProducts, Collection $selectedActivationKeys): void

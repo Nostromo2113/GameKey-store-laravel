@@ -22,7 +22,8 @@ class User extends Authenticatable implements MustVerifyEmail, JWTSubject
         'address',
         'email',
         'password',
-        'avatar'
+        'avatar',
+        'phone_number'
     ];
 
     protected $hidden = [

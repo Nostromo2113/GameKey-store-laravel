@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Services\Admin;
+namespace App\Managers;
 
 use App\Models\Order;
 use Illuminate\Support\Collection;
 
-class OrderProductManagerService
+class OrderProductManager
 {
-    public function __construct(ActivationKeyManagerService $keyManager)
+    public function __construct(ActivationKeyManager $keyManager)
     {
         $this->keyManager = $keyManager;
     }

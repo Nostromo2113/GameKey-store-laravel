@@ -16,13 +16,13 @@ class StoreController extends Controller
     {
         try {
             $data = $request->validated();
-            $categoryId = $data['category']['id'];
+            $categoryId = $data['category'];
             $genres = $data['genres'];
             $data['technical_requirements']['is_recommended'] = 1;
-            if (isset($data['preview_image'])) {
-                $data['preview_image'] = Storage::disk('public')->put('uploads/products/preview_images', $data['preview_image']);
+            if (isset($data['file'])) {
+                $data['file'] = Storage::disk('public')->put('uploads/products/preview_images', $data['file']);
             } else {
-                $data['preview_image'] = 'no image';
+                $data['file'] = 'no image';
             }
 
 
@@ -31,11 +31,11 @@ class StoreController extends Controller
                 'description' => $data['description'],
                 'publisher' => $data['publisher'],
                 'release_date' => $data['release_date'],
-                'preview_image' => $data['preview_image'],
+                'preview_image' => $data['file'],
                 'price' => $data['price'],
-                'amount' => $data['amount'],
                 'category_id' => $categoryId,
                 'is_published' => $data['is_published'],
+                'amount' => 1
             ]);
             $data['technical_requirements']['product_id'] = $product['id'];
 
@@ -43,7 +43,7 @@ class StoreController extends Controller
 
 
             $product->genres()->sync($genres);
-            $product->load('category', 'technicalRequirements.php', 'genres');
+            $product->load('category', 'technicalRequirements', 'genres');
             return response()->json([
                 'message' => 'Продукт обновлен успешно',
                 'data' => $product,
@@ -58,7 +58,7 @@ class StoreController extends Controller
         } catch (Exception $e) {
             // Обработка всех остальных ошибок
             return response()->json([
-                'message' => 'Произошла ошибка при обновлении продукта.',
+                'message' => 'Произошла ошибка при добавлении продукта.',
                 'error' => $e->getMessage(),
             ], 500);
         }

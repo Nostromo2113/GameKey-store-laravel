@@ -7,6 +7,7 @@ use App\Managers\OrderProductManager;
 use App\Models\Order;
 use App\Models\Product;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
 
 class OrderUpdateService
 {
@@ -24,31 +25,60 @@ class OrderUpdateService
      *
      * @param Order $order Заказ для обновления.
      * @param array $data Данные для обновления.
-     * @return Order $order Возвращает обновленный заказ
+     * @param bool $isInTransaction Флаг для транзакций. По умолчанию false.
+     * @return Order Возвращает обновленный заказ.
      * @throws \Exception
      */
-    public function update(Order $order, array $data): Order
+    public function update(Order $order, array $data, bool $isInTransaction = false): Order
     {
+        // Логика внутри callback, которая будет выполняться в транзакции
+        $callback = function () use ($order, $data) {
+            $requestedProducts = $data['order_products'];
+            $requestedProductIds = array_column($requestedProducts, 'id');
 
-        $requestedProducts = $data['order_products'];
-        $requestedProductIds = array_column($requestedProducts, 'id');
+            $existingProducts = $order->orderProducts()->whereIn('product_id', $requestedProductIds)->get();
 
-        $existingProducts = $order->orderProducts()->whereIn('product_id', $requestedProductIds)->get();
+            $products = Product::whereIn('id', $requestedProductIds)->get();
 
-        $products = Product::whereIn('id', $requestedProductIds)->get();
+            $selectedActivationKeys = $this->keyManager->selectKeys($requestedProducts, $products, $existingProducts) ?? collect([]);
 
-        $selectedActivationKeys = $this->keyManager->selectKeys($requestedProducts, $products, $existingProducts) ?? collect([]);
+            $productsIds = $order->orderProducts()->pluck('product_id')->toArray();
+            $productsToRemoveIds = array_diff($productsIds, $requestedProductIds);
 
-        $productsIds = $order->orderProducts()->pluck('product_id')->toArray();
-        $productsToRemoveIds = array_diff($productsIds, $requestedProductIds);
+            $this->performAddProductToOrder($requestedProducts, $selectedActivationKeys, $existingProducts, $order);
 
+            $this->performUpdateProductQuantity($requestedProducts, $existingProducts, $selectedActivationKeys);
 
-        $this->performAddProductToOrder($requestedProducts, $selectedActivationKeys, $existingProducts, $order);
+            $this->performRemoveProductToOrder($order, $productsToRemoveIds);
 
-        $this->performUpdateProductQuantity($requestedProducts, $existingProducts, $selectedActivationKeys);
-        $this->performRemoveProductToOrder($order, $productsToRemoveIds);
+            return $order;
+        };
 
-        return $order;
+        // Управление транзакциями
+        if ($isInTransaction) {
+            return $callback();
+        } else {
+            return DB::transaction($callback);
+        }
+    }
+    /**
+     * Переводит статус заказа в "Выполнено".
+     *
+     * @param Order $order Заказ для обновления.
+     * @return Order Возвращает обновленный заказ.
+     * @throws \Exception
+     */
+    public function executeOrder(Order $order) :Order
+    {
+        try {
+            $order->status = 'completed';
+            $order->save();
+            $orderProductsIds = $order->orderProducts->pluck('id')->toArray();
+            $this->keyManager->softDeleteKeys($orderProductsIds);
+            return $order;
+        } catch(\Exception $e) {
+            throw new \Exception('Ошибка изменения статуса заказа', $e->getMessage());
+        }
     }
 
     /**

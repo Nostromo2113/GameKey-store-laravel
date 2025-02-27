@@ -6,24 +6,28 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\Order\UpdateRequest;
 use App\Http\Resources\Admin\OrderResource;
 use App\Models\Order;
+use App\Services\Admin\Cart\CartClearService;
 use App\Services\Admin\OrderUpdateService;
 
 class UpdateController extends Controller
 {
-    public function __construct(OrderUpdateService $orderService)
+    public function __construct(OrderUpdateService $orderUpdateService)
     {
-        $this->orderService = $orderService;
+        $this->orderUpdateService = $orderUpdateService;
     }
 
 
     public function __invoke(Order $order, UpdateRequest $request)
     {
         $data = $request->validated();
-        try {
-           $updatedOrder = $this->orderService->update($order, $data);
-           return response()->json(['message' => 'order has been updated', 'order' => new OrderResource($updatedOrder)]);
-        } catch(\Exception $e) {
-            return response()->json(['Ошибка при обновлении продукта в заказе' => $e->getMessage()], 500);
-        }
+            $executeOrder = $data['is_execute'] ?? false;
+            if ($executeOrder) {
+              $updatedOrder = $this->orderUpdateService->executeOrder($order);
+            } else if(isset($data['order_products']) && !$executeOrder) {
+                $updatedOrder = $this->orderUpdateService->update($order, $data);
+            } else {
+                return response()->json(['message'=> 'Полученных данных недостаточно'], 500);
+            }
+            return response()->json(['message' => '', 'order' => new OrderResource($updatedOrder)]);
     }
 }

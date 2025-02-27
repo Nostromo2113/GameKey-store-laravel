@@ -3,7 +3,6 @@
 namespace App\Managers;
 
 use App\Models\ActivationKey;
-use App\Services\Admin\Array;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
@@ -13,7 +12,7 @@ class ActivationKeyManager
     /**
      * Выбирает ключи активации для работы с заказом (привязка или удаление).
      *
-     * @param Array $requestOrderProducts - данные из запроса
+     * @param array $requestOrderProducts - данные из запроса
      * @param Collection $filteredOrderProducts - продукты, уже присутствующие в заказе
      * @return Collection|null - отобранные ключи активации или null, если подходящих ключей нет
      */
@@ -27,10 +26,10 @@ class ActivationKeyManager
                 $existingOrderProduct = $existingOrderProducts->firstWhere('product_id', $requestOrderProduct['id']);
                 $orderProduct = $products->firstWhere('id', $requestOrderProduct['id']);
                 $requestQuantity = (int)$requestOrderProduct['quantity'];
-                if($existingOrderProduct) {
+                if ($existingOrderProduct) {
                     $currentQuantity = $existingOrderProduct ? (int)$existingOrderProduct->activationKeys->count() : 0;
                     $calcQuantity = $requestQuantity - $currentQuantity;
-                } else if($orderProduct) {
+                } else if ($orderProduct) {
                     $calcQuantity = $requestQuantity;
                 }
                 if ($calcQuantity !== 0) {
@@ -68,11 +67,25 @@ class ActivationKeyManager
     public function releaseKeys(array $orderProductIdsToRemove): void
     {
         try {
-            DB::table('activation_keys')
-                ->whereIn('order_product_id', $orderProductIdsToRemove)
+            ActivationKey::whereIn('order_product_id', $orderProductIdsToRemove)
                 ->update(['order_product_id' => null]);
         } catch (\Exception $e) {
             throw new \Exception("Ошибка при освобождении ключей активации: " . $e->getMessage());
+        }
+    }
+
+    /**
+     * Мягкое удаление ключей при завершеннии заказа.
+     *
+     * @param array $orderProductIdsToRemove - ID продуктов для удаления
+     * @return void
+     */
+    public function softDeleteKeys($orderProductIds): void
+    {
+        try {
+            ActivationKey::whereIn('order_product_id', $orderProductIds)->delete();
+        } catch (\Exception $e) {
+            throw new \Exception('Ошибка при мягком удалении ключей активации: ' . $e->getMessage());
         }
     }
 

@@ -22,7 +22,10 @@ class StoreRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'user_id' => 'required|integer|exists:users,id'
+            'user_id' => 'required|integer|exists:users,id',
+            'order_products' => 'array|nullable',
+            'order_products.*.id' => 'integer|exists:products,id',
+            'order_products.*.quantity' => 'nullable|integer|min:1', // Разрешаем пустое, но если передано — это число >= 1
         ];
     }
 }

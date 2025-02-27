@@ -22,11 +22,10 @@ class UpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'is_execute' => 'nullable|boolean',
             'order_products' => 'array|nullable',
             'order_products.*.id' => 'required|integer|exists:products,id',
             'order_products.*.quantity' => '',
-            'order_products.*.activation_key_id' => '',
-            //'order_products.*.quantity' => 'integer|min:1',
         ];
     }
 }

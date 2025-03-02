@@ -54,11 +54,16 @@ class OrderUpdateService
             return $order;
         };
 
-        // Управление транзакциями
-        if ($isInTransaction) {
-            return $callback();
+        // Управление обновлением заказа.
+        // Проверка на статус и на выполнение транзакции
+        if(!$order->isCompleted()) {
+            if ($isInTransaction) {
+                return $callback();
+            } else {
+                return DB::transaction($callback);
+            }
         } else {
-            return DB::transaction($callback);
+            throw new \Exception('Заказ уже завершен. Обновление невозможно', 403);
         }
     }
     /**
@@ -71,13 +76,16 @@ class OrderUpdateService
     public function executeOrder(Order $order) :Order
     {
         try {
-            $order->status = 'completed';
-            $order->save();
-            $orderProductsIds = $order->orderProducts->pluck('id')->toArray();
-            $this->keyManager->softDeleteKeys($orderProductsIds);
-            return $order;
+            if($order->isCompleted()){
+                throw new \Exception('Заказ выполнен. Изменение статуса невозможно', 403);
+            }
+                $order->status = 'completed';
+                $order->save();
+                $orderProductsIds = $order->orderProducts->pluck('id')->toArray();
+                $this->keyManager->softDeleteKeys($orderProductsIds);
+                return $order;
         } catch(\Exception $e) {
-            throw new \Exception('Ошибка изменения статуса заказа', $e->getMessage());
+            throw new \Exception('Ошибка изменения статуса заказа: ' . $e->getMessage(), $e->getCode());
         }
     }
 

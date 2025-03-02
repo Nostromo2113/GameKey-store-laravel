@@ -23,7 +23,6 @@ class OrderResource extends JsonResource
             'user' => $this->user,
             'order_date' => $this->created_at,
             'products' => $this->OrderProducts->map(function ($orderProduct) {
-                $activationKeys = $orderProduct->activationKeys;
                 $product = $orderProduct->product;
                 return [
                     'id' => $product->id,
@@ -38,7 +37,12 @@ class OrderResource extends JsonResource
                     'is_published' => $product->is_published,
                     'quantity' => $orderProduct->quantity,
                     'activation_keys' => $this->status === 'completed'
-                        ? null // Если статус "completed", ключи не возвращаем
+                        ? $orderProduct->activationKeys()->withTrashed()->get()->map(function ($key) {
+                            return [
+                                'key' => $key->key,
+                                'deleted_at' => $key->deleted_at, // Показываем, что ключ удален
+                            ];
+                        })
                         : $orderProduct->activationKeys->map(function ($key) {
                             return [
                                 'key' => $key->key,

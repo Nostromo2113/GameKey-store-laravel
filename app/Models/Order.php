@@ -8,7 +8,23 @@ use Illuminate\Database\Eloquent\Model;
 class Order extends Model
 {
     use HasFactory;
+    //Константы статуса заказа
+    const STATUS_PENDING = 'pending';
+    const STATUS_COMPLETED = 'completed';
+
     protected $guarded = false;
+
+
+    public function isPending()
+    {
+        return $this->status === self::STATUS_PENDING;
+    }
+
+    public function isCompleted()
+    {
+        return $this->status = self::STATUS_COMPLETED;
+    }
+
 
     public function user()
     {

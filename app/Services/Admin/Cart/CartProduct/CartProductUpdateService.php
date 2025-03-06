@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services\Admin\Cart;
+namespace App\Services\Admin\Cart\CartProduct;
 
 use App\Models\Cart;
 use App\Models\Product;
@@ -17,7 +17,7 @@ class CartProductUpdateService
      * @return Cart Возвращает обновленную корзину.
      * @throws Exception Если произошла ошибка при обновлении.
      */
-    public function update(array $data, Cart $cart, Product $product): Cart
+    public function updateProductQuantityInCart(array $data, Cart $cart, Product $product): Cart
     {
         $newQuantity = $data['quantity'];
 

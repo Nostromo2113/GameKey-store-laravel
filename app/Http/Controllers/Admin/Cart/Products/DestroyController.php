@@ -4,17 +4,19 @@ namespace App\Http\Controllers\Admin\Cart\Products;
 
 use App\Http\Controllers\Controller;
 use App\Models\Cart;
+use App\Services\Admin\Cart\CartProduct\CartProductService;
 
 class DestroyController extends Controller
 {
+    private $cartProductService;
+
+    public function __construct(CartProductService $cartProductService)
+    {
+        $this->cartProductService = $cartProductService;
+    }
     public function __invoke(Cart $cart, $productId)
     {
-        try {
-            $cart->products()->detach($productId);
-
-            return response()->json(['message' => 'Product removed from cart']);
-        } catch (\Exception $e) {
-            return response()->json(['error when deleting a product from the cart' => $e->getMessage()], 500);
-        }
+        $this->cartProductService->destroy($cart, $productId);
+        return response()->json(['message' => 'Продукт удален из корзины'], 200);
     }
 }

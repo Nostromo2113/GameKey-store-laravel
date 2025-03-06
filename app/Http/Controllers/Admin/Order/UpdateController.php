@@ -6,14 +6,14 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\Order\UpdateRequest;
 use App\Http\Resources\Admin\OrderResource;
 use App\Models\Order;
-use App\Services\Admin\Cart\CartClearService;
-use App\Services\Admin\OrderUpdateService;
+use App\Services\Admin\Order\OrderProduct\OrderProductService;
 
 class UpdateController extends Controller
 {
-    public function __construct(OrderUpdateService $orderUpdateService)
+    private $orderProductService;
+    public function __construct(OrderProductService $orderProductService)
     {
-        $this->orderUpdateService = $orderUpdateService;
+        $this->orderProductService = $orderProductService;
     }
 
 
@@ -22,9 +22,9 @@ class UpdateController extends Controller
         $data = $request->validated();
             $executeOrder = $data['is_execute'] ?? false;
             if ($executeOrder) {
-              $updatedOrder = $this->orderUpdateService->executeOrder($order);
+              $updatedOrder = $this->orderProductService->executeOrder($order);
             } else if(isset($data['order_products']) && !$executeOrder) {
-                $updatedOrder = $this->orderUpdateService->update($order, $data);
+                $updatedOrder = $this->orderProductService->update($order, $data);
             } else {
                 return response()->json(['message'=> 'Полученных данных недостаточно'], 500);
             }

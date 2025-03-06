@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Services\Admin\Cart;
+namespace App\Services\Admin\Cart\CartProduct;
 
 use App\Models\Cart;
 
-class CartProductStoreService
+class CartProductCreateService
 {
     /**
      * Добавляет продукт в корзину.
@@ -14,7 +14,7 @@ class CartProductStoreService
      * @return array Возвращает массив с результатом.
      * @throws \Exception Ошибка.
      */
-    public function store(array $data, Cart $cart): array
+    public function storeProductInCart(array $data, Cart $cart): array
     {
         try {
             $productId = $data['product_id'];

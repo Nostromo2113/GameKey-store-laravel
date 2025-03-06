@@ -5,11 +5,12 @@ namespace App\Http\Controllers\Admin\User;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\User\UpdateRequest;
 use App\Models\User;
-use App\Services\Admin\UserUpdateService;
+use App\Services\Admin\User\UserService;
 
 class UpdateController extends Controller
 {
-    public function __construct(UserUpdateService $userService)
+    private UserService $userService;
+    public function __construct(UserService $userService)
     {
         $this->userService = $userService;
     }
@@ -17,16 +18,12 @@ class UpdateController extends Controller
     public function __invoke(UpdateRequest $request, User $user)
     {
         $data = $request->validated();
-        try {
+
             $user = $this->userService->update($data, $user);
 
             return response()->json([
-                'message' => 'Пользователь обновлен успешно',
+                'message' => 'Пользователь успешно обновлен',
                 'data' => $user
             ], 200);
-
-        } catch(\Exception $e) {
-            return response()->json($e->getMessage(), 500);
-        }
     }
 }

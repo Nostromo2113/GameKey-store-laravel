@@ -22,7 +22,7 @@ class Order extends Model
 
     public function isCompleted()
     {
-        return $this->status = self::STATUS_COMPLETED;
+        return $this->status === self::STATUS_COMPLETED;
     }
 
 

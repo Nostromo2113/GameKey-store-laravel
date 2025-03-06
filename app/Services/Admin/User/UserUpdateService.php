@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services\Admin;
+namespace App\Services\Admin\User;
 
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
@@ -41,18 +41,22 @@ class UserUpdateService
      */
     private function fillUser(User $user, array $data): void
     {
-        $imagePath = $this->updateAvatar($user, $data);
+        try {
+            $imagePath = $this->updateAvatar($user, $data);
 
-        $user->fill([
-            'name' => $data['name'],
-            'email' => $data['email'],
-            'phone_number' => $data['phone_number'],
-            'surname' => $data['surname'],
-            'patronymic' => $data['patronymic'],
-            'age' => $data['age'],
-            'address' => $data['address'],
-            'avatar' => $imagePath,
-        ])->save();
+            $user->fill([
+                'name' => $data['name'],
+                'email' => $data['email'],
+                'phone_number' => $data['phone_number'],
+                'surname' => $data['surname'],
+                'patronymic' => $data['patronymic'],
+                'age' => $data['age'],
+                'address' => $data['address'],
+                'avatar' => $imagePath,
+            ])->save();
+        } catch(\Exception $e) {
+            throw new \Exception('Ошибка при записи пользователя: ' . $e->getMessage());
+        }
     }
 
 
@@ -87,7 +91,7 @@ class UserUpdateService
             return $imagePath;
 
         } catch (\Exception $e) {
-            throw $e;
+            throw new \Exception('Ошибка при обновлении аватара пользователя: ' . $e->getMessage());
         }
     }
 }

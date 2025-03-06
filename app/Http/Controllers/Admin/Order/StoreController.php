@@ -6,16 +6,19 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\Order\StoreRequest;
 use App\Models\Order;
 use App\Models\Product;
-use App\Services\Admin\Cart\CartClearService;
-use App\Services\Admin\OrderUpdateService;
+use App\Services\Admin\Cart\CartProduct\CartProductService;
+use App\Services\Admin\Order\OrderProduct\OrderProductService;
 
 
 class StoreController extends Controller
 {
 
-    public function __construct(CartClearService $cartClearService)
+    private $cartProductService;
+    private $orderProductService;
+    public function __construct(CartProductService $cartProductService, OrderProductService $orderProductService)
     {
-        $this->cartClearService = $cartClearService;
+        $this->cartProductService = $cartProductService;
+        $this->orderProductService = $orderProductService;
     }
     public function __invoke(StoreRequest $request)
     {
@@ -32,10 +35,10 @@ class StoreController extends Controller
             'order_number' => $this->generateOrderNumber(5),
         ]);
 
-        $this->cartClearService->clearCart($userId);
+        $this->cartProductService->destroyAll($userId);
 
         if($request->filled('order_products')){
-            app(OrderUpdateService::class)->update($order, $data);
+            $this->orderProductService->update($order, $data);
         }
         return response()->json([
             'message' => 'Order created successfully',

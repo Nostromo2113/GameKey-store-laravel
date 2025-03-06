@@ -4,12 +4,13 @@ namespace App\Http\Controllers\Admin\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\Auth\RegistrationRequest;
-use App\Services\Admin\UserStoreService;
+use trash\UserService;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
 class RegistrationController extends Controller
 {
-    public function __construct(UserStoreService $userService)
+    private UserService $userService;
+    public function __construct(UserService $userService)
     {
         $this->userService = $userService;
     }
@@ -18,7 +19,7 @@ class RegistrationController extends Controller
     {
         $data = $request->validated();
         try {
-            $newUser = $this->userService->store($data);
+            $newUser = $this->userService->storeUser($data);
 
             $token = JWTAuth::fromUser($newUser);
 

@@ -2,19 +2,19 @@
 
 namespace App\Services\Admin;
 
-use App\Managers\ActivationKeyManager;
-use App\Managers\OrderProductManager;
 use App\Models\Order;
 use App\Models\Product;
+use App\Repositories\ActivationKeyRepository;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
+use trash\OrderProductManager;
 
-class OrderUpdateService
+class OrderService
 {
-    private ActivationKeyManager $keyManager;
+    private ActivationKeyRepository $keyManager;
     private OrderProductManager $orderProductManager;
 
-    public function __construct(ActivationKeyManager $keyManager, OrderProductManager $orderProductManager)
+    public function __construct(ActivationKeyRepository $keyManager, OrderProductManager $orderProductManager)
     {
         $this->keyManager = $keyManager;
         $this->orderProductManager = $orderProductManager;
@@ -54,8 +54,8 @@ class OrderUpdateService
             return $order;
         };
 
-        // Управление обновлением заказа.
-        // Проверка на статус и на выполнение транзакции
+        // Проверка на статус заказа
+        // Проверка на выполнение транзакции
         if(!$order->isCompleted()) {
             if ($isInTransaction) {
                 return $callback();

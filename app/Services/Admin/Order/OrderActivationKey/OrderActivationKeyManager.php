@@ -3,7 +3,7 @@
 namespace App\Services\Admin\Order\OrderActivationKey;
 
 use App\Models\ActivationKey;
-use App\Services\Admin\ActivationKey\ActivationKeyRepository;
+use App\Repositories\ActivationKeyRepository;
 use Illuminate\Support\Collection;
 
 class OrderActivationKeyManager
@@ -17,6 +17,7 @@ class OrderActivationKeyManager
 
     /**
      * Выбирает ключи активации для работы с заказом (привязка или удаление).
+     * Обращается в репозиторий за сырым запросом
      *
      * @param array $requestOrderProducts - данные из запроса
      * @param Collection $filteredOrderProducts - продукты, уже присутствующие в заказе
@@ -30,6 +31,7 @@ class OrderActivationKeyManager
 
     /**
      * Массово обновляет ключи активации в базе данных.
+     * Обращается в репозиторий за сырым запросом
      *
      * @param array $data - массив данных с обновляемыми ключами
      * @return void

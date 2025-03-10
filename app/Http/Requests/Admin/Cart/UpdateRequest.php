@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests\Admin\Order;
+namespace App\Http\Requests\Admin\Cart;
 
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -22,7 +22,9 @@ class UpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'order_products' => 'array|nullable',
+            'product_id' => 'required|integer',
+            'quantity' => 'integer',
+            'price' => 'integer',
         ];
     }
 }

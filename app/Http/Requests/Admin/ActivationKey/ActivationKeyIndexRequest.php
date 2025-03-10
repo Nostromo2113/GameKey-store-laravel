@@ -4,7 +4,7 @@ namespace App\Http\Requests\Admin\ActivationKey;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class IndexRequest extends FormRequest
+class ActivationKeyIndexRequest extends FormRequest
 {
     public function authorize()
     {
@@ -14,7 +14,7 @@ class IndexRequest extends FormRequest
     public function rules()
     {
         return [
-            'id' => 'required|integer',
+            'product_id' => 'integer|exists:products,id',
         ];
     }
 }

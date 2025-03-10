@@ -1,60 +1,44 @@
 <?php
 
-namespace App\Services\Admin;
+namespace App\Services\Admin\Order\OrderActivationKey;
 
 use App\Models\ActivationKey;
+use App\Repositories\ActivationKeyRepository;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\DB;
 
-class ActivationKeyManagerService
+class OrderActivationKeyManager
 {
+    private $activationKeyRepository;
+
+    public function __construct(ActivationKeyRepository $activationKeyRepository)
+    {
+        $this->activationKeyRepository = $activationKeyRepository;
+    }
 
     /**
      * Выбирает ключи активации для работы с заказом (привязка или удаление).
+     * Обращается в репозиторий за сырым запросом
      *
-     * @param Array $requestOrderProducts - данные из запроса
+     * @param array $requestOrderProducts - данные из запроса
      * @param Collection $filteredOrderProducts - продукты, уже присутствующие в заказе
      * @return Collection|null - отобранные ключи активации или null, если подходящих ключей нет
      */
     public function selectKeys(array $requestOrderProducts, Collection $products, Collection $existingOrderProducts): ?Collection
     {
-        try {
-            $bindings = [];
-            $sqlParts = [];
+        return $this->activationKeyRepository->selectKeys($requestOrderProducts, $products, $existingOrderProducts);
+    }
 
-            foreach ($requestOrderProducts as $requestOrderProduct) {
-                $existingOrderProduct = $existingOrderProducts->firstWhere('product_id', $requestOrderProduct['id']);
-                $orderProduct = $products->firstWhere('id', $requestOrderProduct['id']);
-                $requestQuantity = (int)$requestOrderProduct['quantity'];
-                if($existingOrderProduct) {
-                    $currentQuantity = $existingOrderProduct ? (int)$existingOrderProduct->activationKeys->count() : 0;
-                    $calcQuantity = $requestQuantity - $currentQuantity;
-                } else if($orderProduct) {
-                    $calcQuantity = $requestQuantity;
-                }
-                if ($calcQuantity !== 0) {
-                    $condition = $calcQuantity > 0
-                        ? "order_product_id IS NULL"
-                        : "order_product_id = ?";
-                    $sqlParts[] = "(SELECT * FROM activation_keys WHERE product_id = ? AND $condition LIMIT ?)";
-                    $bindings[] = $requestOrderProduct['id'];
-                    if ($calcQuantity < 0) {
-                        $bindings[] = $orderProduct->id;
-                    }
-                    $bindings[] = abs($calcQuantity);
-                }
-            }
 
-            if (!empty($sqlParts)) {
-                $sql = implode(' UNION ALL ', $sqlParts);
-                $activationKeys = DB::select($sql, $bindings);
-                return ActivationKey::hydrate($activationKeys);
-            }
-
-            return null;
-        } catch (\Exception $e) {
-            throw new \Exception("Ошибка при выборе ключей активации.");
-        }
+    /**
+     * Массово обновляет ключи активации в базе данных.
+     * Обращается в репозиторий за сырым запросом
+     *
+     * @param array $data - массив данных с обновляемыми ключами
+     * @return void
+     */
+    public function bindKeys(array $data): void
+    {
+        $this->activationKeyRepository->bindKeys($data);
     }
 
 
@@ -67,11 +51,25 @@ class ActivationKeyManagerService
     public function releaseKeys(array $orderProductIdsToRemove): void
     {
         try {
-            DB::table('activation_keys')
-                ->whereIn('order_product_id', $orderProductIdsToRemove)
+            ActivationKey::whereIn('order_product_id', $orderProductIdsToRemove)
                 ->update(['order_product_id' => null]);
         } catch (\Exception $e) {
             throw new \Exception("Ошибка при освобождении ключей активации: " . $e->getMessage());
+        }
+    }
+
+    /**
+     * Мягкое удаление ключей при завершеннии заказа.
+     *
+     * @param array $orderProductIds- ID продуктов для удаления
+     * @return void
+     */
+    public function softDeleteKeys($orderProductIds): void
+    {
+        try {
+            ActivationKey::whereIn('order_product_id', $orderProductIds)->delete();
+        } catch (\Exception $e) {
+            throw new \Exception('Ошибка при мягком удалении ключей активации: ' . $e->getMessage());
         }
     }
 
@@ -112,54 +110,6 @@ class ActivationKeyManagerService
             return $activationKeysToUpdate;
         } catch (\Exception $e) {
             throw new \Exception("Ошибка при подготовке ключей активации: " . $e->getMessage());
-        }
-    }
-
-
-    /**
-     * Массово обновляет ключи активации в базе данных.
-     *
-     * @param array $data - массив данных с обновляемыми ключами
-     * @return void
-     */
-    public function bindKeys(array $data): void
-    {
-        if (empty($data)) {
-            return;
-        }
-
-        try {
-            $keyIds = [];
-            $caseSql = 'CASE `id`';
-
-            $bindings = [];
-
-            foreach ($data as $group) {
-                foreach ($group as $item) {
-                    $keyIds[] = $item['activation_key_id'];
-                    $orderProductId = $item['order_product_id'] ?? null;
-
-                    $caseSql .= " WHEN ? THEN ?";
-
-                    $bindings[] = $item['activation_key_id'];
-                    $bindings[] = $orderProductId;
-                }
-            }
-
-            $caseSql .= ' END';
-            $keyIdsList = implode(',', array_fill(0, count($keyIds), '?')); // Используем плейсхолдеры для ID
-
-            $bindings = array_merge($bindings, $keyIds);
-
-            $sql = "
-                UPDATE `activation_keys`
-                SET `order_product_id` = {$caseSql}
-                WHERE `id` IN ({$keyIdsList});
-                    ";
-
-            DB::statement($sql, $bindings);
-        } catch (\Exception $e) {
-            throw new \Exception("Ошибка при обновлении привязки ключей активации: " . $e->getMessage());
         }
     }
 

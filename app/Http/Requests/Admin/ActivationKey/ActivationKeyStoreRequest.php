@@ -4,7 +4,7 @@ namespace App\Http\Requests\Admin\ActivationKey;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreRequest extends FormRequest
+class ActivationKeyStoreRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,9 +22,9 @@ class StoreRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'id' => 'required|integer|exists:products,id',
-            'key' => 'nullable|string|regex:/^[A-Z0-9]{5}-[A-Z0-9]{5}-[A-Z0-9]{5}$/|size:17|unique:activation_keys,key',
-
+            'activation_key' => 'array|required',
+            'activation_key.product_id' => 'required|integer|exists:products,id',
+            'activation_key.key' => 'nullable|string|regex:/^[A-Z0-9]{5}-[A-Z0-9]{5}-[A-Z0-9]{5}$/|size:17|unique:activation_keys,key',
         ];
     }
 }

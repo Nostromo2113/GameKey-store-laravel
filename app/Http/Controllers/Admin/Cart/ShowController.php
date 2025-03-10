@@ -3,17 +3,18 @@ namespace App\Http\Controllers\Admin\Cart;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Admin\CartResource;
+use App\Models\Cart;
 use App\Models\User;
+use Illuminate\Support\Facades\DB;
 
 class ShowController extends Controller
 {
-    public function __invoke(User $user)
+    public function __invoke(Cart $cart)
     {
-        if (!$user) {
-            return response()->json(['message' => 'User not found'], 404);
+        if (!$cart) {
+            return response()->json(['message' => 'Cart not found'], 404);
         }
-
-        $cart = $user->cart;
+        $cart->load('products');
         return response()->json(new CartResource($cart), 200);
     }
 }

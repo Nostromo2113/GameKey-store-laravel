@@ -22,11 +22,9 @@ class UpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'order_products' => 'array|nullable',
+            'order_products' => 'array|required',
             'order_products.*.id' => 'required|integer|exists:products,id',
-            'order_products.*.quantity' => '',
-            'order_products.*.activation_key_id' => '',
-            //'order_products.*.quantity' => 'integer|min:1',
+            'order_products.*.key' => 'nullable|string|regex:/^[A-Z0-9]{5}-[A-Z0-9]{5}-[A-Z0-9]{5}$/|size:17|unique:activation_keys,key',
         ];
     }
 }

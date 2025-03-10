@@ -12,10 +12,10 @@ class IndexController extends Controller
     public function __invoke(IndexRequest $request)
     {
         $data = $request->validated();
-        $id = $data['id'] ?? null;
+        $userId = $data['user_id'] ?? null;
         $orderNumber = $data['query'] ?? null;
-        if ($id) {
-            $user = User::find($id);
+        if ($userId) {
+            $user = User::find($userId);
             if (!$user) {
                 return response()->json(['message' => 'User not found'], 404);
             }

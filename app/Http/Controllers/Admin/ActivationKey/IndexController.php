@@ -3,22 +3,27 @@
 namespace App\Http\Controllers\Admin\ActivationKey;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Admin\Cart\IndexRequest;
-use App\Models\Cart;
+
+use App\Http\Requests\Admin\ActivationKey\ActivationKeyIndexRequest;
+use App\Http\Resources\Admin\ActivationKeyCollectionResource;
+use App\Models\ActivationKey;
 use App\Models\Product;
 
 class IndexController extends Controller
 {
-    public function __invoke(IndexRequest $request)
+    public function __invoke(ActivationKeyIndexRequest $request)
     {
         $data = $request->validated();
-        $product = Product::findOrFail($data['id']);
-
-        if (!$product) {
-            return response()->json(['error' => 'Product not found'], 404);
+        if (isset($data['product_id'])) {
+            $product = Product::with('activationKeys.product')->findOrFail($data['product_id']);
+            if (!$product) {
+                return response()->json(['error' => 'Product not found'], 404);
+            }
+            $keys = $product->activationKeys;
+        } else {
+            $keys = ActivationKey::with('product')->get();
         }
-
-        $keys = $product->activationKeys;
+        $keys = ActivationKeyCollectionResource::collection($keys);
 
         return response()->json($keys, 200);
     }

@@ -19,11 +19,12 @@ class IndexController extends Controller
             if (!$product) {
                 return response()->json(['error' => 'Product not found'], 404);
             }
-            $keys = $product->activationKeys;
+            $keys = $product->activationKeys()->paginate(15);
+            $keys = new ActivationKeyCollectionResource($keys);
         } else {
-            $keys = ActivationKey::with('product')->get();
+            $keys = ActivationKey::with('product')->paginate(15);
         }
-        $keys = ActivationKeyCollectionResource::collection($keys);
+        $keys = new ActivationKeyCollectionResource($keys);
 
         return response()->json($keys, 200);
     }

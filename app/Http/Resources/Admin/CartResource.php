@@ -17,7 +17,9 @@ class CartResource extends JsonResource
         return [
             'id' => $this->id,
             'user_id' => $this->user_id,
-            'total_price' => $this->total_price,
+            'total_price' => $this->products->reduce(function ($sum, $product) {
+                return $sum + ($product->price *  $product->pivot->quantity);
+            }, 0),
             'products' => $this->products->map(function ($product) {
                 return [
                     'id' => $product->id,
@@ -28,7 +30,7 @@ class CartResource extends JsonResource
                     'price' => $product->price,
                     'total_price' => $product->pivot->price,
                     'quantity_cart' => $product->pivot->quantity,
-                    'quantity_store' => $product->activationKeys()->where('order_product_id', null)->count(),
+                    'quantity_store' => $product->activationKeys->where('order_product_id', null)->count(),
                 ];
             })
         ];

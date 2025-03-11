@@ -14,7 +14,7 @@ class ShowController extends Controller
         if (!$cart) {
             return response()->json(['message' => 'Cart not found'], 404);
         }
-        $cart->load('products');
+        $cart->load('products.activationKeys');
         return response()->json(new CartResource($cart), 200);
     }
 }

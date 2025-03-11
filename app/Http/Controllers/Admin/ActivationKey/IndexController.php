@@ -20,7 +20,6 @@ class IndexController extends Controller
                 return response()->json(['error' => 'Product not found'], 404);
             }
             $keys = $product->activationKeys()->paginate(15);
-            $keys = new ActivationKeyCollectionResource($keys);
         } else {
             $keys = ActivationKey::with('product')->paginate(15);
         }

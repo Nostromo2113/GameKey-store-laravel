@@ -24,7 +24,7 @@ class UpdateRequest extends FormRequest
         return [
             'order_products' => 'array|required',
             'order_products.*.id' => 'required|integer|exists:products,id',
-            'order_products.*.key' => 'nullable|string|regex:/^[A-Z0-9]{5}-[A-Z0-9]{5}-[A-Z0-9]{5}$/|size:17|unique:activation_keys,key',
+            'order_products.*.quantity' => 'required|integer',
         ];
     }
 }

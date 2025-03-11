@@ -53,7 +53,7 @@ class ActivationKeyRepository
 
             return null;
         } catch (\Exception $e) {
-            throw new \Exception("Ошибка при выборе ключей активации.");
+            throw new \Exception("Ошибка при выборе ключей активации: " . $e->getMessage());
         }
     }
 

@@ -11,12 +11,14 @@ class ActivationKeyCollectionResource extends ResourceCollection
     {
         return [
             'data' => ActivationKeyResource::collection($this->collection),
-            'current_page' => $this->resource->currentPage(),
-            'last_page' => $this->resource->lastPage(),
-            'per_page' => $this->resource->perPage(),
-            'total' => $this->resource->total(),
-            'next_page_url' => $this->resource->nextPageUrl(),
-            'prev_page_url' => $this->resource->previousPageUrl(),
+            'meta' => [
+                'current_page' => $this->currentPage(),
+                'last_page' => $this->lastPage(),
+                'per_page' => $this->perPage(),
+                'total' => $this->total(),
+                'next_page_url' => $this->nextPageUrl(),
+                'prev_page_url' => $this->previousPageUrl(),
+            ],
         ];
     }
 }

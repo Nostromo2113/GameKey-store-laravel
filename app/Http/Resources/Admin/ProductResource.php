@@ -22,12 +22,12 @@ class ProductResource extends JsonResource
             'release_date' => $this->release_date,
             'preview_image' => $this->preview_image,
             'price' => $this->price,
-            'amount' => $this->activationKeys->count(),
+            'amount' => $this->activationKeys->whereNull('order_product_id')->count(),
             'category' => $this->category,
             'technical_requirements' => $this->technicalRequirements,
             'genres' => $this->genres,
             'is_published' => $this->is_published,
-            'activation_keys' => $this->activationKeys
+            'activation_keys' => $this->activationKeys,
         ];
     }
 }

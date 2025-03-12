@@ -40,7 +40,7 @@ class OrderResource extends JsonResource
                         ? $orderProduct->activationKeys()->withTrashed()->get()->map(function ($key) {
                             return [
                                 'key' => $key->key,
-                                'deleted_at' => $key->deleted_at,
+                                'deleted_at' => $key->deleted_at, // Показываем, что ключ удален
                             ];
                         })
                         : $orderProduct->activationKeys->map(function ($key) {

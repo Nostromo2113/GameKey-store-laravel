@@ -21,7 +21,7 @@ class IndexController extends Controller
             }
             $keys = $product->activationKeys()->paginate(15);
         } else {
-            $keys = ActivationKey::with('product')->paginate(15);
+            $keys = ActivationKey::with('product')->paginate(20);
         }
         $keys = new ActivationKeyCollectionResource($keys);
 

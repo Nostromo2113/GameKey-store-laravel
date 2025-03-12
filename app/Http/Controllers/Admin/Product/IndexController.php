@@ -3,25 +3,24 @@
 namespace App\Http\Controllers\Admin\Product;
 
 use App\Http\Controllers\Controller;
+use App\Http\Filters\Product\ProductFilter;
+use App\Http\Requests\Admin\Product\FilterRequest;
 use App\Http\Requests\Admin\Product\IndexRequest;
 use App\Http\Resources\Admin\ProductCollectionResource;
 use App\Models\Product;
 
 class IndexController extends Controller
 {
-    public function __invoke(IndexRequest $request)
+
+    public function __invoke(FilterRequest $filterRequest)
     {
-        $data = $request->validated();
+        $data = $filterRequest->validated();
+        $filter = app()->make(ProductFilter::class, [ 'queryParams' => array_filter($data, fn($value) => $value !== null && $value !== '')]);
+        $productsQuery = Product::filter($filter);
 
-        $productsQuery = Product::query()
-            ->with(['activationKeys']); // Предзагрузка связанных ключей
 
-        if (isset($data['query'])) {
-            $productsQuery->where('title', 'like', '%' . $data['query'] . '%');
-        }
+        $products = $productsQuery->paginate(8);
 
-        $products = $productsQuery->get(); // Выполнение запроса
-
-        return ProductCollectionResource::collection($products);
+        return new ProductCollectionResource($products);
     }
 }

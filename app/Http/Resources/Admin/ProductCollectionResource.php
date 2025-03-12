@@ -4,8 +4,9 @@ namespace App\Http\Resources\Admin;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Http\Resources\Json\ResourceCollection;
 
-class ProductCollectionResource extends JsonResource
+class ProductCollectionResource extends ResourceCollection
 {
     /**
      * Transform the resource into an array.
@@ -15,19 +16,13 @@ class ProductCollectionResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-            'id' => $this->id,
-            'title' => $this->title,
-            'description' => $this->description,
-            'publisher' => $this->publisher,
-            'release_date' => $this->release_date,
-            'preview_image' => $this->preview_image,
-            'price' => $this->price,
-            'amount' => $this->activationKeys->whereNull('order_product_id')->count(),
-            'category' => $this->category,
-            'technical_requirements' => $this->technicalRequirements,
-            'genres' => $this->genres,
-            'is_published' => $this->is_published,
-            'activation_keys' => $this->activationKeys
+            'data' => ProductResource::collection($this->collection),
+            'current_page' => $this->resource->currentPage(),
+            'last_page' => $this->resource->lastPage(),
+            'per_page' => $this->resource->perPage(),
+            'total' => $this->resource->total(),
+            'next_page_url' => $this->resource->nextPageUrl(),
+            'prev_page_url' => $this->resource->previousPageUrl(),
         ];
     }
 }

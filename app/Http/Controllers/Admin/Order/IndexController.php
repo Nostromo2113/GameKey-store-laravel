@@ -3,31 +3,33 @@
 namespace App\Http\Controllers\Admin\Order;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Admin\Order\IndexRequest;
+use App\Http\Filters\Order\OrderFilter;
+use App\Http\Requests\Admin\Order\FilterRequest;
 use App\Models\Order;
-use App\Models\User;
+use App\Services\Admin\Order\OrderService;
 
 class IndexController extends Controller
 {
-    public function __invoke(IndexRequest $request)
-    {
-        $data = $request->validated();
-        $userId = $data['user_id'] ?? null;
-        $orderNumber = $data['query'] ?? null;
-        if ($userId) {
-            $user = User::find($userId);
-            if (!$user) {
-                return response()->json(['message' => 'User not found'], 404);
-            }
-            $orders = $user->orders;
-            return response()->json($orders);
-        } else if ($orderNumber) {
-            $selectedOrder = Order::where('order_number', '=', $orderNumber)->get();
-            if ($selectedOrder->isEmpty()) {
-                return response()->json(['message' => 'Order not found'], 404);
-            }
+    private $orderService;
 
-            return response()->json($selectedOrder);
+    public function __construct(OrderService $orderService)
+    {
+        $this->orderService = $orderService;
+    }
+
+    public function __invoke(FilterRequest $filterRequest)
+    {
+        $data = $filterRequest->validated();
+        $orderNumber = $data['order_number'] ?? null;
+
+        if ($orderNumber) {
+
+            $filter = app()->make(OrderFilter::class, ['queryParams' => array_filter($data, fn($value) => $value !== null && $value !== '')]);
+
+            $orderByOrderNumber = Order::filter($filter)->get();
+
+            return response()->json($orderByOrderNumber);
+
         } else {
             return response()->json(Order::all());
         }

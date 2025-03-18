@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests\Admin\Product;
+namespace App\Http\Requests\Admin\Order;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class IndexRequest extends FormRequest
+class FilterRequest extends FormRequest
 {
     public function authorize()
     {
@@ -14,7 +14,8 @@ class IndexRequest extends FormRequest
     public function rules()
     {
         return [
-            'query' => 'nullable|string'
+            'user_id' => 'nullable|integer|exists:users,id',
+            'order_number' => 'nullable|integer'
         ];
     }
 }

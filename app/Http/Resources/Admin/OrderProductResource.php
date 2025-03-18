@@ -5,7 +5,7 @@ namespace App\Http\Resources\Admin;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class OrderResource extends JsonResource
+class OrderProductResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -22,7 +22,7 @@ class OrderResource extends JsonResource
             'status' => $this->status,
             'user' => $this->user,
             'order_date' => $this->created_at,
-            'products' => $this->OrderProducts->map(function ($orderProduct) {
+            'order_products' => $this->OrderProducts->map(function ($orderProduct) {
                 $product = $orderProduct->product;
                 return [
                     'id' => $product->id,

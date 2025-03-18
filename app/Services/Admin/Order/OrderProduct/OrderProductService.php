@@ -40,9 +40,15 @@ class OrderProductService
      */
     public function update(Order $order, array $data, bool $isInTransaction = false): Order
     {
-        // Логика внутри callback, будет выполняться в транзакции
-        $callback = function () use ($order, $data) {
+        if(isset($data['order_products'])) {
             $requestedProducts = $data['order_products'];
+        } else {
+            throw new \Exception('Нет данных для обновления продуктов заказа');
+        }
+
+
+        // Логика внутри callback, будет выполняться в транзакции
+        $callback = function () use ($order, $data, $requestedProducts) {
             $requestedProductIds = array_column($requestedProducts, 'id');
 
             $existingProducts = $order->orderProducts()->whereIn('product_id', $requestedProductIds)->get();

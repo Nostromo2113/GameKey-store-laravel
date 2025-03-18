@@ -10,6 +10,7 @@ use App\Services\Admin\Cart\CartProduct\CartProductService;
 class StoreController extends Controller
 {
     private $cartProductService;
+
     public function __construct(CartProductService $cartProductService)
     {
         $this->cartProductService = $cartProductService;
@@ -19,11 +20,11 @@ class StoreController extends Controller
     public function __invoke(Cart $cart, UpdateRequest $request)
     {
         $data = $request->validated();
-            $result = $this->cartProductService->store($data, $cart);
+        $result = $this->cartProductService->store($data, $cart);
 
-            return response()->json([
-                'message' => $result['message'],
-                'cart' => $result['cart'] ?? null,
-            ], $result['success'] ? 200 : 400);
+        return response()->json([
+            'message' => $result['message'],
+            'cart' => $result['cart'] ?? null,
+        ], $result['success'] ? 200 : 400);
     }
 }

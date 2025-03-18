@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests\Admin\Order;
+namespace App\Http\Requests\Admin\Order\OrderProduct;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreRequest extends FormRequest
+class UpdateRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,10 +22,9 @@ class StoreRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'user_id' => 'required|integer|exists:users,id',
-            'order_products' => 'array|nullable',
-            'order_products.*.id' => 'integer|exists:products,id',
-            'order_products.*.quantity' => 'nullable|integer|min:1',
+            'order_products' => 'array|required',
+            'order_products.*.id' => 'required|integer|exists:products,id',
+            'order_products.*.quantity' => 'required|integer',
         ];
     }
 }

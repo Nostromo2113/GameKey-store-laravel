@@ -15,9 +15,10 @@ class IndexController extends Controller
     public function __invoke(FilterRequest $filterRequest)
     {
         $data = $filterRequest->validated();
-        $filter = app()->make(ProductFilter::class, [ 'queryParams' => array_filter($data, fn($value) => $value !== null && $value !== '')]);
-        $productsQuery = Product::filter($filter);
 
+        $filter = app()->make(ProductFilter::class, [ 'queryParams' => array_filter($data, fn($value) => $value !== null && $value !== '')]);
+
+        $productsQuery = Product::filter($filter);
 
         $products = $productsQuery->paginate(8);
 

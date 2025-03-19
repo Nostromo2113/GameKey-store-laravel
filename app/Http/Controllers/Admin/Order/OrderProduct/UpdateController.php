@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Admin\Order\OrderProduct;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\Order\OrderProduct\UpdateRequest;
-use App\Http\Resources\Admin\OrderProductResource;
 use App\Models\Order;
 use App\Services\Admin\Order\OrderProduct\OrderProductService;
 use Illuminate\Http\JsonResponse;
@@ -32,7 +31,7 @@ class UpdateController extends Controller
 
         return response()->json([
             'message' => 'Заказ успешно обновлен.',
-            'order' => new OrderProductResource($updatedOrder),
+            'order' => new \App\Http\Resources\Admin\Order\OrderShowResource($updatedOrder),
         ]);
     }
 }

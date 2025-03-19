@@ -14,29 +14,26 @@ class UpdateRequest extends FormRequest
     public function rules()
     {
         return [
-            'id' => 'required|integer|exists:products,id',
-            'title' => 'required|string|max:255',
-            'description' => 'required|string',
-            'publisher' => 'required|string|max:255',
-            'release_date' => 'required|date',
-            'file' => 'nullable|image',
-            'price' => 'required|numeric|min:0',
-            'amount' => 'required|integer|min:0',
-            'is_published' => 'required|boolean',
-            'category' => 'required|exists:categories,id',
-            'genres' => 'array|nullable',
-            'genres.*' => 'exists:genres,id',
-            'technical_requirements' => 'array|nullable',
-            'technical_requirements.product_id' => 'required|exists:products,id',
-            'technical_requirements.id' => 'required|exists:technical_requirements,id',
-            'technical_requirements.platform' => 'required|string',
-            'technical_requirements.os' => 'required|string',
-            'technical_requirements.cpu' => 'required|string',
-            'technical_requirements.gpu' => 'required|string',
-            'technical_requirements.ram' => 'required|integer',
-            'technical_requirements.storage' => 'required|integer',
+            'product' => 'required|array',
 
+            'product.title' => 'required|string|max:255',
+            'product.description' => 'required|string',
+            'product.publisher' => 'required|string|max:255',
+            'product.release_date' => 'required|date',
+            'product.file' => 'nullable|image',
+            'product.price' => 'required|numeric|min:0',
+            'product.is_published' => 'required|boolean',
+            'product.category' => 'required|exists:categories,id',
+            'product.genres' => 'array|nullable',
+            'product.genres.*' => 'exists:genres,id',
 
+            'product.technical_requirements' => 'array|nullable',
+            'product.technical_requirements.platform' => 'required|string',
+            'product.technical_requirements.os' => 'required|string',
+            'product.technical_requirements.cpu' => 'required|string',
+            'product.technical_requirements.gpu' => 'required|string',
+            'product.technical_requirements.ram' => 'required|integer',
+            'product.technical_requirements.storage' => 'required|integer',
         ];
     }
 }

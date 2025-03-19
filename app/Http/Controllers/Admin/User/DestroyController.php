@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Admin\User;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Services\Admin\User\UserService;
-use Illuminate\Support\Facades\Storage;
 
 class DestroyController extends Controller
 {

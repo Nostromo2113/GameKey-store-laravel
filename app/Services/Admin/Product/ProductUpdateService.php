@@ -16,7 +16,7 @@ class ProductUpdateService
 
         $this->syncGenresForProduct($product, $data);
 
-        $this->updateProductTechnicalRequirements($data);
+        $this->updateProductTechnicalRequirements($product, $data);
 
         return $product;
     }
@@ -32,7 +32,7 @@ class ProductUpdateService
                 'release_date' => $data['release_date'],
                 'preview_image' => $file,
                 'price' => $data['price'],
-                'amount' => $data['amount'],
+                'amount' => 1,
                 'category_id' => $data['category'],
                 'is_published' => $data['is_published'],
             ])->save();
@@ -81,11 +81,11 @@ class ProductUpdateService
     }
 
 
-    private function updateProductTechnicalRequirements($data): void
+    private function updateProductTechnicalRequirements(Product $product, $data): void
     {
         if (isset($data['technical_requirements'])) {
             try {
-                $technicalRequirements = TechnicalRequirement::findOrFail($data['technical_requirements']['id']);
+                $technicalRequirements = $product->technicalRequirements;
                 $technicalRequirements->update($data['technical_requirements']);
             } catch (\Exception $e) {
                 throw new \Exception('Ошибка при обновлении тех. требований продукта: ' . $e->getMessage());

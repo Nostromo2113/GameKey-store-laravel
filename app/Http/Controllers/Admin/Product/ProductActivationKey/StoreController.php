@@ -1,0 +1,24 @@
+<?php
+
+namespace App\Http\Controllers\Admin\Product\ProductActivationKey;
+
+use App\Http\Controllers\Controller;
+use App\Http\Requests\Admin\Product\ProductActivationKey\StoreRequest;
+use App\Models\Product;
+
+class StoreController extends Controller
+{
+    public function __invoke(Product $product, StoreRequest $request)
+    {
+        $data = $request->validated()['activation_key'];
+
+        $key = $product->activationKeys()->create([
+            'key' => $data['key'],
+        ]);
+
+        return response()->json([
+            'message' => 'Activation key created successfully',
+            'data' => $key
+        ], 201);
+    }
+}

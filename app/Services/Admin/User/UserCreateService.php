@@ -4,11 +4,19 @@ namespace App\Services\Admin\User;
 
 use App\Mail\UserRegistered;
 use App\Models\User;
+use App\Services\Admin\User\UserCart\CartService;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 
 class UserCreateService
 {
+
+    private $cartService;
+
+    public function __construct(CartService $cartService)
+    {
+        $this->cartService = $cartService;
+    }
 
     /**
      * Создает нового пользователя в базе данных.
@@ -33,6 +41,8 @@ class UserCreateService
             'address' => $data['address'],
             'avatar' => $avatar,
         ]);
+
+        $this->cartService->store($newUser);
 
 //          if(!isset($data['password'])) {
 //              $this->sendEmail($newUser, $password);

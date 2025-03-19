@@ -38,7 +38,7 @@ class CartProductCreateService
                 ];
             }
         } catch (\Exception $e) {
-            throw new $e;
+            throw new \Exception('Ошибка при добавлении продукта в заказ: ' . $e->getMessage());
         }
     }
 }

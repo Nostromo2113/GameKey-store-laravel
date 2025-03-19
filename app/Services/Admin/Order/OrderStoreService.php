@@ -33,7 +33,7 @@ class OrderStoreService
         //Очистка корзины
         $this->cartProductService->destroyAll($userId);
 
-        if($data['order_products'] && count($data['order_products']) > 0){
+        if(isset($data['order_products']) && count($data['order_products']) > 0){
             $this->orderProductService->update($order, $data);
         }
 

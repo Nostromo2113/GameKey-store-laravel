@@ -4,29 +4,27 @@ namespace App\Http\Controllers\Admin\Order;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\Order\UpdateRequest;
-use App\Http\Resources\Admin\OrderProductResource;
+use App\Http\Resources\Admin\Order\OrderShowResource;
 use App\Models\Order;
-use App\Services\Admin\Order\OrderService;
+use App\Services\Admin\Order\OrderUpdateService;
 
 class UpdateController extends Controller
 {
-    private $orderService;
-    public function __construct(OrderService $orderService)
-    {
-        $this->orderService = $orderService;
-    }
+    private $orderUpdateService;
 
+    public function __construct(OrderUpdateService $orderUpdateService)
+    {
+        $this->orderUpdateService = $orderUpdateService;
+    }
 
     public function __invoke(Order $order, UpdateRequest $request)
     {
         $data = $request->validated();
-
-        $order = $this->orderService->update($order, $data);
-        $order->load('orderProducts', 'orderProducts.activationKeys');
+        $order = $this->orderUpdateService->update($order, $data);
 
         return response()->json([
-            'data' => new OrderProductResource($order),
-            'message' => 'Статус заказа успешно обновлен'
+            'message' => 'Статус заказа изменен',
+            'data' => new OrderShowResource($order)
         ]);
     }
 }

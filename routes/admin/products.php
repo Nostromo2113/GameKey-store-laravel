@@ -13,7 +13,7 @@ use App\Http\Controllers\Admin\Product\{
 
 // ProductActivationKey
 use App\Http\Controllers\Admin\Product\ProductActivationKey\{
-  StoreController as ProductActivationKeyIndexController,
+  IndexController as ProductActivationKeyIndexController,
   StoreController as ProductActivationKeyStoreController,
   DestroyController as ProductActivationKeyDestroyController
 };

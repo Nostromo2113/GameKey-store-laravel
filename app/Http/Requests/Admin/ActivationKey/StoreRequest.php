@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests\Admin\Product\ProductActivationKey;
+namespace App\Http\Requests\Admin\ActivationKey;
 
 use Illuminate\Foundation\Http\FormRequest;
 

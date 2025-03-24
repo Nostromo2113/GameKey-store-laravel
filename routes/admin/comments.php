@@ -2,11 +2,13 @@
 
 use Illuminate\Support\Facades\Route;
 
-use App\Http\Controllers\Admin\Comment\IndexController;
-use App\Http\Controllers\Admin\Comment\StoreController;
-use App\Http\Controllers\Admin\Comment\ShowController;
-use App\Http\Controllers\Admin\Comment\UpdateController;
-use App\Http\Controllers\Admin\Comment\DestroyController;
+use App\Http\Controllers\Admin\Comment\{
+    IndexController,
+    ShowController,
+    StoreController,
+    UpdateController,
+    DestroyController
+};
 
 Route::group(['prefix' => 'comments'], function () {
     Route::get('/', IndexController::class);

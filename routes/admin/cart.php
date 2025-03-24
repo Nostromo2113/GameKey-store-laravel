@@ -1,10 +1,17 @@
 <?php
 
-use App\Http\Controllers\Admin\Cart\IndexController;
-use App\Http\Controllers\Admin\Cart\CartProduct\StoreController;
-use App\Http\Controllers\Admin\Cart\CartProduct\UpdateController;
-use App\Http\Controllers\Admin\Cart\CartProduct\DestroyController;
 use Illuminate\Support\Facades\Route;
+
+//  Cart
+use App\Http\Controllers\Admin\Cart\IndexController;
+
+//CartProduct
+use App\Http\Controllers\Admin\Cart\CartProduct\{
+    StoreController,
+    UpdateController,
+    DestroyController
+};
+
 
 Route::prefix('cart')->group(function () {
     // Корзина

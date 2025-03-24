@@ -4,7 +4,7 @@ namespace App\Services\Admin\User;
 
 use App\Mail\UserRegistered;
 use App\Models\User;
-use App\Services\Admin\User\UserCart\CartService;
+use App\Services\Admin\Cart\CartService;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 

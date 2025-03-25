@@ -13,7 +13,6 @@ class CartStoreService
             $userId = $user['id'];
             $cart = Cart::create([
                 'user_id' => $userId,
-                'total_price' => 0
             ]);
             return $cart;
         } catch (\Exception $e) {

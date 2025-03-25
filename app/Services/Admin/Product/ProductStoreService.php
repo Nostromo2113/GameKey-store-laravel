@@ -15,8 +15,6 @@ class ProductStoreService
 
                 $genres = $data['genres'];
 
-                $data['technical_requirements']['is_recommended'] = 1; //Свойство необходимо будет удалить. Рудимент
-
                 $file = $this->writeFile($data);
 
 
@@ -29,7 +27,6 @@ class ProductStoreService
                     'price' => $data['price'],
                     'category_id' => $categoryId,
                     'is_published' => $data['is_published'],
-                    'amount' => 1 //Свойство необходимо будет удалить. Рудимент
                 ]);
 
                 $data['technical_requirements']['product_id'] = $product['id'];

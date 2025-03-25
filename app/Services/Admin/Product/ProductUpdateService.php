@@ -32,7 +32,6 @@ class ProductUpdateService
                 'release_date' => $data['release_date'],
                 'preview_image' => $file,
                 'price' => $data['price'],
-                'amount' => 1,
                 'category_id' => $data['category'],
                 'is_published' => $data['is_published'],
             ])->save();

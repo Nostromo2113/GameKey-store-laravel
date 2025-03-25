@@ -28,7 +28,6 @@ class UserCartResource extends JsonResource
                     'release_date' => $product->release_date,
                     'preview_image' => $product->preview_image,
                     'price' => $product->price,
-                    'total_price' => $product->pivot->price,
                     'quantity_cart' => $product->pivot->quantity,
                     'quantity_store' => $product->activationKeys->where('order_product_id', null)->count(),
                 ];

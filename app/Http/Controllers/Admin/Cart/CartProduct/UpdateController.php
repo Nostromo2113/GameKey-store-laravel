@@ -12,6 +12,7 @@ use App\Services\Admin\Cart\CartProduct\CartProductService;
 class UpdateController extends Controller
 {
     private $cartProductService;
+
     public function __construct(CartProductService $cartProductService)
     {
         $this->cartProductService = $cartProductService;
@@ -20,10 +21,12 @@ class UpdateController extends Controller
     public function __invoke(UpdateRequest $request, Cart $cart, Product $product)
     {
         $data = $request->validated();
-            $cart = $this->cartProductService->update($data['product'], $cart, $product);
-            return response()->json([
-                'data' => new UserCartResource($cart),
-                'message' => 'Продукт в корзине успешно обновлен'
-            ], 200);
+
+        $cart = $this->cartProductService->update($data['product'], $cart, $product);
+
+        return response()->json([
+            'data' => new UserCartResource($cart),
+            'message' => 'Продукт в корзине успешно обновлен'
+        ], 200);
     }
 }

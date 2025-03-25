@@ -13,17 +13,20 @@ return new class extends Migration
     {
         Schema::create('cart_products', function (Blueprint $table) {
             $table->id();
-            $table->timestamps();
+
+            //  Product relation
             $table->unsignedBigInteger('product_id');
+            $table->index('product_id', 'cart_product_product_idx');
             $table->foreign('product_id', 'cart_product_product_fk')->references('id')->on('products')->onDelete('cascade');
+
+            //  Cart relation
             $table->unsignedBigInteger('cart_id');
+            $table->index('cart_id', 'cart_product_cart_idx');
             $table->foreign('cart_id', 'cart_product_cart_fk')->references('id')->on('carts')->onDelete('cascade');
 
-            // Количество заказанного продукта
             $table->integer('quantity');
 
-            // Цена продукта на момент заказа
-            $table->decimal('price', 10, 2);
+            $table->timestamps();
         });
     }
 

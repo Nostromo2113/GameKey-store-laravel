@@ -24,7 +24,6 @@ class OrderStoreService
 
         $order = Order::create([
             'user_id' => $userId,
-            'total_price' => 0,
             'status' => 'pending',
             'order_number' => $this->generateOrderNumber(5),
         ]);

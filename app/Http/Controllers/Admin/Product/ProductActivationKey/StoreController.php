@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin\Product\ProductActivationKey;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\ActivationKey\StoreRequest;
+use App\Http\Resources\Admin\Product\ActivationKeyProduct\ProductActivationKeyResource;
 use App\Models\Product;
 
 class StoreController extends Controller
@@ -18,7 +19,7 @@ class StoreController extends Controller
 
         return response()->json([
             'message' => 'Activation key created successfully',
-            'data' => $key
+            'data' => new ProductActivationKeyResource($key)
         ], 201);
     }
 }

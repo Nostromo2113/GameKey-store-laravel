@@ -19,7 +19,6 @@ return new class extends Migration
             $table->string('gpu');
             $table->integer('ram');
             $table->integer('storage');
-            $table->boolean('is_recommended');
 
             $table->unsignedBigInteger('product_id');
             $table->index('product_id', 'technical_requirements_product_idx');

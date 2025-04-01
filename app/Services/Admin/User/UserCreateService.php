@@ -4,11 +4,20 @@ namespace App\Services\Admin\User;
 
 use App\Mail\UserRegistered;
 use App\Models\User;
+use App\Services\Admin\Cart\CartService;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 
 class UserCreateService
 {
+
+    private $cartService;
+
+    public function __construct(CartService $cartService)
+    {
+        $this->cartService = $cartService;
+    }
 
     /**
      * Создает нового пользователя в базе данных.
@@ -18,26 +27,37 @@ class UserCreateService
      */
     public function createUser(array $data): User
     {
-        $avatar = 'uploads/users/avatars/default_avatar.jpg';
+        DB::beginTransaction();
 
-        $password = Hash::make(isset($data['password']) ? $data['password'] : $this->genPassword(6));
+        try {
+            $avatar = 'uploads/users/avatars/default_avatar.jpg';
+            $password = Hash::make(isset($data['password']) ? $data['password'] : $this->genPassword(6));
 
-        $newUser = User::create([
-            'name' => $data['name'],
-            'email' => $data['email'],
-            'phone_number' => $data['phone'],
-            'password' => $password,
-            'surname' => $data['surname'],
-            'patronymic' => $data['patronymic'],
-            'age' => $data['age'],
-            'address' => $data['address'],
-            'avatar' => $avatar,
-        ]);
+            $newUser = User::create([
+                'name' => $data['name'],
+                'email' => $data['email'],
+                'phone_number' => $data['phone_number'],
+                'password' => $password,
+                'surname' => $data['surname'],
+                'patronymic' => $data['patronymic'],
+                'age' => $data['age'],
+                'address' => $data['address'],
+                'avatar' => $avatar,
+            ]);
 
-//          if(!isset($data['password'])) {
-//              $this->sendEmail($newUser, $password);
-//          }
-        return $newUser;
+            $this->cartService->store($newUser);
+
+            if (!isset($data['password'])) {
+                $this->sendEmail($newUser, $password);
+            }
+
+            DB::commit();
+
+            return $newUser;
+        } catch (\Exception $e) {
+            DB::rollBack();
+            throw new \Exception('Ошибка при создании пользователя: ' . $e->getMessage());
+        }
     }
 
 

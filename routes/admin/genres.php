@@ -2,11 +2,13 @@
 
 use Illuminate\Support\Facades\Route;
 
-use App\Http\Controllers\Admin\Genre\IndexController;
-use App\Http\Controllers\Admin\Genre\StoreController;
-use App\Http\Controllers\Admin\Genre\ShowController;
-use App\Http\Controllers\Admin\Genre\UpdateController;
-use App\Http\Controllers\Admin\Genre\DestroyController;
+use App\Http\Controllers\Admin\Genre\{
+  IndexController,
+  StoreController,
+  ShowController,
+  UpdateController,
+  DestroyController
+};
 
 Route::group(['prefix' => 'genres'], function () {
     Route::get('/', IndexController::class);

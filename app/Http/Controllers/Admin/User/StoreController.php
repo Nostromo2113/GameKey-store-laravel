@@ -21,7 +21,7 @@ class StoreController extends Controller
     {
         $data = $request->validated();
 
-        $newUser = $this->userService->store($data);
+        $newUser = $this->userService->store($data['user']);
 
         $token = JWTAuth::fromUser($newUser);
 

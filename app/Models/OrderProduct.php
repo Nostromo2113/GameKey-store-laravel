@@ -16,19 +16,10 @@ class OrderProduct extends Model
     {
         return $this->hasMany(
             ActivationKey::class,
-            'order_product_id' // Пивот-таблица         // Внешниий ключ для получения activation key из пивот         // Для получения модели ключа
+            'order_product_id'
         );
     }
 
-//    public function activationKeys()
-//    {
-//        return $this->belongsToMany(
-//            ActivationKey::class,
-//            'order_products_activation_keys', // Пивот-таблица
-//            'order_product_id',              // Внешниий ключ для получения activation key из пивот
-//            'activation_key_id'              // Для получения модели ключа
-//        );
-//    }
 
     public function product()
     {

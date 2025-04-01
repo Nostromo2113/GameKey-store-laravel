@@ -1,11 +1,7 @@
 <?php
 
-use App\Http\Controllers\Admin\Auth\PasswordUpdateController;
-use App\Http\Controllers\Admin\Auth\PasswordResetController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\AuthController;
-use App\Http\Controllers\Admin\Auth\RegistrationController;
 
 
 Route::get('/user', function (Request $request) {
@@ -13,43 +9,29 @@ Route::get('/user', function (Request $request) {
 })->middleware('auth:sanctum');
 
 
-
-
 Route::group(['prefix' => 'admin'], function () {
 
-    //categories
-    require base_path('routes/admin/categories.php');
-    //genres
-    require base_path('routes/admin/genres.php');
-    //users
-    require base_path('routes/admin/users.php');
-    //products
-    require base_path('routes/admin/products.php');
-    //comments
-    require base_path('routes/admin/comments.php');
-    //activation keys
-    require base_path('routes/admin/activationKeys.php');
-    //cart
-    require base_path('routes/admin/cart.php');
-    //orders
-    require base_path('routes/admin/orders.php');
+    //  auth
+    require base_path('routes/admin/auth.php');
 
-    Route::group([
-        'middleware' => 'api',
-        'prefix' => 'auth'
-    ], function () {
-        Route::post('login', [AuthController::class, 'login']);
-        Route::post('logout', [AuthController::class, 'logout']);
-        Route::post('refresh', [AuthController::class, 'refresh']);
-        Route::post('me', [AuthController::class, 'me']);
-
+    Route::middleware('auth:api')->group(function () {
+        //  categories
+        require base_path('routes/admin/categories.php');
+        //  genres
+        require base_path('routes/admin/genres.php');
+        //  users
+        require base_path('routes/admin/users.php');
+        //  products
+        require base_path('routes/admin/products.php');
+        //  comments
+        require base_path('routes/admin/comments.php');
+        //  activation keys
+        require base_path('routes/admin/activationKeys.php');
+        //  cart
+        require base_path('routes/admin/cart.php');
+        //  orders
+        require base_path('routes/admin/orders.php');
     });
-    Route::group(['prefix' => 'password'], function() {
-        Route::post('reset', [PasswordResetController::class, 'sendResetPasswordMail']);
-        Route::post('change', [PasswordUpdateController::class, 'changePassword']);
-    });
-    Route::post('/registration', RegistrationController::class);
-
 });
 
 

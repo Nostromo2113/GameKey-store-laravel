@@ -14,23 +14,26 @@ class StoreRequest extends FormRequest
     public function rules()
     {
         return [
-            'title' => 'required|string|max:255',
-            'description' => 'required|string',
-            'publisher' => 'required|string|max:255',
-            'release_date' => 'required|date',
-            'file' => 'nullable|image',
-            'price' => 'required|numeric|min:0',
-            'is_published' => 'required|boolean',
-            'category' => 'required|exists:categories,id',
-            'genres' => 'array|nullable',
-            'genres.*' => 'exists:genres,id',
-            'technical_requirements' => 'array|nullable',
-            'technical_requirements.platform' => 'required|string',
-            'technical_requirements.os' => 'required|string',
-            'technical_requirements.cpu' => 'required|string',
-            'technical_requirements.gpu' => 'required|string',
-            'technical_requirements.ram' => 'required|integer',
-            'technical_requirements.storage' => 'required|integer',
+            'product' => 'required|array',
+
+            'product.title' => 'required|string|max:255',
+            'product.description' => 'required|string',
+            'product.publisher' => 'required|string|max:255',
+            'product.release_date' => 'required|date',
+            'product.file' => 'nullable|image|max:2048',
+            'product.price' => 'required|numeric|min:0.01',
+            'product.is_published' => 'required|boolean',
+            'product.category' => 'required|exists:categories,id',
+            'product.genres' => 'array|nullable',
+            'product.genres.*' => 'integer|exists:genres,id',
+
+            'product.technical_requirements' => 'required|array',
+            'product.technical_requirements.platform' => 'required|string|max:100',
+            'product.technical_requirements.os' => 'required|string|max:100',
+            'product.technical_requirements.cpu' => 'required|string|max:100',
+            'product.technical_requirements.gpu' => 'required|string|max:100',
+            'product.technical_requirements.ram' => 'required|integer|min:1',
+            'product.technical_requirements.storage' => 'required|integer|min:1'
         ];
     }
 }

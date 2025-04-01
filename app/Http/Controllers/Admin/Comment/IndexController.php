@@ -4,8 +4,6 @@ namespace App\Http\Controllers\Admin\Comment;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\Comment\IndexRequest;
-use App\Http\Resources\Admin\UserResource;
-use App\Models\Comment;
 use App\Models\Product;
 use App\Models\User;
 

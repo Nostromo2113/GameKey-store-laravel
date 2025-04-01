@@ -64,12 +64,32 @@ class OrderActivationKeyManager
      * @param array $orderProductIds- ID продуктов для удаления
      * @return void
      */
-    public function softDeleteKeys($orderProductIds): void
+    public function softDeleteKeys(array $orderProductIds): void
     {
         try {
             ActivationKey::whereIn('order_product_id', $orderProductIds)->delete();
         } catch (\Exception $e) {
             throw new \Exception('Ошибка при мягком удалении ключей активации: ' . $e->getMessage());
+        }
+    }
+
+
+    /**
+     * Мягкое удаление ключей при завершеннии заказа.
+     *
+     * @param array $orderProductIds- ID продуктов для получение ключей
+     * @return array
+     */
+    public function returnOrderProductsKeys(array $orderProductIds): array
+    {
+        try{
+            $keys = ActivationKey::whereIn('order_product_id', $orderProductIds)
+                ->get()
+                ->pluck('key')
+                ->toArray();
+            return $keys;
+        } catch(\Exception $e){
+            throw new \Exception('Ошибка при возврате ключей заказа: ' . $e->getMessage());
         }
     }
 

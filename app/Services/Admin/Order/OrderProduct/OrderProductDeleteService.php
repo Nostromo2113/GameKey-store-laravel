@@ -23,6 +23,9 @@ class OrderProductDeleteService
      */
     public function removeProductFromOrder(Order $order, array $orderProductIdsToRemove): void
     {
+        if (!empty($productsToRemoveIds)) {
+            return;
+        }
         try {
             $order->orderProducts()
                 ->whereIn('product_id', $orderProductIdsToRemove)

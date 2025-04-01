@@ -2,9 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\Admin\UserResource;
-use Illuminate\Support\Facades\Auth;
-use App\Http\Controllers\Controller;
+use App\Http\Resources\Admin\User\UserResource;
 
 class AuthController extends Controller
 {
@@ -37,7 +35,7 @@ class AuthController extends Controller
     /**
      * Get the authenticated User.
      *
-     * @return UserResource
+     * @return \App\Http\Resources\Admin\User\UserResource
      */
     public function me()
     {

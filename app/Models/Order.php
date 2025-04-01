@@ -2,13 +2,14 @@
 
 namespace App\Models;
 
+use App\Models\Traits\Filterable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Order extends Model
 {
     use HasFactory;
-    //Константы статуса заказа
+    use Filterable;
     const STATUS_PENDING = 'pending';
     const STATUS_COMPLETED = 'completed';
 

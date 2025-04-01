@@ -23,13 +23,35 @@ class RegistrationRequest extends FormRequest
     {
         return [
             'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
+            'email' => [
+                'required',
+                'string',
+                'max:255',
+                'unique:users,email',
+                'lowercase'
+            ],
             'surname' => 'required|string|max:255',
             'patronymic' => 'required|string|max:255',
-            'age' => 'required|integer',
-            'address' => 'required|string|max:255',
-            'password' => 'string|min:6|confirmed',
-            'phone' => 'required|string|min:11'
+            'age' => 'required|integer|max:120',
+            'address' => 'required|string|max:500',
+            'password' => [
+                'required',
+                'string',
+                'min:6',
+                'confirmed',
+            ],
+            'phone_number' => [
+                'required',
+                'string',
+                'unique:users,phone_number'
+            ]
+        ];
+    }
+
+    public function messages(): array
+    {
+        return [
+            'email.lowercase' => 'Email должен быть в нижнем регистре',
         ];
     }
 }

@@ -22,13 +22,7 @@ return new class extends Migration
             // Связь с продуктом
             $table->unsignedBigInteger('product_id');
             $table->index('product_id', 'order_product_product_idx');
-            $table->foreign('product_id', 'order_product_product_fk')->references('id')->on('products')->onDelete('set null');;
-
-            $table->decimal('quantity_price', 10, 2);
-
-
-            // Цена продукта на момент заказа
-            $table->decimal('price', 10, 2);
+            $table->foreign('product_id', 'order_product_product_fk')->references('id')->on('products')->onDelete('cascade');;
 
             $table->timestamps();
         });

@@ -18,8 +18,7 @@ class UpdateController extends Controller
     public function __invoke(UpdateRequest $request, User $user)
     {
         $data = $request->validated();
-
-            $user = $this->userService->update($data, $user);
+            $user = $this->userService->update($data['user'], $user);
 
             return response()->json([
                 'message' => 'Пользователь успешно обновлен',

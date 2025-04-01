@@ -2,16 +2,27 @@
 
 use Illuminate\Support\Facades\Route;
 
-use App\Http\Controllers\Admin\Order\IndexController;
-use App\Http\Controllers\Admin\Order\StoreController;
-use App\Http\Controllers\Admin\Order\ShowController;
-use App\Http\Controllers\Admin\Order\UpdateController;
-use App\Http\Controllers\Admin\Order\DestroyController;
+//  Order
+use App\Http\Controllers\Admin\Order\{
+    IndexController,
+    ShowController,
+    ShowByNumberController,
+    UpdateController,
+};
+//  OrderProduct
+use App\Http\Controllers\Admin\Order\OrderProduct\{
+    BatchController as OrderProductUpdateController
+};
+
 
 Route::group(['prefix' => 'orders'], function () {
+    //  Order
     Route::get('/', IndexController::class);
-    Route::post('/', StoreController::class);
+    Route::get('/by-number', ShowByNumberController::class);
     Route::get('/{order}', ShowController::class);
     Route::patch('/{order}', UpdateController::class);
-    Route::delete('/{order}', DestroyController::class);
+    //  OrderProduct
+     Route::prefix('{order}/products')->group(function (){
+        Route::patch('/', OrderProductUpdateController::class);
+    });
 });

@@ -19,12 +19,11 @@ class CartProductCreateService
         try {
             $productId = $data['product_id'];
             $quantity = $data['quantity'];
-            $totalPrice = $quantity * $data['price'];
 
             $productExist = $cart->products()->where('cart_products.product_id', $productId)->exists();
 
             if (!$productExist) {
-                $cart->products()->attach($productId, ['quantity' => $quantity, 'price' => $totalPrice]);
+                $cart->products()->attach($productId, ['quantity' => $quantity]);
 
                 return [
                     'success' => true,
@@ -38,7 +37,7 @@ class CartProductCreateService
                 ];
             }
         } catch (\Exception $e) {
-            throw new $e;
+            throw new \Exception('Ошибка при добавлении продукта в заказ: ' . $e->getMessage());
         }
     }
 }

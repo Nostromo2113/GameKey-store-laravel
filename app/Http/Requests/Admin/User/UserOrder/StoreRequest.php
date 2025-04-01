@@ -24,8 +24,8 @@ class StoreRequest extends FormRequest
         return [
             'order' => 'required|array',
             'order.user_id' => 'required|integer|exists:users,id',
-            'order.order_products' => 'array|nullable',
-            'order.order_products.*.id' => 'integer|exists:products,id',
+            'order.order_products' => 'nullable|array',
+            'order.order_products.*.id' => 'nullable|exists:products,id',
             'order.order_products.*.quantity' => 'nullable|integer|min:1',
         ];
     }

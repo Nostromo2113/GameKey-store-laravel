@@ -11,7 +11,7 @@ use App\Http\Controllers\Admin\Order\{
 };
 //  OrderProduct
 use App\Http\Controllers\Admin\Order\OrderProduct\{
-    UpdateController as OrderProductUpdateController
+    BatchController as OrderProductUpdateController
 };
 
 

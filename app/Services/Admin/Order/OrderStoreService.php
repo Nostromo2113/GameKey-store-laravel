@@ -29,12 +29,12 @@ class OrderStoreService
         ]);
 
 
-        //Очистка корзины
-        $this->cartProductService->destroyAll($userId);
+//        //Очистка корзины
+//        $this->cartProductService->destroyAll($userId);
 
-        if(isset($data['order_products']) && count($data['order_products']) > 0){
-            $this->orderProductService->update($order, $data);
-        }
+//        if (!empty($data['order_products'])) {
+//            $this->orderProductService->batch($order, $data);
+//        }
 
         return $order;
 

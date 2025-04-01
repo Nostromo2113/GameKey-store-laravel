@@ -4,11 +4,12 @@ namespace App\Http\Controllers\Admin\Order\OrderProduct;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\Order\OrderProduct\UpdateRequest;
+use App\Http\Resources\Admin\Order\OrderShowResource;
 use App\Models\Order;
 use App\Services\Admin\Order\OrderProduct\OrderProductService;
 use Illuminate\Http\JsonResponse;
 
-class UpdateController extends Controller
+class BatchController extends Controller
 {
     private $orderProductService;
     public function __construct(OrderProductService $orderProductService)
@@ -27,11 +28,13 @@ class UpdateController extends Controller
             ], 400);
         }
 
-        $updatedOrder = $this->orderProductService->update($order, $data);
+        $useTransaction = true; // Для читаемости
+
+        $updatedOrder = $this->orderProductService->batch($order, $data, $useTransaction);
 
         return response()->json([
             'message' => 'Заказ успешно обновлен.',
-            'order' => new \App\Http\Resources\Admin\Order\OrderShowResource($updatedOrder),
+            'order' => new OrderShowResource($updatedOrder),
         ]);
     }
 }

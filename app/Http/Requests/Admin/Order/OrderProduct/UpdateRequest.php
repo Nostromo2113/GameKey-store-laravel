@@ -22,9 +22,18 @@ class UpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'order_products' => 'array|required',
-            'order_products.*.id' => 'required|integer|exists:products,id',
-            'order_products.*.quantity' => 'required|integer',
+            'order_products' => 'present|array',
+            'order_products.*.id' => [
+                'required',
+                'integer',
+                'exists:products,id'
+            ],
+            'order_products.*.quantity' => [
+                'required',
+                'integer',
+                'min:1',
+                'max:1000'
+            ]
         ];
     }
 }

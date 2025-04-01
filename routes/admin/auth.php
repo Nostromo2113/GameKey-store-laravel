@@ -19,8 +19,8 @@ Route::group([
 });
 
 Route::group(['prefix' => 'password'], function() {
-    Route::post('reset', [PasswordResetController::class, 'sendResetPasswordMail']);
-    Route::post('change', [PasswordUpdateController::class, 'changePassword'])->middleware('auth:api');
+    Route::post('reset', PasswordResetController::class);
+    Route::post('change', PasswordUpdateController::class)->middleware('auth:api');
 });
 
 Route::post('/registration', RegistrationController::class);

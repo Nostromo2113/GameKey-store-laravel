@@ -71,7 +71,7 @@ class UserUpdateService
      */
     private function updateAvatar(User $user, array $data): string
     {
-        $oldImagePath = $user->avatar;
+        $oldImagePath = $user->avatar ?: 'uploads/users/avatars/default_avatar.jpg';
 
         try {
             // Если аватар был отправлен

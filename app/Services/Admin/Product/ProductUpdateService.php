@@ -4,21 +4,28 @@ namespace App\Services\Admin\Product;
 
 use App\Models\Product;
 use App\Models\TechnicalRequirement;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
 class ProductUpdateService
 {
-    public function updateProduct(Product $product,array $data): Product
+    public function updateProduct(Product $product, array $data): Product
     {
-        $file = $this->overwriteFile($product, $data);
+        DB::beginTransaction();
 
-        $product = $this->fillProduct($product, $data, $file);
+        try {
+            $file = $this->overwriteFile($product, $data);
+            $product = $this->fillProduct($product, $data, $file);
+            $this->syncGenresForProduct($product, $data);
+            $this->updateProductTechnicalRequirements($product, $data);
 
-        $this->syncGenresForProduct($product, $data);
+            DB::commit();
+            return $product;
 
-        $this->updateProductTechnicalRequirements($product, $data);
-
-        return $product;
+        } catch (\Exception $e) {
+            DB::rollBack();
+            throw new \Exception('Ошибка при обновлении продукта: ' . $e->getMessage());
+        }
     }
 
 

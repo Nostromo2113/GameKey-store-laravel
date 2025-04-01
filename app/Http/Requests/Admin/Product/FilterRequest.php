@@ -14,7 +14,7 @@ class FilterRequest extends FormRequest
     public function rules()
     {
         return [
-            'title' => 'nullable|string',
+            'title' => 'nullable|string|max:255',
             'is_published' => 'nullable|boolean',
             'category_id' => 'nullable|integer|exists:categories,id'
         ];

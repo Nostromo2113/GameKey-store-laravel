@@ -17,7 +17,7 @@ return new class extends Migration
             $table->unsignedInteger('order_number')->unique()->nullable();
             $table->enum('status', ['pending', 'completed'])->default('pending');
 
-            $table->unsignedBigInteger('user_id')->nullable();
+            $table->unsignedBigInteger('user_id')->nullable()->onDelete('cascade');
             $table->index('user_id', 'orders_user_idx');
             $table->foreign('user_id', 'orders_user_fk')->references('id')->on('users')->onDelete('set null');
 

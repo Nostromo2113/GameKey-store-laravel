@@ -13,6 +13,7 @@ class ShowController extends Controller
             return response()->json(['message' => 'User not found'], 404);
         }
         $cart = $user->cart;
+
         $cart->load('products.activationKeys');
         return response()->json(new UserCartResource($cart), 200);
     }

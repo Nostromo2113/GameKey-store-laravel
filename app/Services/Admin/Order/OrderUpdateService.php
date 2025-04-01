@@ -2,8 +2,11 @@
 
 namespace App\Services\Admin\Order;
 
+use App\Mail\ActivationKey;
 use App\Models\Order;
 use App\Services\Admin\Order\OrderActivationKey\OrderActivationKeyManager;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 
 class OrderUpdateService
 {
@@ -26,13 +29,15 @@ class OrderUpdateService
      */
     public function update(Order $order, array $data): Order
     {
-        if(isset($data['is_execute'])){
-            $updatedOrder = $this->executeOrder($order);
-            return $updatedOrder;
-        } else {
-            throw new \InvalidArgumentException('Данные для обновления заказа отсутствуют.', 500);
+        if (!isset($data['is_execute'])) {
+            throw new \InvalidArgumentException('Данные для обновления заказа отсутствуют.', 400);
         }
+
+        return DB::transaction(function () use ($order) {
+            return $this->executeOrder($order);
+        });
     }
+
 
 
 
@@ -52,7 +57,10 @@ class OrderUpdateService
             $order->status = 'completed';
             $order->save();
             $orderProductsIds = $order->orderProducts->pluck('id')->toArray();
+            $orderProductsKeys = $this->keyManager->returnOrderProductsKeys($orderProductsIds);
             $this->keyManager->softDeleteKeys($orderProductsIds);
+            $email = $order->user->email;
+            Mail::to($email)->send(new ActivationKey($orderProductsKeys));
             return $order;
         } catch(\Exception $e) {
             throw new \Exception('Ошибка изменения статуса заказа: ' . $e->getMessage(), $e->getCode());

@@ -4,14 +4,17 @@ namespace App\Models;
 
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
 class User extends Authenticatable implements MustVerifyEmail, JWTSubject
 {
-    use HasFactory, Notifiable;
+    use HasFactory, Notifiable, SoftDeletes;
 
+    const ROLE_USER = 'user';
+    const ROLE_ADMIN = 'admin';
 
     protected $fillable = [
         'name',
@@ -23,7 +26,8 @@ class User extends Authenticatable implements MustVerifyEmail, JWTSubject
         'email',
         'password',
         'avatar',
-        'phone_number'
+        'phone_number',
+        'role'
     ];
 
     protected $hidden = [
@@ -39,6 +43,11 @@ class User extends Authenticatable implements MustVerifyEmail, JWTSubject
             'password' => 'hashed',
         ];
     }
+
+   public function isAdmin()
+   {
+       return $this->role == self::ROLE_ADMIN;
+   }
 
     public function orders()
     {

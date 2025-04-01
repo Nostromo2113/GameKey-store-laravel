@@ -23,9 +23,12 @@ class StoreRequest extends FormRequest
     {
         return [
             'product' => 'required|array',
-            'product.product_id' => 'required|integer',
-            'product.quantity' => 'integer',
-            'product.price' => 'integer',
+            'product.product_id' => [
+                'required',
+                'integer',
+                'exists:products,id'
+            ],
+            'product.quantity' => 'required|integer',
         ];
     }
 }

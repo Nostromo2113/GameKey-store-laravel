@@ -16,7 +16,7 @@ class OrderProductCreateService
     }
 
     /**
-     * Добавляет новые продукты в заказ.
+     * Добавляет продукты в заказ.
      *
      * @param array $requestOrderProducts - данные из запроса
      * @param Collection|null $selectedActivationKeys - ключи, выбранные для работы с заказом
@@ -25,12 +25,15 @@ class OrderProductCreateService
      * @return void
      */
     public function addProductToOrder(
-        array       $requestOrderProducts,
+        array      $requestOrderProducts,
         Collection $selectedActivationKeys,
-        Collection  $existingOrderProducts,
-        Order       $order
+        Collection $existingOrderProducts,
+        Order      $order
     ): void
     {
+        if (empty($requestOrderProducts)) {
+            return;
+        }
         $existingOrderProductsByProductId = $existingOrderProducts->keyBy('product_id');
 
         // Сюда добавляем id продуктов, которые присутствуют в реквесте, но отсутствуют в заказе
@@ -48,12 +51,15 @@ class OrderProductCreateService
 
         // Массив для добавления ключей активации
         $activationKeysToAdd = [];
+
+        // Связываем ключи активации с добавленными продуктами
         foreach ($requestOrderProducts as $requestOrderProduct) {
             $orderProduct = $addedOrderProducts->where('product_id', $requestOrderProduct['id'])->first();
             if ($orderProduct) {
                 $activationKeysToAdd = array_merge($activationKeysToAdd, $this->activationKeyManager->prepareKeysForBinding($orderProduct, $requestOrderProduct, $selectedActivationKeys));
             }
         }
+
         // Привязываем ключи активации
         if (!empty($activationKeysToAdd)) {
             $this->activationKeyManager->bindKeys($activationKeysToAdd);

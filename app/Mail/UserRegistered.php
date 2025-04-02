@@ -18,10 +18,10 @@ class UserRegistered extends Mailable
      *
      * @return void
      */
-    public function __construct($user, $password)
+    public function __construct($data)
     {
-        $this->user = $user;
-        $this->password = $password;
+        $this->user = $data['user'];
+        $this->password = $data['password'];
     }
 
     /**

@@ -31,29 +31,30 @@ class OrderProductService
 
     /**
      * Выполняет обновление заказа. Управляет ключами привязанными к продукту в заказе.
-     * @param Order $order Заказ для обновления.
-     * @param array $data Данные для обновления.
-     *  Из-за отстутствия отдельных контроллеров для shop, приходится использовать флаг для транзакции
-     * @param Boolean $useTransaction
-     * @return Order Возвращает обновленный заказ.
+     * @param Order $order Заказ для обновления
+     * @param array $data Данные для обновления
+     * @param Boolean $useTransaction Из-за отстутствия отдельных контроллеров для shop, приходится использовать флаг для транзакции
+     * @return Order Возвращает обновленный заказ
      * @throws \Exception
      */
-    public function batch(Order $order, array $data, bool $useTransaction = true): Order
+    public function batch(Order $order, array $data, bool $useTransaction = false): Order
     {
         if ($order->isCompleted()) {
             throw new \Exception('Заказ уже завершен. Обновление невозможно', 403);
         }
 
-        if (!isset($data['order_products']) || empty($data['order_products'])) {
+        if (!isset($data['order_products'])) {
             return $order;
         }
 
-        // Обёртка в транзакцию (по умолчанию включена)
         $process = function () use ($order, $data) {
             $requestOrderProducts = $data['order_products'];
             $requestedProductIds = array_column($requestOrderProducts, 'id');
 
-            $existingProducts = $order->orderProducts()->whereIn('product_id', $requestedProductIds)->get();
+            $existingProducts = $order->orderProducts()
+                ->with(['activationKeys', 'product'])
+                ->whereIn('product_id', $requestedProductIds)
+                ->get();
             $products = Product::whereIn('id', $requestedProductIds)->get();
 
             $selectedActivationKeys = $this->keyManager->selectKeys($requestOrderProducts, $products, $existingProducts) ?? collect([]);

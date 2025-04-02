@@ -56,6 +56,7 @@ class OrderUpdateService
             }
             $order->status = 'completed';
             $order->save();
+            $order->load(['orderProducts', 'user']);
             $orderProductsIds = $order->orderProducts->pluck('id')->toArray();
             $orderProductsKeys = $this->keyManager->returnOrderProductsKeys($orderProductsIds);
             $this->keyManager->softDeleteKeys($orderProductsIds);

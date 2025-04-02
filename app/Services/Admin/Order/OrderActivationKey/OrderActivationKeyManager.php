@@ -2,15 +2,15 @@
 
 namespace App\Services\Admin\Order\OrderActivationKey;
 
+use App\Contracts\ActivationKeyRepositoryInterface;
 use App\Models\ActivationKey;
-use App\Repositories\ActivationKeyRepository;
 use Illuminate\Support\Collection;
 
 class OrderActivationKeyManager
 {
     private $activationKeyRepository;
 
-    public function __construct(ActivationKeyRepository $activationKeyRepository)
+    public function __construct(ActivationKeyRepositoryInterface $activationKeyRepository)
     {
         $this->activationKeyRepository = $activationKeyRepository;
     }
@@ -106,6 +106,7 @@ class OrderActivationKeyManager
     public function prepareKeysForBinding($orderProduct, array $requestItem, ?Collection $selectedActivationKeys): array
     {
         try {
+            $orderProduct->load(['activationKeys', 'product']);
             $currentActivationKeys = $orderProduct->activationKeys;
             $product = $orderProduct->product;
             $currentQuantity = $currentActivationKeys->count(); // Количество ключей в текущем заказе.

@@ -17,7 +17,9 @@ class SendMailJob implements ShouldQueue
         protected string $mailableClass, // Класс письма (ActivationKey, PasswordReset и т.п.)
         protected array $mailData,       // Переменные для разметки письма
         protected string $toEmail        // email получателя
-    ) {}
+    ) {
+
+    }
 
     public function handle()
     {

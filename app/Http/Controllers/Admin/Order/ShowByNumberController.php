@@ -14,7 +14,7 @@ class ShowByNumberController extends Controller
         $data = $request->validated();
         $filter = app()->make(OrderFilter::class, ['queryParams' => array_filter($data, fn($value) => $value !== null && $value !== '')]);
 
-        $order = Order::filter($filter)->get();
+        $order = Order::filter($filter)->first();
 
         return response()->json($order);
     }

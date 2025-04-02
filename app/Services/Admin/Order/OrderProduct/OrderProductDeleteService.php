@@ -23,10 +23,11 @@ class OrderProductDeleteService
      */
     public function removeProductFromOrder(Order $order, array $orderProductIdsToRemove): void
     {
-        if (!empty($productsToRemoveIds)) {
+        if (empty($orderProductIdsToRemove)) {
             return;
         }
         try {
+            $order->load('orderProducts.activationKeys');
             $order->orderProducts()
                 ->whereIn('product_id', $orderProductIdsToRemove)
                 ->delete();

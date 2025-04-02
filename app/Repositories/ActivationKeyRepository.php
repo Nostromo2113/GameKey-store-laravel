@@ -2,15 +2,27 @@
 
 namespace App\Repositories;
 
+use App\Contracts\ActivationKeyRepositoryInterface;
 use App\Models\ActivationKey;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
-class ActivationKeyRepository
+class ActivationKeyRepository implements ActivationKeyRepositoryInterface
 {
+    /**
+     * Ниже будет сырой SQL с использованием union. Причины выбора такого подхода:
+     *  1. Была задача извлечь ровно то количество ключей из базы, какое нам требуется для batch запроса.
+     *      Ключи извлекаются для разных продуктов, в разном количестве, для добавления, открепления, прикрепления к продукту в заказе.
+     *  2. Вариант извлечь сразу все ключи и работать с ними на уровне PHP меня не устроил
+     *  3. Выполнять запрос в цикле - антипаттерн
+     *  4. До оконных функций SQL на данном этапе написания кода еще не добрался
+     *
+     *  Класс реализован в сервисе через Dependency Injection, и в любой момент может быть безболезненно заменен.
+     */
+
 
     /**
-     * Выбирает ключи активации для работы с заказом (привязка или удаление).
+     * Выбирает ключи активации для работы с заказом (привязка и/или удаление).
      *
      * @param array $requestOrderProducts - данные из запроса
      * @param Collection $filteredOrderProducts - продукты, уже присутствующие в заказе
@@ -104,110 +116,4 @@ class ActivationKeyRepository
             throw new \Exception("Ошибка при обновлении привязки ключей активации: " . $e->getMessage());
         }
     }
-
-
-
-//
-//    /**
-//     * Освобождает ключи продуктов, удаляемых из заказа.
-//     *
-//     * @param array $orderProductIdsToRemove - ID продуктов для удаления
-//     * @return void
-//     */
-//    public function releaseKeys(array $orderProductIdsToRemove): void
-//    {
-//        try {
-//            ActivationKey::whereIn('order_product_id', $orderProductIdsToRemove)
-//                ->update(['order_product_id' => null]);
-//        } catch (\Exception $e) {
-//            throw new \Exception("Ошибка при освобождении ключей активации: " . $e->getMessage());
-//        }
-//    }
-//
-//    /**
-//     * Мягкое удаление ключей при завершеннии заказа.
-//     *
-//     * @param array $orderProductIdsToRemove - ID продуктов для удаления
-//     * @return void
-//     */
-//    public function softDeleteKeys($orderProductIds): void
-//    {
-//        try {
-//            ActivationKey::whereIn('order_product_id', $orderProductIds)->delete();
-//        } catch (\Exception $e) {
-//            throw new \Exception('Ошибка при мягком удалении ключей активации: ' . $e->getMessage());
-//        }
-//    }
-//
-//
-//    /**
-//     * Подготавливает ключи активации для привязки к заказу.
-//     *
-//     * @param mixed $orderProduct - продукт заказа
-//     * @param array $requestItem - данные из запроса (количество и ID продукта)
-//     * @param Collection|null $selectedActivationKeys - доступные ключи активации для привязки
-//     * @return array - массив обновленных ключей
-//     * @throws \Exception - если недостаточно ключей
-//     */
-//    public function prepareKeysForBinding($orderProduct, array $requestItem, ?Collection $selectedActivationKeys): array
-//    {
-//        try {
-//            $currentActivationKeys = $orderProduct->activationKeys;
-//            $product = $orderProduct->product;
-//            $currentQuantity = $currentActivationKeys->count(); // Количество ключей в текущем заказе.
-//            $requestedQuantity = $requestItem['quantity']; // Требуемое количество.
-//            $activationKeysToUpdate = [];
-//
-//            if ($requestedQuantity > $currentQuantity) {
-//                // Необходимы дополнительные ключи.
-//                $additionalKeysNeeded = $requestedQuantity - $currentQuantity;
-//                $availableKeys = $selectedActivationKeys->where('product_id', $product->id);
-//                $availableKeysCount = $availableKeys->count();
-//                if ($availableKeysCount < $additionalKeysNeeded) {
-//                    throw new \Exception("Не хватает ключей активации. Нужно {$additionalKeysNeeded}, а доступно {$availableKeysCount}.");
-//                } else {
-//                    $activationKeysToUpdate[] = $this->prepareKeysForUpdate($availableKeys, $orderProduct);
-//                }
-//            } elseif ($requestedQuantity < $currentQuantity) {
-//                // Нужно уменьшить количество привязанных ключей.
-//                $keysToDetach = $currentActivationKeys->take($currentQuantity - $requestedQuantity);
-//                $activationKeysToUpdate[] = $this->prepareKeysForUpdate($keysToDetach);
-//            }
-//            return $activationKeysToUpdate;
-//        } catch (\Exception $e) {
-//            throw new \Exception("Ошибка при подготовке ключей активации: " . $e->getMessage());
-//        }
-//    }
-//
-//
-//    /**
-//     * Привязывает и отвязывает ключи активации.
-//     *
-//     * @param Collection $keys - отобранные ключи активации
-//     * @param mixed|null $orderProduct - модель из пивот-таблицы (если null, ключи отвязываются)
-//     * @return array|null - массив обновленных данных для привязки ключей или null, если нет ключей
-//     */
-//    private function prepareKeysForUpdate(Collection $keys, $orderProduct = null): ?array
-//    {
-//        try {
-//            if ($keys->isEmpty()) {
-//                return null;
-//            }
-//
-//            $orderProductId = $orderProduct ? $orderProduct->id : null;
-//            $keyIds = $keys->pluck('id');
-//            $keysToUpdate = [];
-//
-//            foreach ($keyIds as $keyId) {
-//                $keysToUpdate[] = [
-//                    'activation_key_id' => $keyId,
-//                    'order_product_id' => $orderProductId
-//                ];
-//            }
-//
-//            return $keysToUpdate;
-//        } catch (\Exception $e) {
-//            throw new \Exception("Ошибка при привязке ключей активации: " . $e->getMessage());
-//        }
-//    }
 }

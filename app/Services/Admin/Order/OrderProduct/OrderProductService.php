@@ -51,15 +51,17 @@ class OrderProductService
             $requestOrderProducts = $data['order_products'];
             $requestedProductIds = array_column($requestOrderProducts, 'id');
 
-            $existingProducts = $order->orderProducts()
-                ->with(['activationKeys', 'product'])
-                ->whereIn('product_id', $requestedProductIds)
+            $order->load([
+                'orderProducts.activationKeys',
+                'orderProducts.product'
+            ]);
+            $existingProducts = $order->orderProducts->whereIn('product_id', $requestedProductIds);
+            $products = Product::whereIn('id', $requestedProductIds)
+                ->with('activationKeys')
                 ->get();
-            $products = Product::whereIn('id', $requestedProductIds)->get();
-
             $selectedActivationKeys = $this->keyManager->selectKeys($requestOrderProducts, $products, $existingProducts) ?? collect([]);
 
-            $productsIds = $order->orderProducts()->pluck('product_id')->toArray();
+            $productsIds = $order->orderProducts->pluck('product_id')->toArray();
             $productsToRemoveIds = array_diff($productsIds, $requestedProductIds);
 
             $this->orderProductCreate->addProductToOrder($requestOrderProducts, $selectedActivationKeys, $existingProducts, $order);

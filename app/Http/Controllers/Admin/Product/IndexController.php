@@ -21,7 +21,7 @@ class IndexController extends Controller
         $productsQuery = Product::filter($filter);
 
         $products = $productsQuery->paginate(8);
-
+        $products->load('category', 'genres', 'activationKeys', 'technicalRequirements');
         return new ProductCollectionResource($products);
     }
 }

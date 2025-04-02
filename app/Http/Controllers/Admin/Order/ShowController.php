@@ -10,6 +10,13 @@ class ShowController extends Controller
 {
     public function __invoke(Order $order)
     {
-        return New OrderShowResource($order);
+        $order->load([
+            'user',
+            'orderProducts.product',
+            'orderProducts.activationKeys' => function ($query) {
+                $query->withTrashed();
+            }
+        ]);
+        return new OrderShowResource($order);
     }
 }

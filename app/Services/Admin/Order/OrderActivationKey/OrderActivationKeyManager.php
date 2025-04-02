@@ -106,7 +106,6 @@ class OrderActivationKeyManager
     public function prepareKeysForBinding($orderProduct, array $requestItem, ?Collection $selectedActivationKeys): array
     {
         try {
-            $orderProduct->load(['activationKeys', 'product']);
             $currentActivationKeys = $orderProduct->activationKeys;
             $product = $orderProduct->product;
             $currentQuantity = $currentActivationKeys->count(); // Количество ключей в текущем заказе.

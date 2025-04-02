@@ -31,7 +31,11 @@ class BatchController extends Controller
         $useTransaction = true; // Для читаемости
 
         $updatedOrder = $this->orderProductService->batch($order, $data, $useTransaction);
-
+        $updatedOrder->load([
+            'user',
+            'orderProducts.product.category',
+            'orderProducts.product.activationKeys'
+        ]);
         return response()->json([
             'message' => 'Заказ успешно обновлен.',
             'order' => new OrderShowResource($updatedOrder),

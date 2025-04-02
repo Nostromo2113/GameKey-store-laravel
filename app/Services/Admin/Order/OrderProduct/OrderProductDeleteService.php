@@ -27,7 +27,6 @@ class OrderProductDeleteService
             return;
         }
         try {
-            $order->load('orderProducts.activationKeys');
             $order->orderProducts()
                 ->whereIn('product_id', $orderProductIdsToRemove)
                 ->delete();

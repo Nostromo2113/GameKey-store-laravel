@@ -26,13 +26,14 @@ class CartProductUpdateService
 
         // Находим продукт в корзине
         $cartProduct = $cart->products()->where('product_id', $product->id)->first();
+
         // Получаем кол-во продукта в корзине актуальное на данный момент
         $oldQuantity = $cartProduct->pivot->quantity;
 
         // Если доступных ключей меньше, чем текущее количество, обновляем до доступного количества
         if ($availableKeys < $oldQuantity) {
             // Обновляем количество в корзине до доступных ключей
-            $cart->products()->updateExistingPivot($product->id, ['quantity' => $availableKeys]);
+            $cart->products->updateExistingPivot($product->id, ['quantity' => $availableKeys]);
         } elseif ($newQuantity !== $oldQuantity) {
             // Иначе обновляем до нового количества, если оно изменилось
             $cart->products()->updateExistingPivot($product->id, ['quantity' => $newQuantity]);

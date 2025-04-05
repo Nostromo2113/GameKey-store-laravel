@@ -28,18 +28,18 @@ class ActivationKeyRepository implements ActivationKeyRepositoryInterface
      * @param Collection $filteredOrderProducts - продукты, уже присутствующие в заказе
      * @return Collection|null - отобранные ключи активации или null, если подходящих ключей нет
      */
-    public function selectKeys(array $requestOrderProducts, Collection $products, Collection $existingOrderProducts): ?Collection
+    public function selectKeys(array $requestOrderProducts, Collection $requestProducts, Collection $existingProducts): ?Collection
     {
         try {
             $bindings = [];
             $sqlParts = [];
 
             foreach ($requestOrderProducts as $requestOrderProduct) {
-                $existingOrderProduct = $existingOrderProducts->firstWhere('product_id', $requestOrderProduct['id']);
-                $orderProduct = $products->firstWhere('id', $requestOrderProduct['id']);
+                $existingProduct = $existingProducts->firstWhere('product_id', $requestOrderProduct['id']);
+                $orderProduct = $requestProducts->firstWhere('id', $requestOrderProduct['id']);
                 $requestQuantity = (int)$requestOrderProduct['quantity'];
-                if ($existingOrderProduct) {
-                    $currentQuantity = $existingOrderProduct ? (int)$existingOrderProduct->activationKeys->count() : 0;
+                if ($existingProduct) {
+                    $currentQuantity = $existingProduct ? (int)$existingProduct->activationKeys->count() : 0;
                     $calcQuantity = $requestQuantity - $currentQuantity;
                 } else if ($orderProduct) {
                     $calcQuantity = $requestQuantity;

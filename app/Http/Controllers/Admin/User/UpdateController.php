@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin\User;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\User\UpdateRequest;
+use App\Http\Resources\Admin\User\UserResource;
 use App\Models\User;
 use App\Services\Admin\User\UserService;
 
@@ -22,7 +23,7 @@ class UpdateController extends Controller
 
             return response()->json([
                 'message' => 'Пользователь успешно обновлен',
-                'data' => $user
+                'data' => new UserResource($user)
             ], 200);
     }
 }

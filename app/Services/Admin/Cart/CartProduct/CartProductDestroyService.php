@@ -6,10 +6,11 @@ use App\Models\Cart;
 
 class CartProductDestroyService
 {
-    public function deleteProductInCart(Cart $cart, int $productId) :void
+    public function deleteProductInCart(Cart $cart, int $productId) :Cart
     {
         try {
             $cart->products()->detach($productId);
+            return $cart;
         } catch (\Exception $e) {
             throw new \Exception("Ошибка при удалении продукта из корзины: " . $e->getMessage());
         }

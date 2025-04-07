@@ -24,9 +24,11 @@ class UpdateController extends Controller
 
         $cart = $this->cartProductService->update($data['product'], $cart, $product);
 
+        $cart->load('products.activationKeys');
+
         return response()->json([
-            'data' => new UserCartResource($cart),
-            'message' => 'Продукт в корзине успешно обновлен'
+            'message' => 'Продукт в корзине успешно обновлен',
+            'data' => new UserCartResource($cart)
         ], 200);
     }
 }

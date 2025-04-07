@@ -22,12 +22,12 @@ class CartProductService
         $this->cartProductDestroyService = $cartProductDestroyService;
     }
 
-    public function store(array $data, Cart $cart) :array
+    public function store(array $data, Cart $cart) :Cart
     {
         $cart->load('products');
-        $response = $this->cartProductCreateService->storeProductInCart($data, $cart);
+        $cart = $this->cartProductCreateService->storeProductInCart($data, $cart);
 
-        return $response;
+        return $cart;
     }
 
     public function update(array $data, Cart $cart, Product $product) :Cart
@@ -35,14 +35,13 @@ class CartProductService
         $cart->load('products');
         $product->load('activationKeys');
 
-        $updatedCart = $this->cartProductUpdateService->updateProductQuantityInCart($data, $cart, $product);
+        return $this->cartProductUpdateService->updateProductQuantityInCart($data, $cart, $product);
 
-        return $updatedCart;
     }
 
-    public function destroy(Cart $cart, int $productId) :void
+    public function destroy(Cart $cart, int $productId) :Cart
     {
-        $this->cartProductDestroyService->deleteProductInCart($cart, $productId);
+       return $this->cartProductDestroyService->deleteProductInCart($cart, $productId);
     }
 
     public function destroyAll(int $userId) :void

@@ -6,7 +6,6 @@ use App\Jobs\SendMailJob;
 use App\Mail\ActivationKey;
 use App\Models\Order;
 use App\Services\Admin\Order\OrderActivationKey\OrderActivationKeyManager;
-use Illuminate\Support\Facades\DB;
 
 class OrderUpdateService
 {
@@ -16,7 +15,6 @@ class OrderUpdateService
     {
         $this->keyManager = $keyManager;
     }
-
 
 
     /**
@@ -32,13 +30,8 @@ class OrderUpdateService
         if (!isset($data['is_execute'])) {
             throw new \InvalidArgumentException('Данные для обновления заказа отсутствуют.', 400);
         }
-
-        return DB::transaction(function () use ($order) {
             return $this->executeOrder($order);
-        });
     }
-
-
 
 
     /**
@@ -50,7 +43,6 @@ class OrderUpdateService
      */
     private function executeOrder(Order $order) :Order
     {
-        try {
             if($order->isCompleted()){
                 throw new \Exception('Заказ выполнен. Изменение статуса невозможно', 403);
             }
@@ -61,14 +53,13 @@ class OrderUpdateService
             $orderProductsKeys = $this->keyManager->returnOrderProductsKeys($orderProductsIds);
             $this->keyManager->softDeleteKeys($orderProductsIds);
 
+            // Выполняется при успешной транзакции
             SendMailJob::dispatch(
                 ActivationKey::class,
                 $orderProductsKeys,
                 $order->user->email
-            );
+            )->afterCommit();
+
             return $order;
-        } catch(\Exception $e) {
-            throw new \Exception('Ошибка изменения статуса заказа: ' . $e->getMessage(), $e->getCode());
-        }
     }
 }

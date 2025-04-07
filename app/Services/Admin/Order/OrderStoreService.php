@@ -8,16 +8,6 @@ use App\Services\Admin\Order\OrderProduct\OrderProductService;
 
 class OrderStoreService
 {
-    private $cartProductService;
-    private $orderProductService;
-
-    public function __construct(CartProductService $cartProductService, OrderProductService $orderProductService)
-    {
-        $this->cartProductService = $cartProductService;
-        $this->orderProductService = $orderProductService;
-    }
-
-
     public function storeOrder(array $data): Order
     {
         $userId = $data['user_id'];
@@ -27,14 +17,6 @@ class OrderStoreService
             'status' => 'pending',
             'order_number' => $this->generateOrderNumber(5),
         ]);
-
-
-//        //Очистка корзины
-//        $this->cartProductService->destroyAll($userId);
-
-//        if (!empty($data['order_products'])) {
-//            $this->orderProductService->batch($order, $data);
-//        }
 
         return $order;
 

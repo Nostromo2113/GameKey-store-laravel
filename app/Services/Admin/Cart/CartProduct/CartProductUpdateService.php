@@ -19,7 +19,6 @@ class CartProductUpdateService
      */
     public function updateProductQuantityInCart(array $data, Cart $cart, Product $product): Cart
     {
-        try {
             $newQuantity = $data['quantity'];
             // Получаем количество доступных ключей активации для продукта
             $availableKeys = $product->activationKeys->where('order_product_id', null)->count();
@@ -39,8 +38,5 @@ class CartProductUpdateService
                 $cart->products()->updateExistingPivot($product->id, ['quantity' => $newQuantity]);
             }
             return $cart;
-        } catch(\Exception $e){
-            throw new \Exception('Ошибка про обновлении продукта в корзине: ' . $e);
-        }
     }
 }

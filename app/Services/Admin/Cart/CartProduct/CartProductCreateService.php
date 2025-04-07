@@ -14,7 +14,7 @@ class CartProductCreateService
      * @return array Возвращает массив с результатом.
      * @throws \Exception Ошибка.
      */
-    public function storeProductInCart(array $data, Cart $cart): Cart
+    public function addProductToCart(array $data, Cart $cart): Cart
     {
             $productId = $data['product_id'];
             $quantity = $data['quantity'];

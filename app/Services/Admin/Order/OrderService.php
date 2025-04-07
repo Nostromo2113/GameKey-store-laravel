@@ -4,6 +4,7 @@ namespace App\Services\Admin\Order;
 
 use App\Models\Order;
 use App\Services\Admin\Order\OrderActivationKey\OrderActivationKeyManager;
+use Illuminate\Support\Facades\DB;
 
 
 class OrderService
@@ -13,7 +14,7 @@ class OrderService
 
     public function __construct
     (
-        OrderStoreService $orderStoreService,
+        OrderStoreService  $orderStoreService,
         OrderUpdateService $orderUpdateService
     )
     {
@@ -24,6 +25,7 @@ class OrderService
 
     public function store(array $data): Order
     {
+        // Единичное обращение к бд. Транзакция не нужна
         $order = $this->orderStoreService->storeOrder($data);
         return $order;
     }
@@ -31,8 +33,10 @@ class OrderService
 
     public function update(Order $order, array $data): Order
     {
-        $order = $this->orderUpdateService->update($order, $data);
-        return $order;
+        return DB::transaction(function () use ($order, $data) {
+            $order = $this->orderUpdateService->update($order, $data);
+            return $order;
+        });
     }
 
 }

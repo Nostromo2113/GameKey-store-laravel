@@ -39,6 +39,8 @@ class OrderProductService
      * @param Boolean $useTransaction Из-за отстутствия отдельных контроллеров для shop, приходится использовать флаг для транзакции
      * @return Order Возвращает обновленный заказ
      * @throws \Exception
+     *
+     * Транзакция по требованию
      */
     public function batch(Order $order, array $data, bool $useTransaction = false): Order
     {

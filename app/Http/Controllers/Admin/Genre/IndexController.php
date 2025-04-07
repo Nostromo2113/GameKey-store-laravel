@@ -11,6 +11,5 @@ class IndexController extends Controller
     {
        $genres = Genre::all();
        return $genres;
-
     }
 }

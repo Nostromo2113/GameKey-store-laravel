@@ -12,7 +12,9 @@ class DestroyController extends Controller
     {
         // policy
         $this->authorize('delete', $activationKey);
+
         $activationKey->delete();
+
         return response()->json('Activation key removed', 200);
     }
 }

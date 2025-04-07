@@ -17,7 +17,6 @@ class StoreController extends Controller
     }
     public function __invoke(StoreRequest $request)
     {
-
         $data = $request->validated();
 
         $product = $this->productService->store($data['product']);

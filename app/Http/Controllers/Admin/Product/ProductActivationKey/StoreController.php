@@ -22,7 +22,7 @@ class StoreController extends Controller
         ]);
 
         return response()->json([
-            'message' => 'Activation key created successfully',
+            'message' => 'Ключ активации создан',
             'data' => new ActivationKeyResource($key)
         ], 201);
     }

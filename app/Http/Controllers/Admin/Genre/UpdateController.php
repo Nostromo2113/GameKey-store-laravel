@@ -10,17 +10,14 @@ class UpdateController extends Controller
 {
     public function __invoke(Genre $genre, UpdateRequest $request)
     {
-        // Получаем валидированные данные
         $data = $request->validated();
 
-
-        // Обновить категорию с новыми данными
         $genre->update([
             'title' => $data['title']
         ]);
 
         return response()->json([
-            'message' => 'Категория обновлена успешно',
+            'message' => 'Категория успешно обновлена',
             'data' => $genre
         ], 200);
     }

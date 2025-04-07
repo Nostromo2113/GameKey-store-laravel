@@ -26,7 +26,7 @@ class StoreController extends Controller
         $token = JWTAuth::fromUser($newUser);
 
         return response()->json([
-            'message' => 'User created successfully',
+            'message' => 'Пользователь создан',
             'data' => $newUser,
             'access_token' => $token
         ], 201);

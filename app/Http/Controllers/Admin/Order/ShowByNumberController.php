@@ -13,11 +13,10 @@ class ShowByNumberController extends Controller
     public function __invoke(ShowRequest $request)
     {
         $data = $request->validated();
+
         $filter = app()->make(OrderFilter::class, ['queryParams' => array_filter($data, fn($value) => $value !== null && $value !== '')]);
 
         $order = Order::filter($filter)->get();
-
-
 
         return response()->json($order);
     }

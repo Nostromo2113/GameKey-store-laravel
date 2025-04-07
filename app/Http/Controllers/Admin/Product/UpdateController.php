@@ -18,10 +18,8 @@ class UpdateController extends Controller
         $this->productService = $productService;
     }
 
-
     public function __invoke(UpdateRequest $request, Product $product)
     {
-
         $data = $request->validated();
 
         $product = $this->productService->update($product, $data['product']);
@@ -32,7 +30,5 @@ class UpdateController extends Controller
             'message' => 'Продукт успешно обновлен',
             'data' => new ProductResource($product),
         ], 200);
-
-
     }
 }

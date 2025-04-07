@@ -14,7 +14,7 @@ class ActivationKeyRepository implements ActivationKeyRepositoryInterface
      *  1. Была задача извлечь ровно то количество ключей из базы, какое нам требуется для batch запроса.
      *      Ключи извлекаются для разных продуктов, в разном количестве, для добавления, открепления, прикрепления к продукту в заказе.
      *  2. Вариант извлечь сразу все ключи и работать с ними на уровне PHP меня не устроил
-     *  3. Выполнять запрос в цикле - антипаттерн
+     *  3. Выполнять запрос в цикле n+1
      *  4. До оконных функций SQL на данном этапе написания кода еще не добрался
      *
      *  Класс реализован в сервисе через Dependency Injection, и в любой момент может быть безболезненно заменен.
@@ -28,7 +28,7 @@ class ActivationKeyRepository implements ActivationKeyRepositoryInterface
      * @param Collection $filteredOrderProducts - продукты, уже присутствующие в заказе
      * @return Collection|null - отобранные ключи активации или null, если подходящих ключей нет
      */
-    public function selectKeys(array $requestOrderProducts, Collection $requestProducts, Collection $existingProducts): ?Collection
+    public function selectKeys(array $requestOrderProducts, Collection $products, Collection $existingProducts): ?Collection
     {
         try {
             $bindings = [];
@@ -36,7 +36,7 @@ class ActivationKeyRepository implements ActivationKeyRepositoryInterface
 
             foreach ($requestOrderProducts as $requestOrderProduct) {
                 $existingProduct = $existingProducts->firstWhere('product_id', $requestOrderProduct['id']);
-                $orderProduct = $requestProducts->firstWhere('id', $requestOrderProduct['id']);
+                $orderProduct = $products->firstWhere('id', $requestOrderProduct['id']);
                 $requestQuantity = (int)$requestOrderProduct['quantity'];
                 if ($existingProduct) {
                     $currentQuantity = $existingProduct ? (int)$existingProduct->activationKeys->count() : 0;

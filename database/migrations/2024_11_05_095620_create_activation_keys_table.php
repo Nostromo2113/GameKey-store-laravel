@@ -24,6 +24,7 @@ return new class extends Migration
                 ->onDelete('cascade');
 
             //  OrderProduct relation
+            //  В идеале можно создать еще одну пивот таблицу, но целях упрощения оставил пока так
             $table->unsignedBigInteger('order_product_id')->nullable();
             $table->index('order_product_id', 'activation_keys_order_product_idx');
             $table->foreign('order_product_id', 'activation_keys_order_product_fk')

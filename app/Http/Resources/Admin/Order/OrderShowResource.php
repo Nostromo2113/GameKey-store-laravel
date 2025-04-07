@@ -2,16 +2,12 @@
 
 namespace App\Http\Resources\Admin\Order;
 
+use App\Http\Resources\Admin\Order\OrderProduct\OrderProductResource;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class OrderShowResource extends JsonResource
 {
-    /**
-     * Transform the resource into an array.
-     *
-     * @return array<string, mixed>
-     */
     public function toArray(Request $request): array
     {
         return [
@@ -20,45 +16,11 @@ class OrderShowResource extends JsonResource
             'user_id' => $this->user_id,
             'total_price' => $this->total_price,
             'status' => $this->status,
-            'user' => $this->whenLoaded('user'), // Безопасный доступ к отношению
+            'user' => $this->whenLoaded('user'),
             'order_date' => $this->created_at,
-            'order_products' => $this->whenLoaded('orderProducts', function() {
-                return $this->orderProducts->map(function ($orderProduct) {
-                    if (!$orderProduct->relationLoaded('product')) {
-                        return null;
-                    }
-
-                    $product = $orderProduct->product;
-
-                    return [
-                        'id' => $product->id,
-                        'title' => $product->title,
-                        'description' => $product->description,
-                        'publisher' => $product->publisher,
-                        'release_date' => $product->release_date,
-                        'preview_image' => $product->preview_image,
-                        'price' => $product->price,
-                        'amount' => $product->amount,
-                        'category' => $product->relationLoaded('category')
-                            ? $product->category
-                            : null,
-                        'is_published' => $product->is_published,
-                        'quantity' => $orderProduct->quantity,
-                        'activation_keys' => $this->status === 'completed'
-                            ? $orderProduct->activationKeys->map(function ($key) {
-                                return [
-                                    'key' => $key->key,
-                                    'deleted_at' => $key->deleted_at,
-                                ];
-                            })
-                            : $orderProduct->activationKeys->map(function ($key) {
-                                return [
-                                    'key' => $key->key,
-                                ];
-                            }),
-                    ];
-                })->filter();
-            }),
+            'order_products' => OrderProductResource::collection(
+                $this->whenLoaded('orderProducts')
+            ),
         ];
     }
 }

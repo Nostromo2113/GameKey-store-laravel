@@ -24,13 +24,19 @@ class CartProductService
 
     public function store(array $data, Cart $cart) :array
     {
+        $cart->load('products');
         $response = $this->cartProductCreateService->storeProductInCart($data, $cart);
+
         return $response;
     }
 
     public function update(array $data, Cart $cart, Product $product) :Cart
     {
+        $cart->load('products');
+        $product->load('activationKeys');
+
         $updatedCart = $this->cartProductUpdateService->updateProductQuantityInCart($data, $cart, $product);
+
         return $updatedCart;
     }
 

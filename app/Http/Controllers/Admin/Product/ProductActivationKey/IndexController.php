@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Admin\Product\ProductActivationKey;
 
 use App\Http\Controllers\Controller;
-use App\Http\Resources\Admin\Product\ActivationKeyProduct\ProductActivationKeyCollectionResource;
+use App\Http\Resources\Admin\ActivationKey\ActivationKeyCollectionResource;
 use App\Models\Product;
 
 class IndexController extends Controller
@@ -13,7 +13,7 @@ class IndexController extends Controller
         $keys = $product->activationKeys()->with('product')->paginate(20);
 
 
-        return new ProductActivationKeyCollectionResource($keys);
+        return new ActivationKeyCollectionResource($keys);
     }
 }
 

@@ -65,6 +65,7 @@ class OrderProductService
             $requestProducts = Product::whereIn('id', $requestedProductIds)
                 ->with('activationKeys')
                 ->get();
+
             $selectedActivationKeys = $this->keyManager->selectKeys($requestOrderProducts, $requestProducts, $existingProducts) ?? collect([]);
 
             $productsIds = $order->orderProducts->pluck('product_id')->toArray();

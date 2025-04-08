@@ -4,7 +4,7 @@ namespace App\Http\Requests\Admin\Product;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class FilterRequest extends FormRequest
+class IndexRequest extends FormRequest
 {
     public function authorize()
     {

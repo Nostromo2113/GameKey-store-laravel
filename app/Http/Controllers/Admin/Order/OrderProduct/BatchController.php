@@ -35,7 +35,7 @@ class BatchController extends Controller
         $updatedOrder->load([
             'user',
             'orderProducts.product.category',
-            'orderProducts.product.activationKeys'
+            'orderProducts.activationKeys'
         ]);
 
         return response()->json([

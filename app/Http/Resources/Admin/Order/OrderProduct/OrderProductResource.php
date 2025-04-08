@@ -25,9 +25,4 @@ class OrderProductResource extends JsonResource
             ),
         ];
     }
-
-    private function extractActivationKeys()
-    {
-        
-    }
 }

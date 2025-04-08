@@ -23,27 +23,18 @@ class ProductService
 
     public function store(array $data): Product
     {
-        if (Gate::denies('create')) {
-            abort(403, 'У вас нет прав на обновление этого продукта');
-        }
         $product = $this->productStoreService->storeProduct($data);
         return $product;
     }
 
     public function update(Product $product, array $data): Product
     {
-        if (Gate::denies('update', $product)) {
-            abort(403, 'У вас нет прав на обновление этого продукта');
-        }
         $product = $this->productUpdateService->updateProduct($product, $data);
         return $product;
     }
 
     public function destroy(Product $product): void
     {
-        if (Gate::denies('delete', $product)) {
-            abort(403, 'У вас нет прав на обновление этого продукта');
-        }
         $this->productDestroyService->destroyProduct($product);
     }
 }

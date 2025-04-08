@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Traits\Filterable;
+use App\Models\Traits\Sortable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -10,6 +11,7 @@ class Order extends Model
 {
     use HasFactory;
     use Filterable;
+    use Sortable;
     const STATUS_PENDING = 'pending';
     const STATUS_COMPLETED = 'completed';
 

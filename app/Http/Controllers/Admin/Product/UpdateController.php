@@ -20,6 +20,8 @@ class UpdateController extends Controller
 
     public function __invoke(UpdateRequest $request, Product $product)
     {
+        $this->authorize('update', $product);
+
         $data = $request->validated();
 
         $product = $this->productService->update($product, $data['product']);

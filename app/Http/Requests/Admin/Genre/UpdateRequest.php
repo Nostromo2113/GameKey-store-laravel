@@ -22,7 +22,7 @@ class UpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'title' => 'required|string|unique:genres,title'
+            'title' => 'required|string|unique:genres,title,' . $this->genre->id,
         ];
     }
 }

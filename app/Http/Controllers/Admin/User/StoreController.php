@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin\User;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\User\StoreRequest;
+use App\Http\Resources\Admin\User\UserResource;
 use App\Services\Admin\User\UserService;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
@@ -27,7 +28,7 @@ class StoreController extends Controller
 
         return response()->json([
             'message' => 'Пользователь создан',
-            'data' => $newUser,
+            'data' => new UserResource($newUser),
             'access_token' => $token
         ], 201);
     }

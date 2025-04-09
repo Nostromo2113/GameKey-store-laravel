@@ -9,7 +9,10 @@ class DestroyController extends Controller
 {
     public function __invoke(Comment $comment)
     {
+        $this->authorize('delete', $comment);
+
         $comment->delete();
-        return response()->json('Comment', 200);
+
+        return response()->json('Комментарий удален', 200);
     }
 }

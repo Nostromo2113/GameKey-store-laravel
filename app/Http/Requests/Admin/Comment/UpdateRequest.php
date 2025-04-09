@@ -22,7 +22,6 @@ class UpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'id' => 'required|exists:comments,id',
             'content' => 'required|string'
         ];
     }

@@ -11,7 +11,7 @@ class IndexController extends Controller
 {
     public function __invoke(User $user)
     {
-        $orders = $user->orders;
+        $orders = $user->orders()->paginate(8);
         return $orders;
     }
 }

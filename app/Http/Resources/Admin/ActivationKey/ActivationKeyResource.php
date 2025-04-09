@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Resources\Admin\Product\ActivationKeyProduct;
+namespace App\Http\Resources\Admin\ActivationKey;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class ProductActivationKeyResource extends JsonResource
+class ActivationKeyResource extends JsonResource
 {
     public function toArray(Request $request): array
     {

@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
+use App\Jobs\SendMailJob;
 
 class AuthService
 {
@@ -38,7 +39,14 @@ class AuthService
             $newPassword = Str::random(8);
             $user->update(['password' => Hash::make($newPassword)]);
 
-            Mail::to($email)->send(new PasswordReset($user, $newPassword));
+            SendMailJob::dispatch(
+                PasswordReset::class,
+                [
+                    'password' => $newPassword,
+                    'user' => $user
+                ],
+                $email
+            );
 
             DB::commit();
 

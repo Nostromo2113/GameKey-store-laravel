@@ -4,7 +4,7 @@ namespace App\Http\Requests\Admin\Product;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class FilterRequest extends FormRequest
+class IndexRequest extends FormRequest
 {
     public function authorize()
     {
@@ -16,7 +16,8 @@ class FilterRequest extends FormRequest
         return [
             'title' => 'nullable|string|max:255',
             'is_published' => 'nullable|boolean',
-            'category_id' => 'nullable|integer|exists:categories,id'
+            'category_id' => 'nullable|integer|exists:categories,id',
+            'price_sort' => 'nullable|in:asc,desc',
         ];
     }
 }

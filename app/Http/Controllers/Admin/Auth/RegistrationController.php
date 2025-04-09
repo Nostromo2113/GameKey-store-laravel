@@ -24,13 +24,15 @@ class RegistrationController extends Controller
             $token = JWTAuth::fromUser($newUser);
 
             return response()->json([
-                'message' => 'User created successfully',
+                'message' => 'Пользователь создан',
                 'data' => $newUser,
                 'access_token' => $token
             ], 201);
 
         } catch(\Exception $e) {
-            return response()->json($e->getMessage(), 500);
+            return response()->json([
+                'message' => 'Ошибка при создании пользователя: ' . $e->getMessage()
+            ], 500);
         }
     }
 }

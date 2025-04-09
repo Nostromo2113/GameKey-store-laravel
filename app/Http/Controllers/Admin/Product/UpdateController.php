@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Admin\Product;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\Product\UpdateRequest;
-use App\Http\Resources\Admin\Product\ProductResource;
+use App\Http\Resources\Admin\Product\ProductFullResource;
 use App\Models\Product;
 use App\Services\Admin\Product\ProductService;
 
@@ -18,9 +18,9 @@ class UpdateController extends Controller
         $this->productService = $productService;
     }
 
-
     public function __invoke(UpdateRequest $request, Product $product)
     {
+        $this->authorize('update', $product);
 
         $data = $request->validated();
 
@@ -30,9 +30,7 @@ class UpdateController extends Controller
 
         return response()->json([
             'message' => 'Продукт успешно обновлен',
-            'data' => new ProductResource($product),
+            'data' => new ProductFullResource($product),
         ], 200);
-
-
     }
 }

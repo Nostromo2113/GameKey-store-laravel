@@ -14,9 +14,8 @@ class CartProductCreateService
      * @return array Возвращает массив с результатом.
      * @throws \Exception Ошибка.
      */
-    public function storeProductInCart(array $data, Cart $cart): array
+    public function addProductToCart(array $data, Cart $cart): Cart
     {
-        try {
             $productId = $data['product_id'];
             $quantity = $data['quantity'];
 
@@ -24,20 +23,9 @@ class CartProductCreateService
 
             if (!$productExist) {
                 $cart->products()->attach($productId, ['quantity' => $quantity]);
-
-                return [
-                    'success' => true,
-                    'message' => 'Product added to cart',
-                    'cart' => $cart->load('products'),
-                ];
+                return $cart;
             } else {
-                return [
-                    'success' => false,
-                    'message' => 'Product already exists in cart',
-                ];
+                throw new \Exception('Продукт уже есть в корзине');
             }
-        } catch (\Exception $e) {
-            throw new \Exception('Ошибка при добавлении продукта в заказ: ' . $e->getMessage());
-        }
     }
 }

@@ -22,6 +22,14 @@ class UpdateController extends Controller
         $data = $request->validated();
         $order = $this->orderUpdateService->update($order, $data);
 
+        $order->load([
+            'user',
+            'orderProducts.product',
+            'orderProducts.activationKeys' => function ($query) {
+                $query->withTrashed();
+            }
+        ]);
+
         return response()->json([
             'message' => 'Статус заказа изменен',
             'data' => new OrderShowResource($order)

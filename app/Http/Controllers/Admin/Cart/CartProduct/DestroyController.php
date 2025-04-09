@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin\Cart\CartProduct;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\Admin\User\UserCart\UserCartResource;
 use App\Models\Cart;
 use App\Services\Admin\Cart\CartProduct\CartProductService;
 
@@ -16,7 +17,10 @@ class DestroyController extends Controller
     }
     public function __invoke(Cart $cart, $productId)
     {
-        $this->cartProductService->destroy($cart, $productId);
-        return response()->json(['message' => 'Продукт удален из корзины'], 200);
+       $updatedCart = $this->cartProductService->destroy($cart, $productId);
+        return response()->json([
+            'message' => 'Продукт удален из корзины',
+            'data' => new UserCartResource($updatedCart)
+        ], 200);
     }
 }

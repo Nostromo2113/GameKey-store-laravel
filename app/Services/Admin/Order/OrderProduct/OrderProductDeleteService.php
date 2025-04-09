@@ -23,16 +23,12 @@ class OrderProductDeleteService
      */
     public function removeProductFromOrder(Order $order, array $orderProductIdsToRemove): void
     {
-        if (!empty($productsToRemoveIds)) {
+        if (empty($orderProductIdsToRemove)) {
             return;
         }
-        try {
             $order->orderProducts()
                 ->whereIn('product_id', $orderProductIdsToRemove)
                 ->delete();
             $this->activationKeyManager->releaseKeys($orderProductIdsToRemove);
-        } catch (\Exception $e) {
-            throw new \Exception("Ошибка при удалении продуктов из заказа: " . $e->getMessage());
-        }
     }
 }

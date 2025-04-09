@@ -2,6 +2,8 @@
 
 namespace App\Services\Admin\User;
 
+use App\Jobs\SendMailJob;
+use App\Mail\PasswordReset;
 use App\Mail\UserRegistered;
 use App\Models\User;
 use App\Services\Admin\Cart\CartService;
@@ -31,13 +33,13 @@ class UserCreateService
 
         try {
             $avatar = 'uploads/users/avatars/default_avatar.jpg';
-            $password = Hash::make(isset($data['password']) ? $data['password'] : $this->genPassword(6));
+            $password = isset($data['password']) ? $data['password'] : $this->genPassword(6);
 
             $newUser = User::create([
                 'name' => $data['name'],
                 'email' => $data['email'],
                 'phone_number' => $data['phone_number'],
-                'password' => $password,
+                'password' => Hash::make($password),
                 'surname' => $data['surname'],
                 'patronymic' => $data['patronymic'],
                 'age' => $data['age'],
@@ -89,7 +91,14 @@ class UserCreateService
      */
     private function sendEmail(User $newUser, string $password): void
     {
-        Mail::to($newUser->email)->send(new UserRegistered($newUser, $password));
+        SendMailJob::dispatch(
+            UserRegistered::class,
+            [
+                'password' => $password,
+                'user' => $newUser
+            ],
+            $newUser->email
+        );
 
         $newUser->sendEmailVerificationNotification();
     }

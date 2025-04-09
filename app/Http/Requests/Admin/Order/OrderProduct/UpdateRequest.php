@@ -26,7 +26,7 @@ class UpdateRequest extends FormRequest
             'order_products.*.id' => [
                 'required',
                 'integer',
-                'exists:products,id'
+       //         'exists:products,id'
             ],
             'order_products.*.quantity' => [
                 'required',

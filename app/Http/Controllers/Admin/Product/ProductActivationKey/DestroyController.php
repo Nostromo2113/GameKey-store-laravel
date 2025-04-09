@@ -10,7 +10,11 @@ class DestroyController extends Controller
 {
     public function __invoke(Product $product, ActivationKey $activationKey)
     {
+        // policy
+        $this->authorize('delete', $activationKey);
+
         $activationKey->delete();
+
         return response()->json('Activation key removed', 200);
     }
 }

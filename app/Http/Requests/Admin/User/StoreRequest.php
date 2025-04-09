@@ -29,7 +29,7 @@ class StoreRequest extends FormRequest
             'user.patronymic' => 'required|string|max:255',
             'user.age' => 'required|integer|min:1|max:120',
             'user.address' => 'required|string|max:255',
-            'user.phone' => 'required|string|min:11|max:15'
+            'user.phone_number' => 'required|string|min:11|max:15'
         ];
     }
 }

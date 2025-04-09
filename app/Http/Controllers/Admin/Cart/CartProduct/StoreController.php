@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin\Cart\CartProduct;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\Cart\CartProduct\StoreRequest;
+use App\Http\Resources\Admin\User\UserCart\UserCartResource;
 use App\Models\Cart;
 use App\Services\Admin\Cart\CartProduct\CartProductService;
 
@@ -20,11 +21,13 @@ class StoreController extends Controller
     public function __invoke(Cart $cart, StoreRequest $request)
     {
         $data = $request->validated();
-        $result = $this->cartProductService->store($data['product'], $cart);
+        $cart = $this->cartProductService->store($data['product'], $cart);
+
+        $cart->load('products.activationKeys');
 
         return response()->json([
-            'message' => $result['message'],
-            'cart' => $result['cart'] ?? null,
-        ], $result['success'] ? 200 : 400);
+            'message' => 'Продукт добавлен в корзину',
+            'data' => new UserCartResource($cart),
+        ], 200);
     }
 }

@@ -10,7 +10,7 @@ class IndexController extends Controller
 {
     public function __invoke()
     {
-       $users = User::all();
+       $users = User::paginate(8);
        return UserResource::collection($users);
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Services\Admin\Product;
 
 use App\Models\Product;
+use Illuminate\Support\Facades\Gate;
 
 class ProductService
 {
@@ -36,6 +37,4 @@ class ProductService
     {
         $this->productDestroyService->destroyProduct($product);
     }
-
-
 }

@@ -2,6 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Admin\StatsController;
 
 
 Route::get('/user', function (Request $request) {
@@ -32,6 +33,8 @@ Route::group(['prefix' => 'admin'], function () {
         //  orders
         require base_path('routes/admin/orders.php');
     });
+
+    Route::get('stats', StatsController::class);
 });
 
 

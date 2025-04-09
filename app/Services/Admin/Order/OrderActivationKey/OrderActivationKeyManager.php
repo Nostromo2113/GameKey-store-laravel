@@ -2,15 +2,15 @@
 
 namespace App\Services\Admin\Order\OrderActivationKey;
 
+use App\Contracts\ActivationKeyRepositoryInterface;
 use App\Models\ActivationKey;
-use App\Repositories\ActivationKeyRepository;
 use Illuminate\Support\Collection;
 
 class OrderActivationKeyManager
 {
     private $activationKeyRepository;
 
-    public function __construct(ActivationKeyRepository $activationKeyRepository)
+    public function __construct(ActivationKeyRepositoryInterface $activationKeyRepository)
     {
         $this->activationKeyRepository = $activationKeyRepository;
     }
@@ -20,12 +20,13 @@ class OrderActivationKeyManager
      * Обращается в репозиторий за сырым запросом
      *
      * @param array $requestOrderProducts - данные из запроса
-     * @param Collection $filteredOrderProducts - продукты, уже присутствующие в заказе
+     * @param Collection $requestProducts - продукты из запроса
+     * @param Collection $existingProducts - текущее состояние заказа. Его продукты
      * @return Collection|null - отобранные ключи активации или null, если подходящих ключей нет
      */
-    public function selectKeys(array $requestOrderProducts, Collection $products, Collection $existingOrderProducts): ?Collection
+    public function selectKeys(array $requestOrderProducts, Collection $requestProducts, Collection $existingProducts): ?Collection
     {
-        return $this->activationKeyRepository->selectKeys($requestOrderProducts, $products, $existingOrderProducts);
+        return $this->activationKeyRepository->selectKeys($requestOrderProducts, $requestProducts, $existingProducts);
     }
 
 
@@ -118,7 +119,7 @@ class OrderActivationKeyManager
                 $availableKeys = $selectedActivationKeys->where('product_id', $product->id);
                 $availableKeysCount = $availableKeys->count();
                 if ($availableKeysCount < $additionalKeysNeeded) {
-                    throw new \Exception("Не хватает ключей активации. Нужно {$additionalKeysNeeded}, а доступно {$availableKeysCount}.");
+                    throw new \Exception("Недостаточно ключей активации. Нужно {$additionalKeysNeeded}, а доступно {$availableKeysCount}.");
                 } else {
                     $activationKeysToUpdate[] = $this->prepareKeysForUpdate($availableKeys, $orderProduct);
                 }

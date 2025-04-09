@@ -12,18 +12,10 @@ class StoreController extends Controller
     {
         $data = $request->validated();
 
-        $category = Category::where('title', $data['title'])->first();
-
-        if ($category) {
-            return response()->json([
-                'message' => 'Category already exists'
-            ], 409);
-        }
-
         $newCategory = Category::create($data);
 
         return response()->json([
-            'message' => 'Category created successfully',
+            'message' => 'Категория создана',
             'data' => $newCategory
         ], 201);
     }

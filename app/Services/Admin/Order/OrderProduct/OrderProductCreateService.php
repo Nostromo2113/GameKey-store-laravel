@@ -48,10 +48,9 @@ class OrderProductCreateService
 
         // Добавляем продукты в заказ
         $addedOrderProducts = $order->orderProducts()->createMany($productsToAdd);
-
+        $addedOrderProducts->load('activationKeys', 'product');
         // Массив для добавления ключей активации
         $activationKeysToAdd = [];
-
         // Связываем ключи активации с добавленными продуктами
         foreach ($requestOrderProducts as $requestOrderProduct) {
             $orderProduct = $addedOrderProducts->where('product_id', $requestOrderProduct['id'])->first();

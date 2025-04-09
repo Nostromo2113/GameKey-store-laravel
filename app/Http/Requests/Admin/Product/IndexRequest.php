@@ -16,7 +16,8 @@ class IndexRequest extends FormRequest
         return [
             'title' => 'nullable|string|max:255',
             'is_published' => 'nullable|boolean',
-            'category_id' => 'nullable|integer|exists:categories,id'
+            'category_id' => 'nullable|integer|exists:categories,id',
+            'price_sort' => 'nullable|in:asc,desc',
         ];
     }
 }

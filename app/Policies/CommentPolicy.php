@@ -29,7 +29,9 @@ class CommentPolicy
      */
     public function create(User $user): bool
     {
-        return  $user->hasVerifiedEmail();
+        return true;
+        //  Для демонстрации открыт доступ
+        //  return  $user->hasVerifiedEmail();
     }
 
     /**

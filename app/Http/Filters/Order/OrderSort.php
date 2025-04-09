@@ -4,7 +4,9 @@ namespace App\Http\Filters\Order;
 
 use App\Http\Filters\AbstractFilter;
 use Illuminate\Database\Eloquent\Builder;
-
+/**
+ * TODO: Перенести в Filter
+ */
 class OrderSort extends AbstractFilter
 {
     public const CREATED_AT = 'createdAt';

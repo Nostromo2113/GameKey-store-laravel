@@ -12,10 +12,12 @@ use Tymon\JWTAuth\Contracts\JWTSubject;
 
 class User extends Authenticatable implements MustVerifyEmail, JWTSubject
 {
-    use HasFactory, Notifiable, SoftDeletes;
+    use HasFactory;
+    use Notifiable;
+    use SoftDeletes;
 
-    const ROLE_USER = 'user';
-    const ROLE_ADMIN = 'admin';
+    public const ROLE_USER  = 'user';
+    public const ROLE_ADMIN = 'admin';
 
     protected $fillable = [
         'name',
@@ -41,27 +43,27 @@ class User extends Authenticatable implements MustVerifyEmail, JWTSubject
     {
         return [
             'email_verified_at' => 'datetime',
-            'password' => 'hashed',
+            'password'          => 'hashed',
         ];
     }
 
-   public function isAdmin()
-   {
-       return $this->role == self::ROLE_ADMIN;
-   }
+    public function isAdmin()
+    {
+        return $this->role == self::ROLE_ADMIN;
+    }
 
     public function orders()
     {
         return $this->hasMany(Order::class, 'user_id');
     }
 
-    const GENDER_MALE = 1;
-    const GENDER_FEMALE = 2;
+    public const GENDER_MALE   = 1;
+    public const GENDER_FEMALE = 2;
 
-    static function getGenders()
+    public static function getGenders()
     {
         return [
-            self::GENDER_MALE => 'Мужской',
+            self::GENDER_MALE   => 'Мужской',
             self::GENDER_FEMALE => 'Женский'
         ];
     }

@@ -20,7 +20,7 @@ class UpdateController extends Controller
 
         return response()->json([
             'message' => 'Comment successfully updated',
-            'data' => $comment
+            'data'    => $comment
         ], 200);
     }
 }

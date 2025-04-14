@@ -26,9 +26,9 @@ class OrderProductDeleteService
         if (empty($orderProductIdsToRemove)) {
             return;
         }
-            $order->orderProducts()
-                ->whereIn('product_id', $orderProductIdsToRemove)
-                ->delete();
-            $this->activationKeyManager->releaseKeys($orderProductIdsToRemove);
+        $order->orderProducts()
+            ->whereIn('product_id', $orderProductIdsToRemove)
+            ->delete();
+        $this->activationKeyManager->releaseKeys($orderProductIdsToRemove);
     }
 }

@@ -11,6 +11,7 @@ class DestroyController extends Controller
     public function __invoke(User $user, Order $order)
     {
         $order->delete();
+
         return response()->json('Order removed', 200);
     }
 }

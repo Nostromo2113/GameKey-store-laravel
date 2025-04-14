@@ -16,16 +16,17 @@ class CartProductCreateService
      */
     public function addProductToCart(array $data, Cart $cart): Cart
     {
-            $productId = $data['product_id'];
-            $quantity = $data['quantity'];
+        $productId = $data['product_id'];
+        $quantity  = $data['quantity'];
 
-            $productExist = $cart->products()->where('cart_products.product_id', $productId)->exists();
+        $productExist = $cart->products()->where('cart_products.product_id', $productId)->exists();
 
-            if (!$productExist) {
-                $cart->products()->attach($productId, ['quantity' => $quantity]);
-                return $cart;
-            } else {
-                throw new \Exception('Продукт уже есть в корзине');
-            }
+        if (!$productExist) {
+            $cart->products()->attach($productId, ['quantity' => $quantity]);
+
+            return $cart;
+        } else {
+            throw new \Exception('Продукт уже есть в корзине');
+        }
     }
 }

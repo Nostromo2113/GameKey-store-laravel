@@ -1,12 +1,11 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-
 use App\Http\Controllers\Admin\Genre\{
-  IndexController,
-  StoreController,
-  UpdateController,
-  DestroyController
+    IndexController,
+    StoreController,
+    UpdateController,
+    DestroyController
 };
 
 Route::group(['prefix' => 'genres'], function () {

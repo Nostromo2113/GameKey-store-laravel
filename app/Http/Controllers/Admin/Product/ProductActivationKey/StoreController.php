@@ -23,7 +23,7 @@ class StoreController extends Controller
 
         return response()->json([
             'message' => 'Ключ активации создан',
-            'data' => new ActivationKeyResource($key)
+            'data'    => new ActivationKeyResource($key)
         ], 201);
     }
 }

@@ -20,14 +20,14 @@ class ProductStoreService
             $file = $this->writeFile($data);
 
             $product = Product::create([
-                'title' => $data['title'],
-                'description' => $data['description'],
-                'publisher' => $data['publisher'],
-                'release_date' => $data['release_date'],
+                'title'         => $data['title'],
+                'description'   => $data['description'],
+                'publisher'     => $data['publisher'],
+                'release_date'  => $data['release_date'],
                 'preview_image' => $file,
-                'price' => $data['price'],
-                'category_id' => $categoryId,
-                'is_published' => $data['is_published'],
+                'price'         => $data['price'],
+                'category_id'   => $categoryId,
+                'is_published'  => $data['is_published'],
             ]);
 
             TechnicalRequirement::create([
@@ -55,6 +55,7 @@ class ProductStoreService
             } else {
                 $file = 'no image';
             }
+
             return $file;
         } catch (\Exception $e) {
             throw new \Exception('Ошибка при записи превью файла продукта: ' . $e->getMessage());

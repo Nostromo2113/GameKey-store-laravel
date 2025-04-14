@@ -9,8 +9,9 @@ class IndexController extends Controller
 {
     public function __invoke()
     {
-       $categories = Category::all();
-       return $categories;
+        $categories = Category::all();
+
+        return $categories;
 
     }
 }

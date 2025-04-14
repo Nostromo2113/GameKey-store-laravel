@@ -8,7 +8,6 @@ use App\Http\Resources\Admin\Product\ProductFullResource;
 use App\Models\Product;
 use App\Services\Admin\Product\ProductService;
 
-
 class UpdateController extends Controller
 {
     private $productService;
@@ -30,7 +29,7 @@ class UpdateController extends Controller
 
         return response()->json([
             'message' => 'Продукт успешно обновлен',
-            'data' => new ProductFullResource($product),
+            'data'    => new ProductFullResource($product),
         ], 200);
     }
 }

@@ -3,7 +3,6 @@
 namespace App\Services\Admin\Product;
 
 use App\Models\Product;
-use Illuminate\Support\Facades\Gate;
 
 class ProductService
 {
@@ -14,22 +13,24 @@ class ProductService
     public function __construct(
         ProductStoreService $productStoreService,
         ProductUpdateService $productUpdateService,
-        ProductDestroyService $productDestroyService)
-    {
-        $this->productStoreService = $productStoreService;
-        $this->productUpdateService = $productUpdateService;
+        ProductDestroyService $productDestroyService
+    ) {
+        $this->productStoreService   = $productStoreService;
+        $this->productUpdateService  = $productUpdateService;
         $this->productDestroyService = $productDestroyService;
     }
 
     public function store(array $data): Product
     {
         $product = $this->productStoreService->storeProduct($data);
+
         return $product;
     }
 
     public function update(Product $product, array $data): Product
     {
         $product = $this->productUpdateService->updateProduct($product, $data);
+
         return $product;
     }
 

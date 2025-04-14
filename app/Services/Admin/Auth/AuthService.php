@@ -7,7 +7,6 @@ use App\Models\User;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 use App\Jobs\SendMailJob;
@@ -43,7 +42,7 @@ class AuthService
                 PasswordReset::class,
                 [
                     'password' => $newPassword,
-                    'user' => $user
+                    'user'     => $user
                 ],
                 $email
             );

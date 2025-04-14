@@ -11,7 +11,10 @@ use Illuminate\Support\Facades\Mail;
 
 class SendMailJob implements ShouldQueue
 {
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+    use Dispatchable;
+    use InteractsWithQueue;
+    use Queueable;
+    use SerializesModels;
 
     public function __construct(
         protected string $mailableClass, // Класс письма (ActivationKey, PasswordReset и т.п.)

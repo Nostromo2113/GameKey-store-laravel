@@ -7,18 +7,18 @@ use Illuminate\Database\Eloquent\Builder;
 
 class ProductFilter extends AbstractFilter
 {
-    public const TITLE = 'title';
+    public const TITLE        = 'title';
     public const IS_PUBLISHED = 'is_published';
-    public const CATEGORY_ID = 'category_id';
-    public const PRICE_SORT = 'price_sort';
+    public const CATEGORY_ID  = 'category_id';
+    public const PRICE_SORT   = 'price_sort';
 
     protected function getCallbacks(): array
     {
         return [
-            self::TITLE => [$this, 'title'],
+            self::TITLE        => [$this, 'title'],
             self::IS_PUBLISHED => [$this, 'isPublished'],
-            self::CATEGORY_ID => [$this, 'categoryId'],
-            self::PRICE_SORT => [$this, 'priceSort'],
+            self::CATEGORY_ID  => [$this, 'categoryId'],
+            self::PRICE_SORT   => [$this, 'priceSort'],
         ];
     }
 

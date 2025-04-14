@@ -12,8 +12,8 @@ class Order extends Model
     use HasFactory;
     use Filterable;
     use Sortable;
-    const STATUS_PENDING = 'pending';
-    const STATUS_COMPLETED = 'completed';
+    public const STATUS_PENDING   = 'pending';
+    public const STATUS_COMPLETED = 'completed';
 
     protected $guarded = false;
 
@@ -36,7 +36,8 @@ class Order extends Model
 
     public function products()
     {
-        return $this->belongsToMany(Product::class, 'order_products', 'order_id', 'product_id')->withPivot(['id']);;
+        return $this->belongsToMany(Product::class, 'order_products', 'order_id', 'product_id')->withPivot(['id']);
+        ;
     }
 
     public function orderProducts()

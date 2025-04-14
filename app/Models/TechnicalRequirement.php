@@ -9,7 +9,7 @@ class TechnicalRequirement extends Model
 {
     use HasFactory;
 
-    protected $guarded = false;
+    protected $guarded  = false;
     protected $fillable = [
         'id',
         'platform',

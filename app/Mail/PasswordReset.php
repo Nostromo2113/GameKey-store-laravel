@@ -8,7 +8,8 @@ use Illuminate\Queue\SerializesModels;
 
 class PasswordReset extends Mailable
 {
-    use Queueable, SerializesModels;
+    use Queueable;
+    use SerializesModels;
 
     public $user;
     public $password;
@@ -20,7 +21,7 @@ class PasswordReset extends Mailable
      */
     public function __construct($data)
     {
-        $this->user = $data['user'];
+        $this->user     = $data['user'];
         $this->password = $data['password'];
     }
 

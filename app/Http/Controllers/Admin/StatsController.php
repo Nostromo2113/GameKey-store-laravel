@@ -13,9 +13,9 @@ class StatsController extends Controller
     public function __invoke()
     {
         return response()->json([
-            'orders' => Order::count(),
-            'products' => Product::count(),
-            'users' => User::count(),
+            'orders'          => Order::count(),
+            'products'        => Product::count(),
+            'users'           => User::count(),
             'activation_keys' => ActivationKey::count(),
         ]);
     }

@@ -22,10 +22,10 @@ class StoreRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'order' => 'required|array',
-            'order.user_id' => 'required|integer|exists:users,id',
-            'order.order_products' => 'nullable|array',
-            'order.order_products.*.id' => 'nullable|exists:products,id',
+            'order'                           => 'required|array',
+            'order.user_id'                   => 'required|integer|exists:users,id',
+            'order.order_products'            => 'nullable|array',
+            'order.order_products.*.id'       => 'nullable|exists:products,id',
             'order.order_products.*.quantity' => 'nullable|integer|min:1',
         ];
     }

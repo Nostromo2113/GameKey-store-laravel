@@ -18,8 +18,8 @@ class ProductFullResource extends JsonResource
             (new ProductResource($this))->toArray($request),
             [
                 'technical_requirements' => $this->technicalRequirements,
-                'category' => $this->category,
-                'genres' => $this->genres,
+                'category'               => $this->category,
+                'genres'                 => $this->genres,
             ]
         );
     }

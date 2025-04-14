@@ -12,10 +12,10 @@ class ActivationKeyCollectionResource extends ResourceCollection
         return [
             'data' => ActivationKeyResource::collection($this->collection),
             'meta' => [
-                'current_page' => $this->currentPage(),
-                'last_page' => $this->lastPage(),
-                'per_page' => $this->perPage(),
-                'total' => $this->total(),
+                'current_page'  => $this->currentPage(),
+                'last_page'     => $this->lastPage(),
+                'per_page'      => $this->perPage(),
+                'total'         => $this->total(),
                 'next_page_url' => $this->nextPageUrl(),
                 'prev_page_url' => $this->previousPageUrl(),
             ],

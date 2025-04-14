@@ -11,6 +11,7 @@ class IndexController extends Controller
     public function __invoke()
     {
         $filter = app()->make(OrderSort::class, [ 'queryParams' => ['createdAt' => 'desc']]);
+
         return Order::filter($filter)->paginate(10);
     }
 }

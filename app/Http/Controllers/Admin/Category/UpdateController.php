@@ -18,7 +18,7 @@ class UpdateController extends Controller
 
         return response()->json([
             'message' => 'Категория обновлена успешно',
-            'data' => $category
+            'data'    => $category
         ], 200);
     }
 }

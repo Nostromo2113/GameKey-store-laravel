@@ -36,12 +36,12 @@ class ActivationKeyRepository implements ActivationKeyRepositoryInterface
 
             foreach ($requestOrderProducts as $requestOrderProduct) {
                 $existingProduct = $existingProducts->firstWhere('product_id', $requestOrderProduct['id']);
-                $orderProduct = $products->firstWhere('id', $requestOrderProduct['id']);
+                $orderProduct    = $products->firstWhere('id', $requestOrderProduct['id']);
                 $requestQuantity = (int)$requestOrderProduct['quantity'];
                 if ($existingProduct) {
                     $currentQuantity = $existingProduct ? (int)$existingProduct->activationKeys->count() : 0;
-                    $calcQuantity = $requestQuantity - $currentQuantity;
-                } else if ($orderProduct) {
+                    $calcQuantity    = $requestQuantity - $currentQuantity;
+                } elseif ($orderProduct) {
                     $calcQuantity = $requestQuantity;
                 }
                 if ($calcQuantity !== 0) {
@@ -58,8 +58,9 @@ class ActivationKeyRepository implements ActivationKeyRepositoryInterface
             }
 
             if (!empty($sqlParts)) {
-                $sql = implode(' UNION ALL ', $sqlParts);
+                $sql            = implode(' UNION ALL ', $sqlParts);
                 $activationKeys = DB::select($sql, $bindings);
+
                 return ActivationKey::hydrate($activationKeys);
             }
 
@@ -83,14 +84,14 @@ class ActivationKeyRepository implements ActivationKeyRepositoryInterface
         }
 
         try {
-            $keyIds = [];
+            $keyIds  = [];
             $caseSql = 'CASE `id`';
 
             $bindings = [];
 
             foreach ($data as $group) {
                 foreach ($group as $item) {
-                    $keyIds[] = $item['activation_key_id'];
+                    $keyIds[]       = $item['activation_key_id'];
                     $orderProductId = $item['order_product_id'] ?? null;
 
                     $caseSql .= " WHEN ? THEN ?";

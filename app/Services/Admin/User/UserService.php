@@ -14,23 +14,23 @@ class UserService
         UserCreateService  $userCreateService,
         UserUpdateService  $userUpdateService,
         UserDestroyService $userDestroyService
-    )
-
-    {
-        $this->userCreateService = $userCreateService;
-        $this->userUpdateService = $userUpdateService;
+    ) {
+        $this->userCreateService  = $userCreateService;
+        $this->userUpdateService  = $userUpdateService;
         $this->userDestroyService = $userDestroyService;
     }
 
     public function store(array $data): User
     {
-       $newUser = $this->userCreateService->createUser($data);
-       return $newUser;
+        $newUser = $this->userCreateService->createUser($data);
+
+        return $newUser;
     }
 
     public function update(array $data, User $user): User
     {
         $updatedUser = $this->userUpdateService->updateUser($data, $user);
+
         return $updatedUser;
     }
 

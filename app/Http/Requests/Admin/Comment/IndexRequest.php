@@ -14,9 +14,9 @@ class IndexRequest extends FormRequest
     public function rules()
     {
         return [
-            'id' => 'nullable|integer',
+            'id'    => 'nullable|integer',
             'query' => 'string|nullable',
-            'type' => 'nullable|string'
+            'type'  => 'nullable|string'
         ];
     }
 }

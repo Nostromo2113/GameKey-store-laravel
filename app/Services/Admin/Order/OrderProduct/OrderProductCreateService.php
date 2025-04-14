@@ -29,8 +29,7 @@ class OrderProductCreateService
         Collection $selectedActivationKeys,
         Collection $existingOrderProducts,
         Order      $order
-    ): void
-    {
+    ): void {
         if (empty($requestOrderProducts)) {
             return;
         }

@@ -28,7 +28,7 @@ class UpdateController extends Controller
 
         return response()->json([
             'message' => 'Продукт в корзине успешно обновлен',
-            'data' => new UserCartResource($cart)
+            'data'    => new UserCartResource($cart)
         ], 200);
     }
 }

@@ -7,7 +7,6 @@ use App\Models\Product;
 
 class CartService
 {
-
     /**
      * Создает корзину. Вызывается при регистрации пользователя
      *
@@ -19,9 +18,10 @@ class CartService
     {
         try {
             $cart = Cart::create([
-                'user_id' => $userId,
+                'user_id'     => $userId,
                 'total_price' => 0
             ]);
+
             return $cart;
         } catch (\Exception $e) {
             throw $e;
@@ -38,8 +38,8 @@ class CartService
     public function addProductToCart(array $data, Cart $cart): array
     {
         try {
-            $productId = $data['product_id'];
-            $quantity = $data['quantity'];
+            $productId  = $data['product_id'];
+            $quantity   = $data['quantity'];
             $totalPrice = $quantity * $data['price'];
 
             $productExist = $cart->products()->where('cart_products.product_id', $productId)->exists();
@@ -50,7 +50,7 @@ class CartService
                 return [
                     'success' => true,
                     'message' => 'Product added to cart',
-                    'cart' => $cart->load('products'),
+                    'cart'    => $cart->load('products'),
                 ];
             } else {
                 return [
@@ -113,7 +113,7 @@ class CartService
         try {
             $cart = Cart::where('user_id', $userId)->firstOrFail();
             $cart->products()->detach();
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             throw new \Exception("Ошибка при очистке корзины: " . $e->getMessage());
         }
     }

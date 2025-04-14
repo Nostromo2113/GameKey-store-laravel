@@ -10,12 +10,11 @@ use App\Models\Product;
 
 class IndexController extends Controller
 {
-
     public function __invoke(IndexRequest $filterRequest)
     {
         $data = $filterRequest->validated();
 
-        $filter = app()->make(ProductFilter::class, [ 'queryParams' => array_filter($data, fn($value) => $value !== null && $value !== '')]);
+        $filter = app()->make(ProductFilter::class, [ 'queryParams' => array_filter($data, fn ($value) => $value !== null && $value !== '')]);
 
         $productsQuery = Product::filter($filter);
 

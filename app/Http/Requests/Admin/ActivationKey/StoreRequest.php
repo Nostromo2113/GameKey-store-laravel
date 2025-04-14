@@ -23,9 +23,9 @@ class StoreRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'activation_key' => 'required|array',
+            'activation_key'            => 'required|array',
             'activation_key.product_id' => 'required|integer|exists:products,id',
-            'activation_key.key' => [
+            'activation_key.key'        => [
                 'nullable',
                 'string',
                 'regex:/^[A-Z0-9]{5}-[A-Z0-9]{5}-[A-Z0-9]{5}$/',

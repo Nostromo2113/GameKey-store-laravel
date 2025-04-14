@@ -19,11 +19,11 @@ class UpdateController extends Controller
     public function __invoke(UpdateRequest $request, User $user)
     {
         $data = $request->validated();
-            $user = $this->userService->update($data['user'], $user);
+        $user = $this->userService->update($data['user'], $user);
 
-            return response()->json([
-                'message' => 'Пользователь успешно обновлен',
-                'data' => new UserResource($user)
-            ], 200);
+        return response()->json([
+            'message' => 'Пользователь успешно обновлен',
+            'data'    => new UserResource($user)
+        ], 200);
     }
 }

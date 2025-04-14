@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers\Admin\User\UserCart;
 
 use App\Http\Controllers\Controller;
@@ -15,6 +16,7 @@ class ShowController extends Controller
         $cart = $user->cart;
 
         $cart->load('products.activationKeys');
+
         return response()->json(new UserCartResource($cart), 200);
     }
 }

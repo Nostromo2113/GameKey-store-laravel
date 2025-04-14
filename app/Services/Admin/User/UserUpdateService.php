@@ -45,16 +45,16 @@ class UserUpdateService
             $imagePath = $this->updateAvatar($user, $data);
 
             $user->fill([
-                'name' => $data['name'],
-                'email' => $data['email'],
+                'name'         => $data['name'],
+                'email'        => $data['email'],
                 'phone_number' => $data['phone_number'],
-                'surname' => $data['surname'],
-                'patronymic' => $data['patronymic'],
-                'age' => $data['age'],
-                'address' => $data['address'],
-                'avatar' => $imagePath,
+                'surname'      => $data['surname'],
+                'patronymic'   => $data['patronymic'],
+                'age'          => $data['age'],
+                'address'      => $data['address'],
+                'avatar'       => $imagePath,
             ])->save();
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             throw new \Exception('Ошибка при записи пользователя: ' . $e->getMessage());
         }
     }

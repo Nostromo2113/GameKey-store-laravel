@@ -27,7 +27,7 @@ class StoreController extends Controller
 
         return response()->json([
             'message' => 'Продукт создан',
-            'data' => new ProductResource($product)
+            'data'    => new ProductResource($product)
         ]);
     }
 }

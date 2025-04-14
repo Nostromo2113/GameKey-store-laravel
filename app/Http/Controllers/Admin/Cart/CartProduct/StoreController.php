@@ -27,7 +27,7 @@ class StoreController extends Controller
 
         return response()->json([
             'message' => 'Продукт добавлен в корзину',
-            'data' => new UserCartResource($cart),
+            'data'    => new UserCartResource($cart),
         ], 200);
     }
 }

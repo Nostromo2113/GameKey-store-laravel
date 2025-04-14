@@ -14,15 +14,13 @@ class OrderProductService
     private $orderProductUpdate;
     private $orderProductDelete;
 
-    public function __construct
-    (
+    public function __construct(
         OrderActivationKeyManager $orderActivationKeyManager,
         OrderProductCreateService $orderProductCreateService,
         OrderProductUpdateService $orderProductUpdateService,
         OrderProductDeleteService $orderProductDeleteService
-    )
-    {
-        $this->keyManager = $orderActivationKeyManager;
+    ) {
+        $this->keyManager         = $orderActivationKeyManager;
         $this->orderProductCreate = $orderProductCreateService;
         $this->orderProductUpdate = $orderProductUpdateService;
         $this->orderProductDelete = $orderProductDeleteService;
@@ -54,7 +52,7 @@ class OrderProductService
 
         $process = function () use ($order, $data) {
             $requestOrderProducts = $data['order_products'];
-            $requestedProductIds = array_column($requestOrderProducts, 'id');
+            $requestedProductIds  = array_column($requestOrderProducts, 'id');
 
             $order->load([
                 'orderProducts.activationKeys',
@@ -70,7 +68,7 @@ class OrderProductService
 
             $selectedActivationKeys = $this->keyManager->selectKeys($requestOrderProducts, $requestProducts, $existingProducts) ?? collect([]);
 
-            $productsIds = $order->orderProducts->pluck('product_id')->toArray();
+            $productsIds         = $order->orderProducts->pluck('product_id')->toArray();
             $productsToRemoveIds = array_diff($productsIds, $requestedProductIds);
 
             $this->orderProductCreate->addProductToOrder($requestOrderProducts, $selectedActivationKeys, $existingProducts, $order);

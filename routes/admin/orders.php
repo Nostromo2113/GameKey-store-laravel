@@ -16,7 +16,7 @@ use App\Http\Controllers\Admin\Order\OrderProduct\{
 Route::group(['prefix' => 'orders'], function () {
     //  Order
     Route::get('/', IndexController::class);
-    Route::get('/by-number', ShowByNumberController::class);
+    Route::get('/number/{order_number}', ShowByNumberController::class);
     Route::get('/{order}', ShowController::class);
     Route::patch('/{order}', UpdateController::class);
     //  OrderProduct

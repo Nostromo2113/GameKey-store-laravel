@@ -42,6 +42,7 @@ class UserCreateService
                 'age'          => $data['age'],
                 'address'      => $data['address'],
                 'avatar'       => $avatar,
+                'role'         => 'admin' //Для теста
             ]);
 
             $this->cartService->store($newUser);
@@ -100,6 +101,4 @@ class UserCreateService
 
         $newUser->sendEmailVerificationNotification();
     }
-
-
 }

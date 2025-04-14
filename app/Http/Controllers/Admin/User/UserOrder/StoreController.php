@@ -7,9 +7,7 @@ use App\Http\Requests\Admin\User\UserOrder\StoreRequest;
 use App\Services\Admin\Cart\CartProduct\CartProductService;
 use App\Services\Admin\Order\OrderProduct\OrderProductService;
 use App\Services\Admin\Order\OrderService;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
-
 
 class StoreController extends Controller
 {
@@ -19,8 +17,8 @@ class StoreController extends Controller
 
     public function __construct(OrderService $orderService, CartProductService $cartProductService, OrderProductService $orderProductService)
     {
-        $this->orderService = $orderService;
-        $this->cartProductService = $cartProductService;
+        $this->orderService        = $orderService;
+        $this->cartProductService  = $cartProductService;
         $this->orderProductService = $orderProductService;
     }
 
@@ -43,7 +41,7 @@ class StoreController extends Controller
 
             return response()->json([
                 'message' => 'Заказ создан',
-                'data' => $order
+                'data'    => $order
             ], 201);
 
         } catch (\Exception $e) {
@@ -51,7 +49,7 @@ class StoreController extends Controller
 
             return response()->json([
                 'message' => 'Ошибка при создании заказа',
-                'error' => $e->getMessage()
+                'error'   => $e->getMessage()
             ], 500);
         }
     }

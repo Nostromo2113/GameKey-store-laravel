@@ -10,6 +10,7 @@ class DestroyController extends Controller
     public function __invoke(Genre $genre)
     {
         $genre->delete();
+
         return response()->json('Жанр удален', 200);
     }
 }

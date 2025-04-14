@@ -9,15 +9,14 @@ use App\Models\Product;
 
 class StoreController extends Controller
 {
-
     public function __invoke(Product $product, StoreRequest $request)
     {
         $this->authorize('create', Comment::class);
 
         $comment = $product->comments()->create([
-            'content' => $request->input('content'),
-            'user_id' => auth()->id(),
-            'user_name' => auth()->user()->name,
+            'content'       => $request->input('content'),
+            'user_id'       => auth()->id(),
+            'user_name'     => auth()->user()->name,
             'product_title' => $product->title
         ]);
 

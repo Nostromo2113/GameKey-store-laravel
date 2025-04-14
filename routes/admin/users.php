@@ -1,7 +1,6 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-
 //  User
 use App\Http\Controllers\Admin\User\{
     IndexController,
@@ -10,19 +9,16 @@ use App\Http\Controllers\Admin\User\{
     UpdateController,
     DestroyController,
 };
-
 //  UserOrder
 use App\Http\Controllers\Admin\User\UserOrder\{
     IndexController as UserOrderIndexController,
     StoreController as UserOrderStoreController,
     DestroyController as UserOrderDestroyController,
 };
-
 //  UserCart
 use App\Http\Controllers\Admin\User\UserCart\{
     ShowController as UserCartShowController,
 };
-
 
 Route::group(['prefix' => 'users'], function () {
     //  User

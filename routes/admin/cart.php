@@ -1,17 +1,14 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-
 //  Cart
 use App\Http\Controllers\Admin\Cart\IndexController;
-
 //CartProduct
 use App\Http\Controllers\Admin\Cart\CartProduct\{
     StoreController,
     UpdateController,
     DestroyController
 };
-
 
 Route::prefix('cart')->group(function () {
     // Корзина

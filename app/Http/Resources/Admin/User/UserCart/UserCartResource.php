@@ -15,20 +15,20 @@ class UserCartResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-            'id' => $this->id,
-            'user_id' => $this->user_id,
+            'id'          => $this->id,
+            'user_id'     => $this->user_id,
             'total_price' => $this->products->reduce(function ($sum, $product) {
-                return $sum + ($product->price *  $product->pivot->quantity);
+                return $sum + ($product->price * $product->pivot->quantity);
             }, 0),
             'products' => $this->products->map(function ($product) {
                 return [
-                    'id' => $product->id,
-                    'title' => $product->title,
-                    'publisher' => $product->publisher,
-                    'release_date' => $product->release_date,
-                    'preview_image' => $product->preview_image,
-                    'price' => $product->price,
-                    'quantity_cart' => $product->pivot->quantity,
+                    'id'             => $product->id,
+                    'title'          => $product->title,
+                    'publisher'      => $product->publisher,
+                    'release_date'   => $product->release_date,
+                    'preview_image'  => $product->preview_image,
+                    'price'          => $product->price,
+                    'quantity_cart'  => $product->pivot->quantity,
                     'quantity_store' => $product->activationKeys->where('order_product_id', null)->count(),
                 ];
             })

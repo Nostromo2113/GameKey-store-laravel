@@ -10,6 +10,7 @@ class IndexController extends Controller
     public function __invoke()
     {
         $carts = Cart::all();
+
         return response()->json($carts, 200);
     }
 }

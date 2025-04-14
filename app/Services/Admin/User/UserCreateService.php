@@ -3,17 +3,14 @@
 namespace App\Services\Admin\User;
 
 use App\Jobs\SendMailJob;
-use App\Mail\PasswordReset;
 use App\Mail\UserRegistered;
 use App\Models\User;
 use App\Services\Admin\Cart\CartService;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Mail;
 
 class UserCreateService
 {
-
     private $cartService;
 
     public function __construct(CartService $cartService)
@@ -32,19 +29,19 @@ class UserCreateService
         DB::beginTransaction();
 
         try {
-            $avatar = 'uploads/users/avatars/default_avatar.jpg';
+            $avatar   = 'uploads/users/avatars/default_avatar.jpg';
             $password = isset($data['password']) ? $data['password'] : $this->genPassword(6);
 
             $newUser = User::create([
-                'name' => $data['name'],
-                'email' => $data['email'],
+                'name'         => $data['name'],
+                'email'        => $data['email'],
                 'phone_number' => $data['phone_number'],
-                'password' => Hash::make($password),
-                'surname' => $data['surname'],
-                'patronymic' => $data['patronymic'],
-                'age' => $data['age'],
-                'address' => $data['address'],
-                'avatar' => $avatar,
+                'password'     => Hash::make($password),
+                'surname'      => $data['surname'],
+                'patronymic'   => $data['patronymic'],
+                'age'          => $data['age'],
+                'address'      => $data['address'],
+                'avatar'       => $avatar,
             ]);
 
             $this->cartService->store($newUser);
@@ -71,13 +68,14 @@ class UserCreateService
      */
     private function genPassword(int $length = 6): string
     {
-        $chars = 'qazxswedcvfrtgbnhyujmkiolp1234567890QAZXSWEDCVFRTGBNHYUJMKIOLP';
-        $size = strlen($chars) - 1;
+        $chars    = 'qazxswedcvfrtgbnhyujmkiolp1234567890QAZXSWEDCVFRTGBNHYUJMKIOLP';
+        $size     = strlen($chars) - 1;
         $password = '';
 
         while ($length--) {
             $password .= $chars[random_int(0, $size)];
         }
+
         return $password;
     }
 
@@ -95,7 +93,7 @@ class UserCreateService
             UserRegistered::class,
             [
                 'password' => $password,
-                'user' => $newUser
+                'user'     => $newUser
             ],
             $newUser->email
         );

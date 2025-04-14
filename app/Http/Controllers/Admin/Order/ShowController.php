@@ -17,6 +17,7 @@ class ShowController extends Controller
                 $query->withTrashed();
             }
         ]);
+
         return new OrderShowResource($order);
     }
 }

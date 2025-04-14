@@ -12,7 +12,7 @@ class UserDestroyService
         try {
             $this->deleteUserAvatar($user);
             $user->delete();
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             throw new \Exception('Ошибка при удалении пользователя: ' . $e->getMessage());
         }
     }
@@ -21,10 +21,10 @@ class UserDestroyService
     {
         try {
             $avatar = $user->avatar;
-            if($avatar != 'uploads/users/avatars/default_avatar.jpg' && Storage::disk('public')->exists($avatar) && isset($data['file'])) {
+            if ($avatar != 'uploads/users/avatars/default_avatar.jpg' && Storage::disk('public')->exists($avatar) && isset($data['file'])) {
                 Storage::disk('public')->delete($avatar);
             }
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             throw new \Exception('Ошибка при удалении аватара пользователя: ' . $e->getMessage());
         }
     }

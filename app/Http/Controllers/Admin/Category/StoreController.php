@@ -16,7 +16,7 @@ class StoreController extends Controller
 
         return response()->json([
             'message' => 'Категория создана',
-            'data' => $newCategory
+            'data'    => $newCategory
         ], 201);
     }
 }

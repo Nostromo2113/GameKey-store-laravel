@@ -14,9 +14,9 @@ class CartService
         $this->cartStoreService = $cartStoreService;
     }
 
-    public function store (User $user): Cart
+    public function store(User $user): Cart
     {
-       return $this->cartStoreService->storeCart($user);
+        return $this->cartStoreService->storeCart($user);
     }
 
 }

@@ -26,13 +26,12 @@ class OrderProductUpdateService
         array       $requestOrderProducts,
         Collection  $existingProducts,
         ?Collection $selectedActivationKeys
-    ): void
-    {
+    ): void {
         if (empty($requestOrderProducts) && empty($existingProducts) && empty($selectedActivationKeys)) {
             return;
         }
 
-        $existingProductsById = $existingProducts->keyBy('product_id');
+        $existingProductsById   = $existingProducts->keyBy('product_id');
         $activationKeysToUpdate = [];
 
         foreach ($requestOrderProducts as $requestItem) {
@@ -48,5 +47,3 @@ class OrderProductUpdateService
         }
     }
 }
-
-

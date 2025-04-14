@@ -15,6 +15,16 @@ class Product extends Model
     protected $guarded = false;
 
 
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::deleting(function ($product) {
+            // Каскадное удаление после softDelete
+            $product->orderProducts()->delete();
+        });
+    }
+
     public function activationKeys()
     {
         return $this->hasMany(ActivationKey::class, 'product_id');
@@ -38,6 +48,11 @@ class Product extends Model
     public function orders()
     {
         return $this->belongsToMany(Order::class, 'order_products', 'product_id', 'order_id')->withPivot('activation_key_id');
+    }
+
+    public function orderProducts()
+    {
+        return $this->hasMany(OrderProduct::class, 'product_id');
     }
 
     public function cart()

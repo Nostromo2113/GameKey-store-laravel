@@ -15,4 +15,3 @@ class IndexController extends Controller
         return new ActivationKeyCollectionResource($keys);
     }
 }
-

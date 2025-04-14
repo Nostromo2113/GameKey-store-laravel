@@ -4,7 +4,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\StatsController;
 
-
 Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
@@ -36,5 +35,3 @@ Route::group(['prefix' => 'admin'], function () {
 
     Route::get('stats', StatsController::class);
 });
-
-

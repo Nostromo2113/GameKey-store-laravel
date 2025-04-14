@@ -19,7 +19,7 @@ class UpdateController extends Controller
 
     public function __invoke(Order $order, UpdateRequest $request)
     {
-        $data = $request->validated();
+        $data  = $request->validated();
         $order = $this->orderUpdateService->update($order, $data);
 
         $order->load([
@@ -32,7 +32,7 @@ class UpdateController extends Controller
 
         return response()->json([
             'message' => 'Статус заказа изменен',
-            'data' => new OrderShowResource($order)
+            'data'    => new OrderShowResource($order)
         ]);
     }
 }

@@ -3,8 +3,6 @@
 namespace App\Services\Admin\Order;
 
 use App\Models\Order;
-use App\Services\Admin\Cart\CartProduct\CartProductService;
-use App\Services\Admin\Order\OrderProduct\OrderProductService;
 
 class OrderStoreService
 {
@@ -13,8 +11,8 @@ class OrderStoreService
         $userId = $data['user_id'];
 
         $order = Order::create([
-            'user_id' => $userId,
-            'status' => 'pending',
+            'user_id'      => $userId,
+            'status'       => 'pending',
             'order_number' => $this->generateOrderNumber(5),
         ]);
 

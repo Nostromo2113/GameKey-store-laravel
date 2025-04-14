@@ -17,10 +17,11 @@ class DestroyController extends Controller
     }
     public function __invoke(Cart $cart, $productId)
     {
-       $updatedCart = $this->cartProductService->destroy($cart, $productId);
+        $updatedCart = $this->cartProductService->destroy($cart, $productId);
+
         return response()->json([
             'message' => 'Продукт удален из корзины',
-            'data' => new UserCartResource($updatedCart)
+            'data'    => new UserCartResource($updatedCart)
         ], 200);
     }
 }

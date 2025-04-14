@@ -1,7 +1,6 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-
 //  Product
 use App\Http\Controllers\Admin\Product\{
     IndexController,
@@ -10,20 +9,17 @@ use App\Http\Controllers\Admin\Product\{
     UpdateController,
     DestroyController
 };
-
 // ProductActivationKey
 use App\Http\Controllers\Admin\Product\ProductActivationKey\{
     IndexController as ProductActivationKeyIndexController,
     StoreController as ProductActivationKeyStoreController,
     DestroyController as ProductActivationKeyDestroyController
 };
-
 // ProductComment
 use App\Http\Controllers\Admin\Product\ProductComment\{
     IndexController as ProductCommentIndexController,
     StoreController as ProductCommentStoreController
 };
-
 
 Route::group(['prefix' => 'products'], function () {
     //  Product

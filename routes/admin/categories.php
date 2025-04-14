@@ -1,12 +1,11 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-
 use App\Http\Controllers\Admin\Category\{
-  IndexController,
-  StoreController,
-  UpdateController,
-  DestroyController
+    IndexController,
+    StoreController,
+    UpdateController,
+    DestroyController
 };
 
 Route::group(['prefix' => 'categories'], function () {

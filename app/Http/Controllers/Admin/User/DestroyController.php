@@ -17,6 +17,7 @@ class DestroyController extends Controller
     public function __invoke(User $user)
     {
         $this->userService->destroy($user);
+
         return response()->json('User removed', 200);
     }
 }

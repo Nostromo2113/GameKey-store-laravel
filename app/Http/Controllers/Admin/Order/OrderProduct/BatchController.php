@@ -40,7 +40,7 @@ class BatchController extends Controller
 
         return response()->json([
             'message' => 'Заказ успешно обновлен.',
-            'order' => new OrderShowResource($updatedOrder),
+            'order'   => new OrderShowResource($updatedOrder),
         ]);
     }
 }

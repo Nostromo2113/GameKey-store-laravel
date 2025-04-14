@@ -30,7 +30,8 @@ class OrderUpdateService
         if (!isset($data['is_execute'])) {
             throw new \InvalidArgumentException('Данные для обновления заказа отсутствуют.', 400);
         }
-            return $this->executeOrder($order);
+
+        return $this->executeOrder($order);
     }
 
 
@@ -41,25 +42,25 @@ class OrderUpdateService
      * @return Order Возвращает обновленный заказ.
      * @throws \Exception
      */
-    private function executeOrder(Order $order) :Order
+    private function executeOrder(Order $order): Order
     {
-            if($order->isCompleted()){
-                throw new \Exception('Заказ выполнен. Изменение статуса невозможно', 403);
-            }
-            $order->status = 'completed';
-            $order->save();
-            $order->load(['orderProducts', 'user']);
-            $orderProductsIds = $order->orderProducts->pluck('id')->toArray();
-            $orderProductsKeys = $this->keyManager->returnOrderProductsKeys($orderProductsIds);
-            $this->keyManager->softDeleteKeys($orderProductsIds);
+        if ($order->isCompleted()) {
+            throw new \Exception('Заказ выполнен. Изменение статуса невозможно', 403);
+        }
+        $order->status = 'completed';
+        $order->save();
+        $order->load(['orderProducts', 'user']);
+        $orderProductsIds  = $order->orderProducts->pluck('id')->toArray();
+        $orderProductsKeys = $this->keyManager->returnOrderProductsKeys($orderProductsIds);
+        $this->keyManager->softDeleteKeys($orderProductsIds);
 
-            // Выполняется при успешной транзакции
-            SendMailJob::dispatch(
-                ActivationKey::class,
-                $orderProductsKeys,
-                $order->user->email
-            )->afterCommit();
+        // Выполняется при успешной транзакции
+        SendMailJob::dispatch(
+            ActivationKey::class,
+            $orderProductsKeys,
+            $order->user->email
+        )->afterCommit();
 
-            return $order;
+        return $order;
     }
 }

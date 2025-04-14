@@ -8,7 +8,6 @@ use App\Http\Resources\Admin\User\UserResource;
 use App\Services\Admin\User\UserService;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
-
 class StoreController extends Controller
 {
     private UserService $userService;
@@ -27,8 +26,8 @@ class StoreController extends Controller
         $token = JWTAuth::fromUser($newUser);
 
         return response()->json([
-            'message' => 'Пользователь создан',
-            'data' => new UserResource($newUser),
+            'message'      => 'Пользователь создан',
+            'data'         => new UserResource($newUser),
             'access_token' => $token
         ], 201);
     }

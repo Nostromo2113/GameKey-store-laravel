@@ -10,6 +10,7 @@ class IndexController extends Controller
     public function __invoke(Product $product)
     {
         $comments = $product->comments;
+
         return $comments;
     }
 }

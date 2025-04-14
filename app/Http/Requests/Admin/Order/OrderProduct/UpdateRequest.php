@@ -22,7 +22,7 @@ class UpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'order_products' => 'present|array',
+            'order_products'      => 'present|array',
             'order_products.*.id' => [
                 'required',
                 'integer',

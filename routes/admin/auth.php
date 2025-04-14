@@ -6,11 +6,9 @@ use App\Http\Controllers\Admin\Auth\RegistrationController;
 use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Route;
 
-
-
 Route::group([
     'middleware' => 'api',
-    'prefix' => 'auth'
+    'prefix'     => 'auth'
 ], function () {
     Route::post('login', [AuthController::class, 'login']);
     Route::post('logout', [AuthController::class, 'logout']);
@@ -18,7 +16,7 @@ Route::group([
     Route::post('me', [AuthController::class, 'me']);
 });
 
-Route::group(['prefix' => 'password'], function() {
+Route::group(['prefix' => 'password'], function () {
     Route::post('reset', PasswordResetController::class);
     Route::post('change', PasswordUpdateController::class)->middleware('auth:api');
 });

@@ -8,7 +8,6 @@ use App\Models\Genre;
 
 class StoreController extends Controller
 {
-
     public function __invoke(StoreRequest $request)
     {
         $data = $request->validated();
@@ -17,7 +16,7 @@ class StoreController extends Controller
 
         return response()->json([
             'message' => 'Genre created successfully',
-            'data' => $newGenre
+            'data'    => $newGenre
         ], 201);
     }
 }

@@ -3,7 +3,6 @@
 namespace App\Services\Admin\Product;
 
 use App\Models\Product;
-use App\Models\TechnicalRequirement;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
@@ -14,12 +13,13 @@ class ProductUpdateService
         DB::beginTransaction();
 
         try {
-            $file = $this->overwriteFile($product, $data);
+            $file    = $this->overwriteFile($product, $data);
             $product = $this->fillProduct($product, $data, $file);
             $this->syncGenresForProduct($product, $data);
             $this->updateProductTechnicalRequirements($product, $data);
 
             DB::commit();
+
             return $product;
 
         } catch (\Exception $e) {
@@ -33,14 +33,14 @@ class ProductUpdateService
     {
         try {
             $product->fill([
-                'title' => $data['title'],
-                'description' => $data['description'],
-                'publisher' => $data['publisher'],
-                'release_date' => $data['release_date'],
+                'title'         => $data['title'],
+                'description'   => $data['description'],
+                'publisher'     => $data['publisher'],
+                'release_date'  => $data['release_date'],
                 'preview_image' => $file,
-                'price' => $data['price'],
-                'category_id' => $data['category'],
-                'is_published' => $data['is_published'],
+                'price'         => $data['price'],
+                'category_id'   => $data['category'],
+                'is_published'  => $data['is_published'],
             ])->save();
 
             return $product;

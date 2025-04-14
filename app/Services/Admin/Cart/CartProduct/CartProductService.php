@@ -16,10 +16,9 @@ class CartProductService
         CartProductCreateService  $cartProductCreateService,
         CartProductUpdateService  $cartProductUpdateService,
         CartProductDestroyService $cartProductDestroyService
-    )
-    {
-        $this->cartProductCreateService = $cartProductCreateService;
-        $this->cartProductUpdateService = $cartProductUpdateService;
+    ) {
+        $this->cartProductCreateService  = $cartProductCreateService;
+        $this->cartProductUpdateService  = $cartProductUpdateService;
         $this->cartProductDestroyService = $cartProductDestroyService;
     }
 

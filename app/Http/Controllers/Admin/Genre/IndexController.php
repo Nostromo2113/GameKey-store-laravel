@@ -9,7 +9,8 @@ class IndexController extends Controller
 {
     public function __invoke()
     {
-       $genres = Genre::all();
-       return $genres;
+        $genres = Genre::all();
+
+        return $genres;
     }
 }

@@ -31,7 +31,7 @@ class PasswordUpdateController extends Controller
             } catch (ValidationException $e) {
 
                 return response()->json([
-                    'error' => $e->getMessage(),
+                    'error'  => $e->getMessage(),
                     'errors' => $e->errors()
                 ], 422);
 

@@ -45,7 +45,7 @@ class ProductStoreService
 
             $product->genres()->sync($genres);
 
-            $this->generateActivationKeys($product->id, 50);
+            $this->activationKeyGenerator->generateForProduct($product->id, 50);
 
             DB::commit();
 
@@ -70,18 +70,5 @@ class ProductStoreService
         } catch (\Exception $e) {
             throw new \Exception('Ошибка при записи превью файла продукта: ' . $e->getMessage());
         }
-    }
-
-    private function generateActivationKeys(int $productId, int $quantity): void
-    {
-        $keys = [];
-        for ($i = 0; $i < $quantity; $i++) {
-            $keys[] = [
-                'product_id' => $productId,
-                'key' => $this->activationKeyGenerator->generate(),
-                'created_at' => now(),
-            ];
-        }
-        ActivationKey::insert($keys);
     }
 }

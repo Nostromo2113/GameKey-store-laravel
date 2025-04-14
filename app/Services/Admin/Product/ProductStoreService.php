@@ -2,13 +2,21 @@
 
 namespace App\Services\Admin\Product;
 
+use App\Models\ActivationKey;
 use App\Models\Product;
 use App\Models\TechnicalRequirement;
+use App\Services\Admin\ActivationKeyGeneratorService;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
 class ProductStoreService
 {
+    private $activationKeyGenerator;
+
+    public function __construct(ActivationKeyGeneratorService $activationKeyGeneratorService)
+    {
+        $this->activationKeyGenerator = $activationKeyGeneratorService;
+    }
     public function storeProduct($data)
     {
         DB::beginTransaction();
@@ -37,6 +45,8 @@ class ProductStoreService
 
             $product->genres()->sync($genres);
 
+            $this->generateActivationKeys($product->id, 50);
+
             DB::commit();
 
             return $product;
@@ -60,5 +70,18 @@ class ProductStoreService
         } catch (\Exception $e) {
             throw new \Exception('Ошибка при записи превью файла продукта: ' . $e->getMessage());
         }
+    }
+
+    private function generateActivationKeys(int $productId, int $quantity): void
+    {
+        $keys = [];
+        for ($i = 0; $i < $quantity; $i++) {
+            $keys[] = [
+                'product_id' => $productId,
+                'key' => $this->activationKeyGenerator->generate(),
+                'created_at' => now(),
+            ];
+        }
+        ActivationKey::insert($keys);
     }
 }

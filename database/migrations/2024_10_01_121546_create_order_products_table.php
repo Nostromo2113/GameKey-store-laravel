@@ -22,7 +22,7 @@ return new class extends Migration
             // Связь с продуктом
             $table->unsignedBigInteger('product_id');
             $table->index('product_id', 'order_product_product_idx');
-            $table->foreign('product_id', 'order_product_product_fk')->references('id')->on('products')->onDelete('cascade');;
+            $table->foreign('product_id', 'order_product_product_fk')->references('id')->on('products')->onDelete('cascade');
 
             $table->timestamps();
         });

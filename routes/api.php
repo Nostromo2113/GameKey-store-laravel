@@ -15,6 +15,8 @@ Route::group(['prefix' => 'admin'], function () {
     require base_path('routes/admin/auth.php');
 
     Route::middleware('auth:api')->group(function () {
+        //  stats
+        Route::get('stats', StatsController::class);
         //  categories
         require base_path('routes/admin/categories.php');
         //  genres
@@ -33,5 +35,4 @@ Route::group(['prefix' => 'admin'], function () {
         require base_path('routes/admin/orders.php');
     });
 
-    Route::get('stats', StatsController::class);
 });

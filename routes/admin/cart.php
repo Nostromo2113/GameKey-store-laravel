@@ -10,9 +10,10 @@ use App\Http\Controllers\Admin\Cart\CartProduct\{
     DestroyController
 };
 
-Route::prefix('cart')->group(function () {
+Route::group(['prefix' => 'cart'], function () {
     // Корзина
     Route::get('/', IndexController::class);
+
     // Продукты корзины
     Route::prefix('{cart}/products')->group(function () {
         Route::post('/', StoreController::class);

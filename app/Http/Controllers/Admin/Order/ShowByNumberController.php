@@ -9,9 +9,9 @@ use App\Models\Order;
 
 class ShowByNumberController extends Controller
 {
-    public function __invoke(ShowRequest $request)
+    public function __invoke($query)
     {
-        $data = $request->validated();
+        $data = ['order_number' => $query];
 
         $filter = app()->make(OrderFilter::class, ['queryParams' => array_filter($data, fn ($value) => $value !== null && $value !== '')]);
 

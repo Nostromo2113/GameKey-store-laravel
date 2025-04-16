@@ -21,7 +21,4 @@ class OrderFilter extends AbstractFilter
     {
         $builder->where('order_number', $value);
     }
-
-
-
 }

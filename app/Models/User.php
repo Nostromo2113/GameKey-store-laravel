@@ -2,16 +2,22 @@
 
 namespace App\Models;
 
+use App\Notifications\SendVerifyWithQueueNotification;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
 class User extends Authenticatable implements MustVerifyEmail, JWTSubject
 {
-    use HasFactory, Notifiable;
+    use HasFactory;
+    use Notifiable;
+    use SoftDeletes;
 
+    public const ROLE_USER  = 'user';
+    public const ROLE_ADMIN = 'admin';
 
     protected $fillable = [
         'name',
@@ -22,7 +28,9 @@ class User extends Authenticatable implements MustVerifyEmail, JWTSubject
         'address',
         'email',
         'password',
-        'avatar'
+        'avatar',
+        'phone_number',
+        'role'
     ];
 
     protected $hidden = [
@@ -35,8 +43,13 @@ class User extends Authenticatable implements MustVerifyEmail, JWTSubject
     {
         return [
             'email_verified_at' => 'datetime',
-            'password' => 'hashed',
+            'password'          => 'hashed',
         ];
+    }
+
+    public function isAdmin()
+    {
+        return $this->role == self::ROLE_ADMIN;
     }
 
     public function orders()
@@ -44,13 +57,13 @@ class User extends Authenticatable implements MustVerifyEmail, JWTSubject
         return $this->hasMany(Order::class, 'user_id');
     }
 
-    const GENDER_MALE = 1;
-    const GENDER_FEMALE = 2;
+    public const GENDER_MALE   = 1;
+    public const GENDER_FEMALE = 2;
 
-    static function getGenders()
+    public static function getGenders()
     {
         return [
-            self::GENDER_MALE => 'Мужской',
+            self::GENDER_MALE   => 'Мужской',
             self::GENDER_FEMALE => 'Женский'
         ];
     }
@@ -92,5 +105,10 @@ class User extends Authenticatable implements MustVerifyEmail, JWTSubject
     public function getJWTCustomClaims()
     {
         return [];
+    }
+
+    public function sendEmailVerificationNotification()
+    {
+        $this->notify(new SendVerifyWithQueueNotification());
     }
 }

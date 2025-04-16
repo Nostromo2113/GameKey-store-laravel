@@ -7,10 +7,13 @@ use App\Models\ActivationKey;
 
 class DestroyController extends Controller
 {
-    public function __invoke($id)
+    public function __invoke(ActivationKey $activationKey)
     {
-        $activationKey = ActivationKey::findOrFail($id);
+        // policy
+        $this->authorize('delete', $activationKey);
+
         $activationKey->delete();
+
         return response()->json('Activation key removed', 200);
     }
 }

@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Contracts\ActivationKeyRepositoryInterface;
+use App\Repositories\ActivationKeyRepository;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -19,6 +21,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        $this->app->bind(ActivationKeyRepositoryInterface::class, ActivationKeyRepository::class);
     }
 }

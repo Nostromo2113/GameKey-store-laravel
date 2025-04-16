@@ -14,7 +14,7 @@ class IndexRequest extends FormRequest
     public function rules()
     {
         return [
-            'id' => 'required|integer',
+            'product_id' => 'integer|exists:products,id',
         ];
     }
 }

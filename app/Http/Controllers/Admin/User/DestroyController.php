@@ -4,17 +4,20 @@ namespace App\Http\Controllers\Admin\User;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
-use Illuminate\Support\Facades\Storage;
+use App\Services\Admin\User\UserService;
 
 class DestroyController extends Controller
 {
+    private $userService;
+
+    public function __construct(UserService $userService)
+    {
+        $this->userService = $userService;
+    }
     public function __invoke(User $user)
     {
-        $avatar = $user->avatar;
-        if($avatar != 'uploads/users/avatars/default_avatar.jpg' && Storage::disk('public')->exists($avatar) && isset($data['file'])) {
-            Storage::disk('public')->delete($avatar);
-        }
-        $user->delete();
+        $this->userService->destroy($user);
+
         return response()->json('User removed', 200);
     }
 }

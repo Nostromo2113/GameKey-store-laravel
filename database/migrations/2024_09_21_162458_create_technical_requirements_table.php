@@ -4,8 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class () extends Migration {
     /**
      * Run the migrations.
      */
@@ -19,7 +18,6 @@ return new class extends Migration
             $table->string('gpu');
             $table->integer('ram');
             $table->integer('storage');
-            $table->boolean('is_recommended');
 
             $table->unsignedBigInteger('product_id');
             $table->index('product_id', 'technical_requirements_product_idx');

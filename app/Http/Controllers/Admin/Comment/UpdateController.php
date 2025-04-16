@@ -8,16 +8,19 @@ use App\Models\Comment;
 
 class UpdateController extends Controller
 {
-    public function __invoke(UpdateRequest $request)
+    public function __invoke(Comment $comment, UpdateRequest $request)
     {
+        $this->authorize('update', $comment);
+
         $data = $request->validated();
-        $comment = Comment::findOrFail($data['id']);
+
         $comment->update([
            'content' => $data['content']
         ]);
+
         return response()->json([
             'message' => 'Comment successfully updated',
-            'data' => $comment
+            'data'    => $comment
         ], 200);
     }
 }

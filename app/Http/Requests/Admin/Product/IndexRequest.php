@@ -14,7 +14,10 @@ class IndexRequest extends FormRequest
     public function rules()
     {
         return [
-            'query' => 'nullable|string'
+            'title'        => 'nullable|string|max:255',
+            'is_published' => 'nullable|boolean',
+            'category_id'  => 'nullable|integer|exists:categories,id',
+            'price_sort'   => 'nullable|in:asc,desc',
         ];
     }
 }

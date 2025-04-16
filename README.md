@@ -1,66 +1,225 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# GameKey Store - Laravel REST API Dashboard
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Административная панель для управления магазином ключей активации игр с REST API интерфейсом.
 
-## About Laravel
+Установка для ознакомления с проектом не требуется. Доступ к приложению доступен по ссылке:
+ - Рабочая ссылка приложения <https://google.com>
+ - Репозиторий интерфейса приложения <https://github.com/Nostromo2113/game_key_store_dashboard_front>
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## Техстек  
+- PHP 8.3, Laravel 11, MySQL  
+- **Пакеты**: `tymon/jwt-auth`, Laravel Telescope  
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Интерфейс
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+### Магазин
+![Магазин](https://i.imgur.com/PCLnq21.jpeg)
+![Продукт в магазине](https://i.imgur.com/d8QVMZD.jpeg)
+### Работа с заказом 
+![Заказ](https://i.imgur.com/6TGkfJA.jpeg)
+![Заказ](https://i.imgur.com/SvwgjGI.jpeg)
 
-## Learning Laravel
+## Основные возможности
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+### Аутентификация и пользователи
+- Регистрация новых пользователей
+- Авторизация по JWT (tymon/jwt-auth)
+- Восстановление пароля через email
+- Смена пароля в личном кабинете
+- **Управление пользователями (админ):**
+  - Добавление/удаление
+  - Редактирование данных
+  - Загрузка и смена аватаров
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+### Магазин
+- Просмотр каталога игр
+- Система корзины
+- Оформление заказов
+- **Отправка ключей на email** (после фиктивной оплаты)
+- **Комментарии к продуктам:**
+  - Добавление/редактирование/удаление (автор или админ)
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+### Админ-панель
+- **Управление продуктами:**
+  - Просмотр/добавление/редактирование/удаление
+  - Загрузка и изменение изображений
+- **Управление ключами активации:**
+  - Добавление/удаление ключей
+  - Автоматический подбор ключей при изменении заказа
+- **Управление заказами:**
+  - Просмотр всех заказов
+  - Редактирование (до завершения)
+  - Пакетное обновление ключей
 
-## Laravel Sponsors
+## Особенности реализации
+### Система управления ключами
+- **Жизненный цикл**:  
+  `Свободные` → `Зарезервированные` → `Использованные` (soft delete)
+- **Безопасные операции**:  
+  Транзакции + массовые обновления через `OrderActivationKeyManager`
+- **Автоматизация**:  
+  - Динамический подбор при изменении заказа  
+  - Проверка доступности перед резервированием
+- **Архитектура**:  
+  Репозиторий (`ActivationKeyRepositoryInterface`) + DI в сервисах
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+### Оптимизации
+- **Очереди (Queues):**
+  - Все письма с ключами отправляются через очереди
+- **Минимальные запросы к БД:** пакетные операции с ключами
+- **Eager Loading:** предотвращение N+1 проблем
+- **Telescope:** мониторинг запросов и производительности
 
-### Premium Partners
+## Что отрабатывалось
+Проект демонстрирует:
+- Работу с REST API (JWT, CRUD)
+- Бизнес-логику (управление ключами)
+- Оптимизацию запросов (eager loading, транзакции)
+- Асинхронные задачи (очереди)
+- Безопасность (валидация, транзакции)
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+## Что в планах
+- Вынести запросы на чтение в репозитории
+- Использовать возможности dependency injection
+- Добавить тесты
+- Настроить передачу параметров через DTO
+- Расширить возможности фильтрации и сорировки
 
-## Contributing
+## API
+base url:  
+ - `/api/admin`
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+## Authentication
+Все маршруты кроме auth требуют JWT-токен в заголовке:
+`Authorization: Bearer {token}`
 
-## Code of Conduct
+## Маршруты
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+### Аутентификация
+| Метод | Путь | Описание |
+|-------|------|----------|
+| POST | `/auth/login` | Вход в систему |
+| POST | `/auth/logout` | Выход из системы |
+| POST | `/auth/refresh` | Обновление токена |
+| POST | `/auth/me` | Информация о текущем пользователе |
+| POST | `/password/reset` | Сброс пароля |
+| POST | `/password/change` | Изменение пароля |
+| POST | `/registration` | Регистрация нового пользователя |
 
-## Security Vulnerabilities
+### Пользователи (требуется авторизация)
+| Метод | Путь | Описание |
+|-------|------|----------|
+| GET | `/users` | Список всех пользователей |
+| POST | `/users` | Создание пользователя |
+| GET | `/users/{user}` | Получение пользователя |
+| PATCH | `/users/{user}` | Обновление пользователя |
+| DELETE | `/users/{user}` | Удаление пользователя |
+| GET | `/users/{user}/orders` | Список заказов пользователя |
+| POST | `/users/{user}/orders` | Создание заказа для пользователя |
+| DELETE | `/users/{user}/orders/{order}` | Удаление заказа пользователя |
+| GET | `/users/{user}/cart` | Получение корзины пользователя |
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+### Категории (требуется авторизация)
+| Метод | Путь | Описание |
+|-------|------|----------|
+| GET | `/categories` | Список категорий |
+| POST | `/categories` | Создание категории |
+| PATCH | `/categories/{category}` | Обновление категории |
+| DELETE | `/categories/{category}` | Удаление категории |
 
-## License
+### Жанры (требуется авторизация)
+| Метод | Путь | Описание |
+|-------|------|----------|
+| GET | `/genres` | Список жанров |
+| POST | `/genres` | Создание жанра |
+| PATCH | `/genres/{genre}` | Обновление жанра |
+| DELETE | `/genres/{genre}` | Удаление жанра |
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+### Продукты (требуется авторизация)
+| Метод | Путь | Описание |
+|-------|------|----------|
+| GET | `/products` | Список продуктов |
+| POST | `/products` | Создание продукта |
+| GET | `/products/{product}` | Получение продукта |
+| PATCH | `/products/{product}` | Обновление продукта |
+| DELETE | `/products/{product}` | Удаление продукта |
+| GET | `/products/{product}/activation_keys` | Ключи активации продукта |
+| POST | `/products/{product}/activation_keys` | Добавление ключей активации |
+| GET | `/products/{product}/comments` | Комментарии продукта |
+| POST | `/products/{product}/comments` | Добавление комментария |
+
+### Комментарии (требуется авторизация)
+| Метод | Путь | Описание |
+|-------|------|----------|
+| GET | `/comments/{comment}` | Получение комментария |
+| PATCH | `/comments/{comment}` | Обновление комментария |
+| DELETE | `/comments/{comment}` | Удаление комментария |
+
+### Ключи активации (требуется авторизация)
+| Метод | Путь | Описание |
+|-------|------|----------|
+| GET | `/activation_keys` | Список ключей активации |
+| DELETE | `/activation_keys/{key}` | Удаление ключа активации |
+
+### Корзина (требуется авторизация)
+| Метод | Путь | Описание |
+|-------|------|----------|
+| GET | `/cart` | Получение корзины |
+| POST | `/cart/{cart}/products` | Добавление товара в корзину |
+| PATCH | `/cart/{cart}/products/{product}` | Обновление товара в корзине |
+| DELETE | `/cart/{cart}/products/{product}` | Удаление товара из корзины |
+
+### Заказы (требуется авторизация)
+| Метод | Путь | Описание |
+|-------|------|----------|
+| GET | `/orders` | Список заказов |
+| GET | `/orders/number/{order_number}` | Получение заказа по номеру |
+| GET | `/orders/{order}` | Получение заказа |
+| PATCH | `/orders/{order}` | Обновление заказа |
+| PATCH | `/orders/{order}/products` | Пакетное обновление товаров в заказе |
+
+### Статистика (требуется авторизация)
+| Метод | Путь | Описание |
+|-------|------|----------|
+| GET | `/stats` | Получение статистики |
+
+
+
+
+
+
+
+
+## Установка и запуск
+при необходимости
+
+```bash
+# 1. Клонирование репозитория
+git clone !!НЕ ЗАБЫТЬ ССЫЛКУ!!
+cd repo
+
+# 2. Установка зависимостей
+composer install
+
+# 3. Настройка окружения
+cp .env.example .env
+
+# 4. Генерация ключей
+php artisan key:generate
+php artisan jwt:secret
+
+# 5. Настройка хранилища
+php artisan storage:link
+
+# 6. Запуск миграций
+php artisan migrate
+
+# 7. Запуск обработчика очередей (в отдельном терминале)
+php artisan queue:work
+
+# 8. Запуск сервера разработки
+php artisan serve
+
+# 8. Запуск воркера
+php artisan queue:work
+

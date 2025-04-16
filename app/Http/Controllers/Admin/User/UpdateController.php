@@ -4,45 +4,26 @@ namespace App\Http\Controllers\Admin\User;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\User\UpdateRequest;
+use App\Http\Resources\Admin\User\UserResource;
 use App\Models\User;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Storage;
+use App\Services\Admin\User\UserService;
 
 class UpdateController extends Controller
 {
-    public function __invoke(UpdateRequest $request)
+    private UserService $userService;
+    public function __construct(UserService $userService)
     {
-        // Получаем валидированные данные
+        $this->userService = $userService;
+    }
+
+    public function __invoke(UpdateRequest $request, User $user)
+    {
         $data = $request->validated();
-        // Найти категорию по ID
-        $user = User::findOrFail($data['id']);
-        $oldImagePath = $user->avatar;
-        //Удаляем старое изображение
-        if($oldImagePath != 'uploads/users/avatars/default_avatar.jpg' && Storage::disk('public')->exists($oldImagePath) && isset($data['file'])) {
-            Storage::disk('public')->delete($oldImagePath);
-        }
-
-        if(isset($data['file'])) {
-            $data['file'] = Storage::disk('public')->put('uploads/users/avatars', $data['file']);
-        } else {
-            $data['file'] = $oldImagePath;
-        }
-
-
-        // Обновить категорию с новыми данными
-        $user->fill([
-            'name' => $data['name'],
-            'email' => $data['email'],
-            'surname' => $data['surname'],
-            'patronymic' => $data['patronymic'],
-            'gender' => $data['gender'],
-            'age' => $data['age'],
-            'address' => $data['address'],
-            'avatar' => $data['file']
-        ])->save();
+        $user = $this->userService->update($data['user'], $user);
 
         return response()->json([
-            'message' => 'Пользователь обновлена успешно',
+            'message' => 'Пользователь успешно обновлен',
+            'data'    => new UserResource($user)
         ], 200);
     }
 }

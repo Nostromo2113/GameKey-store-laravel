@@ -4,63 +4,30 @@ namespace App\Http\Controllers\Admin\Product;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\Product\StoreRequest;
+use App\Http\Resources\Admin\Product\ProductResource;
 use App\Models\Product;
-use App\Models\TechnicalRequirement;
-use Exception;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Illuminate\Support\Facades\Storage;
+use App\Services\Admin\Product\ProductService;
 
 class StoreController extends Controller
 {
+    private $productService;
+
+    public function __construct(ProductService $productService)
+    {
+        $this->productService = $productService;
+    }
     public function __invoke(StoreRequest $request)
     {
-        try {
-            $data = $request->validated();
-            $categoryId = $data['category']['id'];
-            $genres = $data['genres'];
-            $data['technical_requirements']['is_recommended'] = 1;
-            if (isset($data['preview_image'])) {
-                $data['preview_image'] = Storage::disk('public')->put('uploads/products/preview_images', $data['preview_image']);
-            } else {
-                $data['preview_image'] = 'no image';
-            }
+        $this->authorize('create', Product::class);
+        $data = $request->validated();
 
+        $product = $this->productService->store($data['product']);
 
-            $product = Product::create([
-                'title' => $data['title'],
-                'description' => $data['description'],
-                'publisher' => $data['publisher'],
-                'release_date' => $data['release_date'],
-                'preview_image' => $data['preview_image'],
-                'price' => $data['price'],
-                'amount' => $data['amount'],
-                'category_id' => $categoryId,
-                'is_published' => $data['is_published'],
-            ]);
-            $data['technical_requirements']['product_id'] = $product['id'];
+        $product->load('category', 'technicalRequirements', 'genres', 'activationKeys');
 
-            TechnicalRequirement::create($data['technical_requirements']);
-
-
-            $product->genres()->sync($genres);
-            $product->load('category', 'technicalRequirements.php', 'genres');
-            return response()->json([
-                'message' => 'Продукт обновлен успешно',
-                'data' => $product,
-            ], 201);
-
-        } catch (ModelNotFoundException $e) {
-            // Обработка случая, когда продукт не найден
-            return response()->json([
-                'message' => 'Продукт не найден.',
-                'error' => $e->getMessage(),
-            ], 404);
-        } catch (Exception $e) {
-            // Обработка всех остальных ошибок
-            return response()->json([
-                'message' => 'Произошла ошибка при обновлении продукта.',
-                'error' => $e->getMessage(),
-            ], 500);
-        }
+        return response()->json([
+            'message' => 'Продукт создан',
+            'data'    => new ProductResource($product)
+        ]);
     }
 }

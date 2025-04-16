@@ -8,7 +8,8 @@ use Illuminate\Queue\SerializesModels;
 
 class UserRegistered extends Mailable
 {
-    use Queueable, SerializesModels;
+    use Queueable;
+    use SerializesModels;
 
     public $user;
     public $password;
@@ -18,10 +19,10 @@ class UserRegistered extends Mailable
      *
      * @return void
      */
-    public function __construct($user, $password)
+    public function __construct($data)
     {
-        $this->user = $user;
-        $this->password = $password;
+        $this->user     = $data['user'];
+        $this->password = $data['password'];
     }
 
     /**

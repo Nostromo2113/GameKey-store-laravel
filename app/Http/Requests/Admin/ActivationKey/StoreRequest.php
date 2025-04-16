@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Admin\ActivationKey;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class StoreRequest extends FormRequest
 {
@@ -22,9 +23,14 @@ class StoreRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'id' => 'required|integer|exists:products,id',
-            'key' => 'nullable|string|regex:/^[A-Z0-9]{5}-[A-Z0-9]{5}-[A-Z0-9]{5}$/|size:17|unique:activation_keys,key',
-
+            'activation_key'            => 'required|array',
+            'activation_key.product_id' => 'required|integer|exists:products,id',
+            'activation_key.key'        => [
+                'nullable',
+                'string',
+                'regex:/^[A-Z0-9]{5}-[A-Z0-9]{5}-[A-Z0-9]{5}$/',
+                Rule::unique('activation_keys', 'key')->whereNull('deleted_at')
+            ],
         ];
     }
 }

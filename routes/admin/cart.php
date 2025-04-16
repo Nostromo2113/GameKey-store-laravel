@@ -1,11 +1,23 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-
+//  Cart
 use App\Http\Controllers\Admin\Cart\IndexController;
-use App\Http\Controllers\Admin\Cart\ShowController;
+//CartProduct
+use App\Http\Controllers\Admin\Cart\CartProduct\{
+    StoreController,
+    UpdateController,
+    DestroyController
+};
 
 Route::group(['prefix' => 'cart'], function () {
+    // Корзина
     Route::get('/', IndexController::class);
-    Route::get('/{user}', ShowController::class);
+
+    // Продукты корзины
+    Route::prefix('{cart}/products')->group(function () {
+        Route::post('/', StoreController::class);
+        Route::patch('{product}', UpdateController::class);
+        Route::delete('{product}', DestroyController::class);
+    });
 });

@@ -2,14 +2,28 @@
 
 namespace App\Models;
 
+use App\Models\Traits\Filterable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Product extends Model
 {
+    use Filterable;
     use HasFactory;
+    use SoftDeletes;
     protected $guarded = false;
 
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::deleting(function ($product) {
+            // Каскадное удаление после softDelete
+            $product->orderProducts()->delete();
+        });
+    }
 
     public function activationKeys()
     {
@@ -34,6 +48,11 @@ class Product extends Model
     public function orders()
     {
         return $this->belongsToMany(Order::class, 'order_products', 'product_id', 'order_id')->withPivot('activation_key_id');
+    }
+
+    public function orderProducts()
+    {
+        return $this->hasMany(OrderProduct::class, 'product_id');
     }
 
     public function cart()

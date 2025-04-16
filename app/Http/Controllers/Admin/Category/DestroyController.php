@@ -10,6 +10,7 @@ class DestroyController extends Controller
     public function __invoke(Category $category)
     {
         $category->delete();
+
         return response()->json('Category removed', 200);
     }
 }

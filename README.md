@@ -3,7 +3,7 @@
 Административная панель для управления магазином ключей активации игр с REST API интерфейсом.
 
 Установка для ознакомления с проектом не требуется. Доступ к приложению доступен по ссылке:
- - Рабочая ссылка приложения <https://google.com>
+ - Рабочая ссылка приложения <https://game-key-store-dashboard-front.vercel.app/>
  - Репозиторий интерфейса приложения <https://github.com/Nostromo2113/game_key_store_dashboard_front>
 
 ## Техстек  
@@ -195,7 +195,7 @@ base url:
 
 ```bash
 # 1. Клонирование репозитория
-git clone !!НЕ ЗАБЫТЬ ССЫЛКУ!!
+git clone https://github.com/Nostromo2113/GameKey-store-laravel.git
 cd repo
 
 # 2. Установка зависимостей
@@ -219,7 +219,4 @@ php artisan queue:work
 
 # 8. Запуск сервера разработки
 php artisan serve
-
-# 8. Запуск воркера
-php artisan queue:work
 

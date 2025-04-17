@@ -48,8 +48,10 @@ class UserCreateService
             $this->cartService->store($newUser);
 
             if (!isset($data['password'])) {
-                $this->sendEmail($newUser, $password);
+                $this->sendProfileInfoMail($newUser, $password);
             }
+
+            $newUser->sendEmailVerificationNotification();
 
             DB::commit();
 
@@ -88,7 +90,7 @@ class UserCreateService
      * @param string $password Пароль пользователя.
      * @return void
      */
-    private function sendEmail(User $newUser, string $password): void
+    private function sendProfileInfoMail(User $newUser, string $password): void
     {
         SendMailJob::dispatch(
             UserRegistered::class,
@@ -98,7 +100,5 @@ class UserCreateService
             ],
             $newUser->email
         );
-
-        $newUser->sendEmailVerificationNotification();
     }
 }

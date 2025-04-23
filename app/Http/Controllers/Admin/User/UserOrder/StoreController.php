@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin\User\UserOrder;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\User\UserOrder\StoreRequest;
+use App\Services\Admin\Cart\CartProduct\CartProductDestroyer;
 use App\Services\Admin\Cart\CartProduct\CartProductService;
 use App\Services\Admin\Order\OrderProduct\OrderProductService;
 use App\Services\Admin\Order\OrderService;
@@ -12,13 +13,13 @@ use Illuminate\Support\Facades\DB;
 class StoreController extends Controller
 {
     private $orderService;
-    private $cartProductService;
+    private $cartProductDestoyer;
     private $orderProductService;
 
-    public function __construct(OrderService $orderService, CartProductService $cartProductService, OrderProductService $orderProductService)
+    public function __construct(OrderService $orderService, CartProductDestroyer $cartProductDestroyer, OrderProductService $orderProductService)
     {
         $this->orderService        = $orderService;
-        $this->cartProductService  = $cartProductService;
+        $this->cartProductDestoyer = $cartProductDestroyer;
         $this->orderProductService = $orderProductService;
     }
 
@@ -32,7 +33,7 @@ class StoreController extends Controller
             $order = $this->orderService->store($data['order']);
 
             if (auth()->id() === $data['order']['user_id']) {
-                $this->cartProductService->destroyAll($data['order']['user_id']);
+                $this->cartProductDestoyer->deleteAllProductsInCart($data['order']['user_id']);
             }
 
             $this->orderProductService->batch($order, $data['order']);

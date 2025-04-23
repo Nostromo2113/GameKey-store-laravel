@@ -3,8 +3,9 @@
 namespace App\Services\Admin\Cart\CartProduct;
 
 use App\Models\Cart;
+use Illuminate\Support\Facades\DB;
 
-class CartProductCreateService
+class CartProductCreator
 {
     /**
      * Добавляет продукт в корзину.
@@ -16,17 +17,19 @@ class CartProductCreateService
      */
     public function addProductToCart(array $data, Cart $cart): Cart
     {
-        $productId = $data['product_id'];
-        $quantity  = $data['quantity'];
+        return DB::transaction(function () use ($data, $cart) {
+            $productId = $data['product_id'];
+            $quantity  = $data['quantity'];
 
-        $productExist = $cart->products()->where('cart_products.product_id', $productId)->exists();
+            $productExist = $cart->products()->where('cart_products.product_id', $productId)->exists();
 
-        if (!$productExist) {
-            $cart->products()->attach($productId, ['quantity' => $quantity]);
+            if (!$productExist) {
+                $cart->products()->attach($productId, ['quantity' => $quantity]);
 
-            return $cart;
-        } else {
+                return $cart;
+            }
+
             throw new \Exception('Продукт уже есть в корзине');
-        }
+        });
     }
 }

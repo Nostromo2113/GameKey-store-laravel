@@ -6,7 +6,7 @@ use App\Models\Cart;
 use App\Models\Product;
 use Exception;
 
-class CartProductUpdateService
+class CartProductUpdater
 {
     /**
      * Обновляет количество продукта в корзине.

@@ -4,7 +4,7 @@ namespace App\Services\Admin\Cart\CartProduct;
 
 use App\Models\Cart;
 
-class CartProductDestroyService
+class CartProductDestroyer
 {
     public function deleteProductInCart(Cart $cart, int $productId): Cart
     {

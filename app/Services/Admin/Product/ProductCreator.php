@@ -51,16 +51,11 @@ class ProductCreator
 
     private function writeFile(array $data): string
     {
-        try {
             if (isset($data['file'])) {
                 $file = Storage::disk('public')->put('uploads/products/preview_images', $data['file']);
             } else {
                 $file = 'no image';
             }
-
             return $file;
-        } catch (\Exception $e) {
-            throw new \Exception('Ошибка при записи превью файла продукта: ' . $e->getMessage());
-        }
     }
 }

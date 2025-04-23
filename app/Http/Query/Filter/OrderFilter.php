@@ -1,14 +1,13 @@
 <?php
 
-namespace App\Http\Filters\Order;
+namespace App\Http\Query\Filter;
 
-use App\Http\Filters\AbstractQuery;
+use App\Http\Query\AbstractQuery;
 use Illuminate\Database\Eloquent\Builder;
 
-class OrderQuery extends AbstractQuery
+class OrderFilter extends AbstractQuery
 {
     public const ORDER_NUMBER = 'order_number';
-
 
     protected function getCallbacks(): array
     {

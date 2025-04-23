@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Filters\Product;
+namespace App\Http\Query\Filter;
 
-use App\Http\Filters\AbstractQuery;
+use App\Http\Query\AbstractQuery;
 use Illuminate\Database\Eloquent\Builder;
 
-class ProductQuery extends AbstractQuery
+class ProductFilter extends AbstractQuery
 {
     public const TITLE        = 'title';
     public const IS_PUBLISHED = 'is_published';

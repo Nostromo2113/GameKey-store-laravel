@@ -6,13 +6,13 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\Order\UpdateRequest;
 use App\Http\Resources\Admin\Order\OrderShowResource;
 use App\Models\Order;
-use App\Services\Admin\Order\OrderUpdateService;
+use App\Services\Admin\Order\OrderUpdater;
 
 class UpdateController extends Controller
 {
     private $orderUpdateService;
 
-    public function __construct(OrderUpdateService $orderUpdateService)
+    public function __construct(OrderUpdater $orderUpdateService)
     {
         $this->orderUpdateService = $orderUpdateService;
     }

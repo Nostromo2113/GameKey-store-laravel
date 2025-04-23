@@ -4,7 +4,7 @@ namespace App\Services\Admin\Order;
 
 use App\Models\Order;
 
-class OrderStoreService
+class OrderCreator
 {
     public function storeOrder(array $data): Order
     {

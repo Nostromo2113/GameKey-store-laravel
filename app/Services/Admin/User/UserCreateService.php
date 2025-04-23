@@ -5,7 +5,7 @@ namespace App\Services\Admin\User;
 use App\Jobs\SendMailJob;
 use App\Mail\UserRegistered;
 use App\Models\User;
-use App\Services\Admin\Cart\CartService;
+use App\Services\Admin\Cart\CartCreator;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
@@ -13,7 +13,7 @@ class UserCreateService
 {
     private $cartService;
 
-    public function __construct(CartService $cartService)
+    public function __construct(CartCreator $cartService)
     {
         $this->cartService = $cartService;
     }

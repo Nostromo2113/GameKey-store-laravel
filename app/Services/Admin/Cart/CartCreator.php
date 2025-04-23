@@ -5,9 +5,9 @@ namespace App\Services\Admin\Cart;
 use App\Models\Cart;
 use App\Models\User;
 
-class CartStoreService
+class CartCreator
 {
-    public function storeCart(User $user): Cart
+    public function store(User $user): Cart
     {
         $userId = $user['id'];
         $cart   = Cart::create([

@@ -26,9 +26,7 @@ class UserCreator
      */
     public function createUser(array $data): User
     {
-        DB::beginTransaction();
-
-        try {
+        return DB::transaction(function () use ($data) {
             $avatar   = 'uploads/users/avatars/default_avatar.jpg';
             $password = isset($data['password']) ? $data['password'] : $this->genPassword(6);
 
@@ -53,13 +51,8 @@ class UserCreator
 
             $newUser->sendEmailVerificationNotification();
 
-            DB::commit();
-
             return $newUser;
-        } catch (\Exception $e) {
-            DB::rollBack();
-            throw new \Exception('Ошибка при создании пользователя: ' . $e->getMessage());
-        }
+        });
     }
 
 

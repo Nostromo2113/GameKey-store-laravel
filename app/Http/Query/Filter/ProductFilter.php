@@ -2,10 +2,10 @@
 
 namespace App\Http\Filters\Product;
 
-use App\Http\Filters\AbstractFilter;
+use App\Http\Filters\AbstractQuery;
 use Illuminate\Database\Eloquent\Builder;
 
-class ProductFilter extends AbstractFilter
+class ProductQuery extends AbstractQuery
 {
     public const TITLE        = 'title';
     public const IS_PUBLISHED = 'is_published';

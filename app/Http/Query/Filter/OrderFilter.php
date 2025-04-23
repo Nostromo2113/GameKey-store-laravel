@@ -2,10 +2,10 @@
 
 namespace App\Http\Filters\Order;
 
-use App\Http\Filters\AbstractFilter;
+use App\Http\Filters\AbstractQuery;
 use Illuminate\Database\Eloquent\Builder;
 
-class OrderFilter extends AbstractFilter
+class OrderQuery extends AbstractQuery
 {
     public const ORDER_NUMBER = 'order_number';
 

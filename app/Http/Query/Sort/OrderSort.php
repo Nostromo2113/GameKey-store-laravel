@@ -2,13 +2,13 @@
 
 namespace App\Http\Filters\Order;
 
-use App\Http\Filters\AbstractFilter;
+use App\Http\Filters\AbstractQuery;
 use Illuminate\Database\Eloquent\Builder;
 
 /**
  * TODO: Перенести в Filter
  */
-class OrderSort extends AbstractFilter
+class OrderSort extends AbstractQuery
 {
     public const CREATED_AT = 'createdAt';
     protected function getCallbacks(): array

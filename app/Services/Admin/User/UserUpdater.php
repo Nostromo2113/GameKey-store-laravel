@@ -14,22 +14,13 @@ class UserUpdater
      * @param array $data Данные для обновления пользователя.
      * @param User $user Пользователь, которого нужно обновить.
      * @return User Обновленный пользователь.
-     * @throws Exception Если произошла ошибка при обновлении.
      */
     public function updateUser(array $data, User $user): User
     {
-        DB::beginTransaction();
-        try {
+        return DB::transaction(function () use ($data, $user) {
             $this->fillUser($user, $data);
-
-            DB::commit();
-
             return $user;
-
-        } catch (\Exception $e) {
-            DB::rollBack();
-            throw $e;
-        }
+        });
     }
 
     /**
@@ -41,7 +32,6 @@ class UserUpdater
      */
     private function fillUser(User $user, array $data): void
     {
-        try {
             $imagePath = $this->updateAvatar($user, $data);
 
             $user->fill([
@@ -54,9 +44,6 @@ class UserUpdater
                 'address'      => $data['address'],
                 'avatar'       => $imagePath,
             ])->save();
-        } catch (\Exception $e) {
-            throw new \Exception('Ошибка при записи пользователя: ' . $e->getMessage());
-        }
     }
 
 
@@ -73,7 +60,6 @@ class UserUpdater
     {
         $oldImagePath = $user->avatar ?: 'uploads/users/avatars/default_avatar.jpg';
 
-        try {
             // Если аватар был отправлен
             if (isset($data['file'])) {
                 // Сохраняем новый аватар
@@ -89,9 +75,5 @@ class UserUpdater
             }
 
             return $imagePath;
-
-        } catch (\Exception $e) {
-            throw new \Exception('Ошибка при обновлении аватара пользователя: ' . $e->getMessage());
-        }
     }
 }

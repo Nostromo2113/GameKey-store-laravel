@@ -6,7 +6,7 @@ use App\Models\Order;
 use App\Services\Admin\Order\OrderActivationKey\OrderActivationKeyManager;
 use Illuminate\Support\Collection;
 
-class OrderProductCreateService
+class OrderProductCreator
 {
     private $activationKeyManager;
 

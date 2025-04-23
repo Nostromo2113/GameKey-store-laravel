@@ -5,7 +5,7 @@ namespace App\Services\Admin\Order\OrderProduct;
 use App\Models\Order;
 use App\Services\Admin\Order\OrderActivationKey\OrderActivationKeyManager;
 
-class OrderProductDeleteService
+class OrderProductDestroyer
 {
     private $activationKeyManager;
 

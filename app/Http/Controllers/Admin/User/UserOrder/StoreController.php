@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\User\UserOrder\StoreRequest;
 use App\Services\Admin\Cart\CartProduct\CartProductDestroyer;
 use App\Services\Admin\Cart\CartProduct\CartProductService;
-use App\Services\Admin\Order\OrderProduct\OrderProductService;
+use App\Services\Admin\Order\OrderProduct\OrderProductBatch;
 use App\Services\Admin\Order\OrderService;
 use Illuminate\Support\Facades\DB;
 
@@ -16,7 +16,7 @@ class StoreController extends Controller
     private $cartProductDestoyer;
     private $orderProductService;
 
-    public function __construct(OrderService $orderService, CartProductDestroyer $cartProductDestroyer, OrderProductService $orderProductService)
+    public function __construct(OrderService $orderService, CartProductDestroyer $cartProductDestroyer, OrderProductBatch $orderProductService)
     {
         $this->orderService        = $orderService;
         $this->cartProductDestoyer = $cartProductDestroyer;

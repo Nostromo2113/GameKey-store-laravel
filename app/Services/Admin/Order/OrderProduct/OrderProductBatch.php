@@ -7,7 +7,7 @@ use App\Models\Product;
 use App\Services\Admin\Order\OrderActivationKey\OrderActivationKeyManager;
 use Illuminate\Support\Facades\DB;
 
-class OrderProductService
+class OrderProductBatch
 {
     private $keyManager;
     private $orderProductCreate;
@@ -16,9 +16,9 @@ class OrderProductService
 
     public function __construct(
         OrderActivationKeyManager $orderActivationKeyManager,
-        OrderProductCreateService $orderProductCreateService,
-        OrderProductUpdateService $orderProductUpdateService,
-        OrderProductDeleteService $orderProductDeleteService
+        OrderProductCreator       $orderProductCreateService,
+        OrderProductUpdater       $orderProductUpdateService,
+        OrderProductDestroyer     $orderProductDeleteService
     ) {
         $this->keyManager         = $orderActivationKeyManager;
         $this->orderProductCreate = $orderProductCreateService;

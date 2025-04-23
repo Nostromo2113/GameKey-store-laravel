@@ -9,7 +9,6 @@ class DestroyController extends Controller
 {
     public function __invoke(ActivationKey $activationKey)
     {
-        // policy
         $this->authorize('delete', $activationKey);
 
         $activationKey->delete();

@@ -6,7 +6,7 @@ use App\Models\Product;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
-class ProductUpdateService
+class ProductUpdater
 {
     public function updateProduct(Product $product, array $data): Product
     {

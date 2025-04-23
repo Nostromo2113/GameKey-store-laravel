@@ -9,7 +9,7 @@ use App\Services\Admin\Cart\CartCreator;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
-class UserCreateService
+class UserCreator
 {
     private $cartService;
 

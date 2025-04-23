@@ -5,7 +5,7 @@ namespace App\Services\Admin\User;
 use App\Models\User;
 use Illuminate\Support\Facades\Storage;
 
-class UserDestroyService
+class UserDestroyer
 {
     public function destroyUser(User $user): void
     {

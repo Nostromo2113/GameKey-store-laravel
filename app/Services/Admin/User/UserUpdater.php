@@ -6,7 +6,7 @@ use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
-class UserUpdateService
+class UserUpdater
 {
     /**
      * Обновляет данные пользователя и, при необходимости, его аватар.

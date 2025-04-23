@@ -2,18 +2,18 @@
 
 namespace App\Models\Traits;
 
-use App\Http\Filters\FilterInterface;
+use App\Http\Query\QueryInterface;
 use Illuminate\Database\Eloquent\Builder;
 
 trait Filterable
 {
     /**
      * @param Builder $builder
-     * @param FilterInterface $filter
+     * @param QueryInterface $filter
      *
      * @return Builder
      */
-    public function scopeFilter(Builder $builder, FilterInterface $filter)
+    public function scopeFilter(Builder $builder, QueryInterface $filter)
     {
         $filter->apply($builder);
 

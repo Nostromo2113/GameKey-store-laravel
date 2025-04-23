@@ -8,21 +8,22 @@ use App\Http\Resources\Admin\User\UserCart\UserCartResource;
 use App\Models\Cart;
 use App\Models\Product;
 use App\Services\Admin\Cart\CartProduct\CartProductService;
+use App\Services\Admin\Cart\CartProduct\CartProductUpdater;
 
 class UpdateController extends Controller
 {
-    private $cartProductService;
+    private $cartProductUpdater;
 
-    public function __construct(CartProductService $cartProductService)
+    public function __construct(CartProductUpdater $cartProductUpdater)
     {
-        $this->cartProductService = $cartProductService;
+        $this->cartProductUpdater = $cartProductUpdater;
     }
 
     public function __invoke(UpdateRequest $request, Cart $cart, Product $product)
     {
         $data = $request->validated();
 
-        $cart = $this->cartProductService->update($data['product'], $cart, $product);
+        $cart = $this->cartProductUpdater->updateProductQuantityInCart($data['product'], $cart, $product);
 
         $cart->load('products.activationKeys');
 

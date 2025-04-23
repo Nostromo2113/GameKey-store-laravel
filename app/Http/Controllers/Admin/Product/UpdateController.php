@@ -7,14 +7,15 @@ use App\Http\Requests\Admin\Product\UpdateRequest;
 use App\Http\Resources\Admin\Product\ProductFullResource;
 use App\Models\Product;
 use App\Services\Admin\Product\ProductService;
+use App\Services\Admin\Product\ProductUpdater;
 
 class UpdateController extends Controller
 {
-    private $productService;
+    private $productUpdater;
 
-    public function __construct(ProductService $productService)
+    public function __construct(ProductUpdater $productUpdater)
     {
-        $this->productService = $productService;
+        $this->productUpdater = $productUpdater;
     }
 
     public function __invoke(UpdateRequest $request, Product $product)
@@ -23,7 +24,7 @@ class UpdateController extends Controller
 
         $data = $request->validated();
 
-        $product = $this->productService->update($product, $data['product']);
+        $product = $this->productUpdater->updateProduct($product, $data['product']);
 
         $product->load('category', 'technicalRequirements', 'genres');
 

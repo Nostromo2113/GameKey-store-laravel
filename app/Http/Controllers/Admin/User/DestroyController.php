@@ -4,19 +4,19 @@ namespace App\Http\Controllers\Admin\User;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
-use App\Services\Admin\User\UserService;
+use App\Services\Admin\User\UserDestroyer;
 
 class DestroyController extends Controller
 {
-    private $userService;
+    private $userDestoyer;
 
-    public function __construct(UserService $userService)
+    public function __construct(UserDestroyer $userDestoyer)
     {
-        $this->userService = $userService;
+        $this->userDestoyer = $userDestoyer;
     }
     public function __invoke(User $user)
     {
-        $this->userService->destroy($user);
+        $this->userDestoyer->destroyUser($user);
 
         return response()->json('User removed', 200);
     }

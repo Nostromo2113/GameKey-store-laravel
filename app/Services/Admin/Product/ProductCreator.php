@@ -9,7 +9,7 @@ use App\Services\Admin\ActivationKeyGeneratorService;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
-class ProductStoreService
+class ProductCreator
 {
     private $activationKeyGenerator;
 
@@ -19,10 +19,8 @@ class ProductStoreService
     }
     public function storeProduct($data)
     {
-        DB::beginTransaction();
-        try {
+        return DB::transaction(function () use ($data) {
             $categoryId = $data['category'];
-
             $genres = $data['genres'];
 
             $file = $this->writeFile($data);
@@ -47,28 +45,17 @@ class ProductStoreService
 
             $this->activationKeyGenerator->generateForProduct($product->id, 50);
 
-            DB::commit();
-
             return $product;
-
-        } catch (\Exception $e) {
-            DB::rollBack();
-            throw new \Exception('Ошибка при создании продукта: ' . $e->getMessage());
-        }
+        });
     }
 
     private function writeFile(array $data): string
     {
-        try {
             if (isset($data['file'])) {
                 $file = Storage::disk('public')->put('uploads/products/preview_images', $data['file']);
             } else {
                 $file = 'no image';
             }
-
             return $file;
-        } catch (\Exception $e) {
-            throw new \Exception('Ошибка при записи превью файла продукта: ' . $e->getMessage());
-        }
     }
 }

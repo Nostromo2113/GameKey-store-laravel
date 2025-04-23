@@ -9,7 +9,7 @@ use Illuminate\Validation\ValidationException;
 
 class PasswordUpdateController extends Controller
 {
-    private $authService;
+    private AuthService $authService;
 
     public function __construct(AuthService $authService)
     {
@@ -21,22 +21,11 @@ class PasswordUpdateController extends Controller
         $data = $request->validated();
         $user = auth('api')->user();
         if ($user) {
-            try {
                 $this->authService->changePassword($user, $data);
 
                 return response()->json([
                     'message' => 'Пароль успешно изменен'
                 ], 200);
-
-            } catch (ValidationException $e) {
-
-                return response()->json([
-                    'error'  => $e->getMessage(),
-                    'errors' => $e->errors()
-                ], 422);
-
-            }
-
         } else {
             return response()->json(['error' => 'Unauthorized'], 401);
         }

@@ -6,13 +6,13 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\Order\OrderProduct\UpdateRequest;
 use App\Http\Resources\Admin\Order\OrderShowResource;
 use App\Models\Order;
-use App\Services\Admin\Order\OrderProduct\OrderProductService;
+use App\Services\Admin\Order\OrderProduct\OrderProductBatch;
 use Illuminate\Http\JsonResponse;
 
 class BatchController extends Controller
 {
     private $orderProductService;
-    public function __construct(OrderProductService $orderProductService)
+    public function __construct(OrderProductBatch $orderProductService)
     {
         $this->orderProductService = $orderProductService;
     }

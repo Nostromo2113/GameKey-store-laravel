@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Filters;
+namespace App\Http\Query;
 
 use Illuminate\Database\Eloquent\Builder;
 
-abstract class AbstractFilter implements FilterInterface
+abstract class AbstractQuery implements QueryInterface
 {
     /** @var array Параметры запроса для фильтрации */
     private $queryParams = [];
@@ -74,7 +74,7 @@ abstract class AbstractFilter implements FilterInterface
      * Удаляет указанные параметры из запроса.
      *
      * @param string[] $keys Ключи параметров, которые нужно удалить
-     * @return AbstractFilter
+     * @return AbstractQuery
      */
     protected function removeQueryParam(string ...$keys)
     {

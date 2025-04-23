@@ -6,8 +6,9 @@ use App\Jobs\SendMailJob;
 use App\Mail\ActivationKey;
 use App\Models\Order;
 use App\Services\Admin\Order\OrderActivationKey\OrderActivationKeyManager;
+use Illuminate\Support\Facades\DB;
 
-class OrderUpdateService
+class OrderUpdater
 {
     private $keyManager;
 
@@ -31,7 +32,9 @@ class OrderUpdateService
             throw new \InvalidArgumentException('Данные для обновления заказа отсутствуют.', 400);
         }
 
-        return $this->executeOrder($order);
+        return DB::transaction(function () use ($order) {
+            return $this->executeOrder($order);
+        });
     }
 
 

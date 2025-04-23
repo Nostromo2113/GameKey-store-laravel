@@ -5,15 +5,15 @@ namespace App\Services\Admin\User;
 use App\Jobs\SendMailJob;
 use App\Mail\UserRegistered;
 use App\Models\User;
-use App\Services\Admin\Cart\CartService;
+use App\Services\Admin\Cart\CartCreator;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
-class UserCreateService
+class UserCreator
 {
     private $cartService;
 
-    public function __construct(CartService $cartService)
+    public function __construct(CartCreator $cartService)
     {
         $this->cartService = $cartService;
     }
@@ -26,9 +26,7 @@ class UserCreateService
      */
     public function createUser(array $data): User
     {
-        DB::beginTransaction();
-
-        try {
+        return DB::transaction(function () use ($data) {
             $avatar   = 'uploads/users/avatars/default_avatar.jpg';
             $password = isset($data['password']) ? $data['password'] : $this->genPassword(6);
 
@@ -53,13 +51,8 @@ class UserCreateService
 
             $newUser->sendEmailVerificationNotification();
 
-            DB::commit();
-
             return $newUser;
-        } catch (\Exception $e) {
-            DB::rollBack();
-            throw new \Exception('Ошибка при создании пользователя: ' . $e->getMessage());
-        }
+        });
     }
 
 

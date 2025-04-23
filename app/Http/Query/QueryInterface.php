@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Filters;
+namespace App\Http\Query;
 
 use Illuminate\Database\Eloquent\Builder;
 
-interface FilterInterface
+interface QueryInterface
 {
     public function apply(Builder $builder);
 }

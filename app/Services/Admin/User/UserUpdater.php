@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Services\Admin;
+namespace App\Services\Admin\User;
 
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
-class UserUpdateService
+class UserUpdater
 {
     /**
      * Обновляет данные пользователя и, при необходимости, его аватар.
@@ -14,22 +14,13 @@ class UserUpdateService
      * @param array $data Данные для обновления пользователя.
      * @param User $user Пользователь, которого нужно обновить.
      * @return User Обновленный пользователь.
-     * @throws Exception Если произошла ошибка при обновлении.
      */
     public function updateUser(array $data, User $user): User
     {
-        DB::beginTransaction();
-        try {
+        return DB::transaction(function () use ($data, $user) {
             $this->fillUser($user, $data);
-
-            DB::commit();
-
             return $user;
-
-        } catch (\Exception $e) {
-            DB::rollBack();
-            throw $e;
-        }
+        });
     }
 
     /**
@@ -41,18 +32,18 @@ class UserUpdateService
      */
     private function fillUser(User $user, array $data): void
     {
-        $imagePath = $this->updateAvatar($user, $data);
+            $imagePath = $this->updateAvatar($user, $data);
 
-        $user->fill([
-            'name'         => $data['name'],
-            'email'        => $data['email'],
-            'phone_number' => $data['phone_number'],
-            'surname'      => $data['surname'],
-            'patronymic'   => $data['patronymic'],
-            'age'          => $data['age'],
-            'address'      => $data['address'],
-            'avatar'       => $imagePath,
-        ])->save();
+            $user->fill([
+                'name'         => $data['name'],
+                'email'        => $data['email'],
+                'phone_number' => $data['phone_number'],
+                'surname'      => $data['surname'],
+                'patronymic'   => $data['patronymic'],
+                'age'          => $data['age'],
+                'address'      => $data['address'],
+                'avatar'       => $imagePath,
+            ])->save();
     }
 
 
@@ -67,9 +58,8 @@ class UserUpdateService
      */
     private function updateAvatar(User $user, array $data): string
     {
-        $oldImagePath = $user->avatar;
+        $oldImagePath = $user->avatar ?: 'uploads/users/avatars/default_avatar.jpg';
 
-        try {
             // Если аватар был отправлен
             if (isset($data['file'])) {
                 // Сохраняем новый аватар
@@ -85,9 +75,5 @@ class UserUpdateService
             }
 
             return $imagePath;
-
-        } catch (\Exception $e) {
-            throw $e;
-        }
     }
 }

@@ -51,12 +51,8 @@ class OrderActivationKeyManager
      */
     public function releaseKeys(array $orderProductIdsToRemove): void
     {
-        try {
             ActivationKey::whereIn('order_product_id', $orderProductIdsToRemove)
                 ->update(['order_product_id' => null]);
-        } catch (\Exception $e) {
-            throw new \Exception("Ошибка при освобождении ключей активации: " . $e->getMessage());
-        }
     }
 
     /**
@@ -67,11 +63,7 @@ class OrderActivationKeyManager
      */
     public function softDeleteKeys(array $orderProductIds): void
     {
-        try {
             ActivationKey::whereIn('order_product_id', $orderProductIds)->delete();
-        } catch (\Exception $e) {
-            throw new \Exception('Ошибка при мягком удалении ключей активации: ' . $e->getMessage());
-        }
     }
 
 
@@ -83,16 +75,12 @@ class OrderActivationKeyManager
      */
     public function returnOrderProductsKeys(array $orderProductIds): array
     {
-        try {
             $keys = ActivationKey::whereIn('order_product_id', $orderProductIds)
                 ->get()
                 ->pluck('key')
                 ->toArray();
 
             return $keys;
-        } catch (\Exception $e) {
-            throw new \Exception('Ошибка при возврате ключей заказа: ' . $e->getMessage());
-        }
     }
 
 
@@ -107,7 +95,6 @@ class OrderActivationKeyManager
      */
     public function prepareKeysForBinding($orderProduct, array $requestItem, ?Collection $selectedActivationKeys): array
     {
-        try {
             $currentActivationKeys  = $orderProduct->activationKeys;
             $product                = $orderProduct->product;
             $currentQuantity        = $currentActivationKeys->count(); // Количество ключей в текущем заказе.
@@ -131,9 +118,6 @@ class OrderActivationKeyManager
             }
 
             return $activationKeysToUpdate;
-        } catch (\Exception $e) {
-            throw new \Exception("Ошибка при подготовке ключей активации: " . $e->getMessage());
-        }
     }
 
 
@@ -146,7 +130,6 @@ class OrderActivationKeyManager
      */
     private function prepareKeysForUpdate(Collection $keys, $orderProduct = null): ?array
     {
-        try {
             if ($keys->isEmpty()) {
                 return null;
             }
@@ -163,8 +146,5 @@ class OrderActivationKeyManager
             }
 
             return $keysToUpdate;
-        } catch (\Exception $e) {
-            throw new \Exception("Ошибка при привязке ключей активации: " . $e->getMessage());
-        }
     }
 }

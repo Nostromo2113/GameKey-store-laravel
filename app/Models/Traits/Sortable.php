@@ -2,12 +2,12 @@
 
 namespace App\Models\Traits;
 
-use App\Http\Filters\FilterInterface;
+use App\Http\Query\QueryInterface;
 use Illuminate\Database\Eloquent\Builder;
 
 trait Sortable
 {
-    public function scopeSort(Builder $builder, FilterInterface $filter)
+    public function scopeSort(Builder $builder, QueryInterface $filter)
     {
         $filter->apply($builder);
 

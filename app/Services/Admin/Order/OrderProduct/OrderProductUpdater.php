@@ -5,7 +5,7 @@ namespace App\Services\Admin\Order\OrderProduct;
 use App\Services\Admin\Order\OrderActivationKey\OrderActivationKeyManager;
 use Illuminate\Support\Collection;
 
-class OrderProductUpdateService
+class OrderProductUpdater
 {
     private $activationKeyManager;
 

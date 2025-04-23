@@ -4,21 +4,23 @@ namespace App\Http\Controllers\Admin\User\UserOrder;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\User\UserOrder\StoreRequest;
+use App\Services\Admin\Cart\CartProduct\CartProductDestroyer;
 use App\Services\Admin\Cart\CartProduct\CartProductService;
-use App\Services\Admin\Order\OrderProduct\OrderProductService;
+use App\Services\Admin\Order\OrderCreator;
+use App\Services\Admin\Order\OrderProduct\OrderProductBatch;
 use App\Services\Admin\Order\OrderService;
 use Illuminate\Support\Facades\DB;
 
 class StoreController extends Controller
 {
-    private $orderService;
-    private $cartProductService;
+    private $orderCreator;
+    private $cartProductDestoyer;
     private $orderProductService;
 
-    public function __construct(OrderService $orderService, CartProductService $cartProductService, OrderProductService $orderProductService)
+    public function __construct(OrderCreator $orderCreator, CartProductDestroyer $cartProductDestroyer, OrderProductBatch $orderProductService)
     {
-        $this->orderService        = $orderService;
-        $this->cartProductService  = $cartProductService;
+        $this->orderCreator        = $orderCreator;
+        $this->cartProductDestoyer = $cartProductDestroyer;
         $this->orderProductService = $orderProductService;
     }
 
@@ -29,10 +31,10 @@ class StoreController extends Controller
         try {
             $data = $request->validated();
 
-            $order = $this->orderService->store($data['order']);
+            $order = $this->orderCreator->storeOrder($data['order']);
 
             if (auth()->id() === $data['order']['user_id']) {
-                $this->cartProductService->destroyAll($data['order']['user_id']);
+                $this->cartProductDestoyer->deleteAllProductsInCart($data['order']['user_id']);
             }
 
             $this->orderProductService->batch($order, $data['order']);
@@ -49,7 +51,6 @@ class StoreController extends Controller
 
             return response()->json([
                 'message' => 'Ошибка при создании заказа',
-                'error'   => $e->getMessage()
             ], 500);
         }
     }

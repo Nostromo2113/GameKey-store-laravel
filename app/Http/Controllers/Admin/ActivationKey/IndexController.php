@@ -10,7 +10,6 @@ class IndexController extends Controller
 {
     public function __invoke()
     {
-
         $keys = ActivationKey::with('product')->paginate(20);
 
         return new ActivationKeyCollectionResource($keys);

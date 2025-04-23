@@ -49,7 +49,6 @@ class StoreController extends Controller
 
             return response()->json([
                 'message' => 'Ошибка при создании заказа',
-                'error'   => $e->getMessage()
             ], 500);
         }
     }

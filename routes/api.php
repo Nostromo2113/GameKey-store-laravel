@@ -36,3 +36,6 @@ Route::group(['prefix' => 'admin'], function () {
     });
 
 });
+
+//  geoTracker
+require  base_path('routes/tests/geoTracker.php');
